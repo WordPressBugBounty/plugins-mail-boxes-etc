@@ -34,7 +34,19 @@ namespace MbeExceptions {
 		}
 	}
 
+	class ApiRequestEmptyResponse extends \Exception {
+		public function __construct( $message = "", $code = 0, Throwable $previous = null ) {
+			parent::__construct( $message, $code, $previous );
+		}
+	}
+
 	class ShippingDocumentException extends \Exception {
+		public function __construct( $message = "", $code = 0, Throwable $previous = null ) {
+			parent::__construct( $message, $code, $previous );
+		}
+	}
+
+	class DbException extends \Exception {
 		public function __construct( $message = "", $code = 0, Throwable $previous = null ) {
 			parent::__construct( $message, $code, $previous );
 		}

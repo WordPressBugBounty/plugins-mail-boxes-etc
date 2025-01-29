@@ -101,23 +101,32 @@ class Mbe_Shipping_Helper_Rates
 		return false;
     }
 
-    public function applyInsuranceToRate($rate, $insuranceValue)
-    {
-        $result = $rate;
+	public function applyInsuranceToRate( $rate, $insuranceValue ) {
+		$result = $rate;
 
-        $helper = new Mbe_Shipping_Helper_Data();
+		$helper = new Mbe_Shipping_Helper_Data();
 
-        $percentageValue = $helper->getShipmentsCsvInsurancePercentage() / 100 * (float)$insuranceValue;
-        $fixedValue = $helper->getShipmentsCsvInsuranceMin();
+		$percentageValue = $helper->getShipmentsCsvInsurancePercentage() / 100 * (float) $insuranceValue;
+		$fixedValue      = $helper->getShipmentsCsvInsuranceMin();
 
-        if ($percentageValue < $fixedValue) {
-            $result += $fixedValue;
-        }
-        else {
-            $result += $percentageValue;
-        }
-        return $result;
-    }
+		// Apply the insurance cost based on the service type
+		switch ( $helper->getSelectedInsuranceCode() ) {
+			case Mbe_Shipping_Helper_Data::MBE_SHIPPING_WITH_SAFE_VALUE_CODE_SUFFIX:
+			case Mbe_Shipping_Helper_Data::MBE_SHIPPING_WITH_SAFE_VALUE_ART_CODE_SUFFIX:
+			case Mbe_Shipping_Helper_Data::MBE_SHIPPING_WITH_SAFE_VALUE_4B_CODE_SUFFIX:
+				$result += $percentageValue;
+				break;
+			default:
+				if ( $percentageValue < $fixedValue ) {
+					$result += $fixedValue;
+				} else {
+					$result += $percentageValue;
+				}
+				break;
+		}
+
+		return $result;
+	}
 
 
     public function getCustomRates($country, $region, $city, $postCode, $weight, $insuranceValue)
@@ -258,6 +267,8 @@ class Mbe_Shipping_Helper_Rates
 		$resultDeliveryPoint = [];
 
         $ws = new Mbe_Shipping_Model_Ws();
+	    $selectedInsuranceCode = $this->helper->getSelectedInsuranceCode();
+	    $selectedInsuranceLabel = $this->helper->getSelectedInsuranceLabel();
         foreach ($newdata as $data) {
             $rate = new \stdClass;
             $rate->Service = $data["delivery_type"];
@@ -281,16 +292,29 @@ class Mbe_Shipping_Helper_Rates
 				}
 	        } else {
 		        $resultWithoutInsurance[] = $rate;
+				// If the insurance service is the old _insurance the getShipmentsCsvInsuranceMin field is used as minimum insurance cost as before
+		        // if the service is a new "safe value" one, the getShipmentsCsvInsuranceMin is used as a threshold for the service
 
-				//rate with insurance
-		        $rateWithInsurance = new \stdClass;
-		        $rateWithInsurance->Service = $this->helper->convertShippingCodeWithInsurance($data["delivery_type"]);
-		        $rateWithInsurance->ServiceDesc = $this->helper->convertShippingLabelWithInsurance($ws->getLabelFromShipmentType($data["delivery_type"]));;
-		        $rateWithInsurance->SubzoneDesc = '';
-		        $rateWithInsurance->IdSubzone = '';
+		        if(
+					$selectedInsuranceCode === Mbe_Shipping_Helper_Data::MBE_SHIPPING_WITH_INSURANCE_CODE_SUFFIX ||
+					(
+						$helper->getShipmentsCsvInsuranceMin() <= $insuranceValue && (
+						$selectedInsuranceCode === Mbe_Shipping_Helper_Data::MBE_SHIPPING_WITH_SAFE_VALUE_CODE_SUFFIX ||
+					    $selectedInsuranceCode === Mbe_Shipping_Helper_Data::MBE_SHIPPING_WITH_SAFE_VALUE_4B_CODE_SUFFIX ||
+					    $selectedInsuranceCode === Mbe_Shipping_Helper_Data::MBE_SHIPPING_WITH_SAFE_VALUE_ART_CODE_SUFFIX
+						)
+					)
+		        ) {
+			        //rate with insurance
+			        $rateWithInsurance              = new \stdClass;
+			        $rateWithInsurance->Service     = $data["delivery_type"] . $selectedInsuranceCode;
+			        $rateWithInsurance->ServiceDesc = $ws->getLabelFromShipmentType( $data["delivery_type"] ) . $selectedInsuranceLabel;;
+			        $rateWithInsurance->SubzoneDesc = '';
+			        $rateWithInsurance->IdSubzone   = '';
 
-		        $rateWithInsurance->NetShipmentTotalPrice = $this->applyInsuranceToRate($data["price"], $insuranceValue);
-		        $resultWithInsurance[] = $rateWithInsurance;
+			        $rateWithInsurance->NetShipmentTotalPrice = $this->applyInsuranceToRate( $data["price"], $insuranceValue );
+			        $resultWithInsurance[]                    = $rateWithInsurance;
+		        }
 	        }
 
 

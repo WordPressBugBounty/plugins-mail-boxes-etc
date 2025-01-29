@@ -240,11 +240,8 @@ class Mbe_Shipping_Model_Pickup_Custom_Data implements Mbe_Shipping_Entity_Model
                     </select>
                     <p style="margin-top:5px; margin-bottom: 5px;">
                         <?php
-//                        $returnLink = urlencode_deep(esc_url(MBE_ESHIP_ID . "_pickup_data_tabs&orderids=".json_encode($item['order_ids'])));
-//                        $buttonLink = esc_url(sprintf("admin.php?backpage=%s&page=' . MBE_ESHIP_ID . '_csv_edit_form&action=new&csv=pickup-addresses&id=%s", $returnLink, null));
-//                        echo '<a class="button" href="'.$buttonLink.'">'.__('Add New Pickup Address', 'mail-boxes-etc').'</a>';
-                        $returnLink = urlencode(MBE_ESHIP_ID . "_pickup_data_tabs&orderids=".json_encode($item['order_ids']));
-                        $hrefUrl = get_admin_url(null, "admin.php?backpage=".$returnLink."&page=" . MBE_ESHIP_ID . "_csv_edit_form&action=new&csv=pickup-addresses&id=");
+                        $returnLink = urlencode(MBE_ESHIP_ID . "_pickup_data_tabs&orderids=".json_encode($item['order_ids'])."&nonce=".wp_create_nonce('mbe_pickup_return_from_address'));
+                        $hrefUrl = get_admin_url(null, "admin.php?backpage=".$returnLink."&page=" . MBE_ESHIP_ID . "_csv_edit_form&action=new&csv=pickup-addresses&id=&nonce=".wp_create_nonce('csv_form_page_handler'));
                         echo wp_kses_post(sprintf( '<a class="button" href="%s">%s</a>',$hrefUrl, __('Add New Pickup Address', 'mail-boxes-etc')));
                         ?>
                     </p>

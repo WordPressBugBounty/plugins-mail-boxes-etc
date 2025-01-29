@@ -1,21 +1,27 @@
 <?php
 
+use MbeExceptions\DbException;
+
 class Mbe_Shipping_Helper_Data
 {
 	private $_mbeMediaDir = 'mbe';
-    private $_csvDir = 'csv';
+	private $_csvDir = 'csv';
 	const MBE_LOG_WS = 'mbe_ws.log';
 	const MBE_LOG_PLUGIN = 'mbe_shipping.log';
 	const XML_PATH_MBE_LOG_FOLDER_NAME =  MBE_ESHIP_ID . '_' . 'log_folder';
 //    const MBE_SHIPPING_PREFIX = "mbe_shipping_";
 	const MBE_CSV_PACKAGES_RESERVED_CODE = 'settings';
 	const MBE_WC_ELINK_SETTINGS_PREFIX = 'woocommerce_wf_mbe_shipping_';
-    const MBE_ELINK_SETTINGS = self::MBE_WC_ELINK_SETTINGS_PREFIX . 'settings';
+	const MBE_ELINK_SETTINGS = self::MBE_WC_ELINK_SETTINGS_PREFIX . 'settings';
 	const MBE_SETTINGS_CSV_SHIPMENTS = MBE_ESHIP_ID . '_' . self::XML_PATH_SHIPMENTS_CSV;
 	const MBE_SETTINGS_CSV_PACKAGE = MBE_ESHIP_ID . '_' . self::XML_PATH_PACKAGES_CSV;
 	const MBE_SETTINGS_CSV_PACKAGE_PRODUCT = MBE_ESHIP_ID . '_' . self::XML_PATH_PACKAGES_PRODUCT_CSV;
-    const SHIPMENT_SOURCE_TRACKING_NUMBER = "woocommerce_mbe_tracking_number";
-    const SHIPMENT_SOURCE_TRACKING_FILENAME = 'woocommerce_mbe_tracking_filename';
+	const SHIPMENT_SOURCE_TRACKING_NUMBER = "woocommerce_mbe_tracking_number";
+	const SHIPMENT_SOURCE_TRACKING_FILENAME = 'woocommerce_mbe_tracking_filename';
+	const SHIPMENT_SOURCE_TRACKING_MBE_STATUS = "woocommerce_mbe_tracking_mbe_status";
+	const SHIPMENT_SOURCE_TRACKING_URL = "woocommerce_mbe_tracking_url";
+	const SHIPMENT_SOURCE_TRACKING_CUSTOM_MAPPING = "woocommerce_mbe_tracking_custom_mapping";
+	const SHIPMENT_SOURCE_TRACKING_NAME = "woocommerce_mbe_tracking_name";
 	const SHIPMENT_SOURCE_RETURN_TRACKING_NUMBER = "woocommerce_mbe_return_tracking_number";
 
 	const MBE_CSV_PACKAGES_TABLE_NAME = MBE_ESHIP_ID . '_' . 'standard_packages';
@@ -108,6 +114,12 @@ class Mbe_Shipping_Helper_Data
     const MBE_INSURANCE_WITHOUT_TAXES = 'insurance_without_taxes';
     const MBE_SHIPPING_WITH_INSURANCE_CODE_SUFFIX = '_INSURANCE';
     const MBE_SHIPPING_WITH_INSURANCE_LABEL_SUFFIX = ' + Insurance';
+	const MBE_SHIPPING_WITH_SAFE_VALUE_CODE_SUFFIX = '_SAFEVALUE';
+	const MBE_SHIPPING_WITH_SAFE_VALUE_LABEL_SUFFIX = ' - SafeValue';
+	const MBE_SHIPPING_WITH_SAFE_VALUE_ART_CODE_SUFFIX = '_SVART';
+	const MBE_SHIPPING_WITH_SAFE_VALUE_ART_LABEL_SUFFIX = ' - SafeValue Art';
+	const MBE_SHIPPING_WITH_SAFE_VALUE_4B_CODE_SUFFIX = '_SV4B';
+	const MBE_SHIPPING_WITH_SAFE_VALUE_4B_LABEL_SUFFIX = ' - SafeValue4Business';
     const MBE_SHIPPING_TRACKING_SEPARATOR = ',';
     const MBE_SHIPPING_TRACKING_SEPARATOR__OLD = '--';
 
@@ -320,23 +332,99 @@ class Mbe_Shipping_Helper_Data
 
     public function convertShippingCodeWithoutInsurance($code)
     {
-        return str_replace(self::MBE_SHIPPING_WITH_INSURANCE_CODE_SUFFIX, "", $code);
+	    $insuranceServicesCodes = [
+		    Mbe_Shipping_Helper_Data::MBE_SHIPPING_WITH_INSURANCE_CODE_SUFFIX,
+		    Mbe_Shipping_Helper_Data::MBE_SHIPPING_WITH_SAFE_VALUE_CODE_SUFFIX,
+		    Mbe_Shipping_Helper_Data::MBE_SHIPPING_WITH_SAFE_VALUE_ART_CODE_SUFFIX,
+		    Mbe_Shipping_Helper_Data::MBE_SHIPPING_WITH_SAFE_VALUE_4B_CODE_SUFFIX
+	    ];
+
+	    foreach ( $insuranceServicesCodes as $services_code ) {
+		    if ( ! empty( $code ) && str_contains( $code, $services_code ) ) {
+			    return str_replace($services_code, "", $code);
+		    }
+	    }
     }
 
+	/**
+	 * Check if the service code is an insurance one and return it, or return false
+	 **/
     public function isShippingWithInsurance($code)
     {
-        $result = false;
-        /*
-        $shippingSuffix = substr($code, -strlen(self::MBE_SHIPPING_WITH_INSURANCE_CODE_SUFFIX));
-        if ($shippingSuffix == self::MBE_SHIPPING_WITH_INSURANCE_CODE_SUFFIX) {
-            $result = true;
-        }
-        */
-        if (!empty($code) && strpos($code, self::MBE_SHIPPING_WITH_INSURANCE_CODE_SUFFIX) !== false) {
-            $result = true;
-        }
-        return $result;
-    }
+	    $insuranceServicesCodes = [
+		    Mbe_Shipping_Helper_Data::MBE_SHIPPING_WITH_INSURANCE_CODE_SUFFIX,
+		    Mbe_Shipping_Helper_Data::MBE_SHIPPING_WITH_SAFE_VALUE_CODE_SUFFIX,
+		    Mbe_Shipping_Helper_Data::MBE_SHIPPING_WITH_SAFE_VALUE_ART_CODE_SUFFIX,
+		    Mbe_Shipping_Helper_Data::MBE_SHIPPING_WITH_SAFE_VALUE_4B_CODE_SUFFIX
+	    ];
+
+	    foreach ( $insuranceServicesCodes as $services_code ) {
+		    if ( ! empty( $code ) && str_contains( $code, $services_code ) ) {
+			    return $services_code;
+		    }
+	    }
+        return false;
+	}
+
+	public function convertShippingCodeWithSafeValue($code)
+	{
+		return $code . self::MBE_SHIPPING_WITH_SAFE_VALUE_CODE_SUFFIX;
+	}
+
+	public function convertShippingLabelWithSafeValue($label)
+	{
+		return $label . self::MBE_SHIPPING_WITH_SAFE_VALUE_LABEL_SUFFIX;
+	}
+
+	public function convertShippingCodeWithSafeValueArt($code)
+	{
+		return $code . self::MBE_SHIPPING_WITH_SAFE_VALUE_ART_CODE_SUFFIX;
+	}
+
+	public function convertShippingLabelWithSafeValueArt($label)
+	{
+		return $label . self::MBE_SHIPPING_WITH_SAFE_VALUE_ART_LABEL_SUFFIX;
+	}
+
+	public function convertShippingCodeWithSafeValue4Business($code)
+	{
+		return $code . self::MBE_SHIPPING_WITH_SAFE_VALUE_4B_CODE_SUFFIX;
+	}
+
+	public function convertShippingLabelWithSafeValue4Business($label)
+	{
+		return $label . self::MBE_SHIPPING_WITH_SAFE_VALUE_4B_LABEL_SUFFIX;
+	}
+
+	/**
+	 * Extract the code for the insurance service selected, if any, from the list of available shipping methods
+	 */
+	public function getSelectedInsuranceCode() {
+		foreach ( $this->getAllowedShipmentServicesArray() as $service ) {
+			$insuranceCode = $this->isShippingWithInsurance( $service );
+			if ($insuranceCode !== false) {
+				return $insuranceCode;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Extract the code for the insurance service selected, if any, from the list of available shipping methods
+	 */
+	public function getSelectedInsuranceLabel() {
+		switch ($this->getSelectedInsuranceCode()) {
+			case self::MBE_SHIPPING_WITH_SAFE_VALUE_CODE_SUFFIX:
+				return self::MBE_SHIPPING_WITH_SAFE_VALUE_LABEL_SUFFIX;
+			case self::MBE_SHIPPING_WITH_SAFE_VALUE_ART_CODE_SUFFIX:
+				return self::MBE_SHIPPING_WITH_SAFE_VALUE_ART_LABEL_SUFFIX;
+			case self::MBE_SHIPPING_WITH_SAFE_VALUE_4B_CODE_SUFFIX:
+				return self::MBE_SHIPPING_WITH_SAFE_VALUE_4B_LABEL_SUFFIX;
+			case self::MBE_SHIPPING_WITH_INSURANCE_CODE_SUFFIX:
+				return self::MBE_SHIPPING_WITH_INSURANCE_LABEL_SUFFIX;
+		}
+		return null;
+	}
 
 
     public function getAllowedShipmentServicesArray()
@@ -875,6 +963,43 @@ class Mbe_Shipping_Helper_Data
         return $result;
     }
 
+	/**
+	 * @param $trackingMolStatus
+	 *
+	 * @return string
+	 */
+	public function getTrackingStatusColor( $trackingMolStatus ): string {
+		switch ( strtolower( strtoupper( $trackingMolStatus ) ) ) {
+			case 'delivered':
+				$color = '#28a745';
+				break;
+			case 'delivered to sender':
+				$color = '#006400';
+				break;
+			case 'exception':
+				$color = '#dc3545';
+				break;
+			case 'in transit':
+				$color = '#007bff';
+				break;
+			case 'in transit to sender':
+				$color = '#fd7e14';
+				break;
+			case 'not delivered':
+				$color = '#6c757d';
+				break;
+			case 'delivered*':
+				$color = '#90ee90';
+				break;
+			default:
+//				$trackingMolStatus = 'No update';
+				$color = '#929292';
+				break;
+		}
+
+		return $color;
+	}
+
     public function isShippingOpen($shipmentId)
     {
         $result = true;
@@ -890,7 +1015,11 @@ class Mbe_Shipping_Helper_Data
         $result = array();
 	    if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
 		    $order = wc_get_order($orderId);
-		    $files = $order->get_meta(self::SHIPMENT_SOURCE_TRACKING_FILENAME);
+			if($order) {
+				$files = $order->get_meta(self::SHIPMENT_SOURCE_TRACKING_FILENAME);
+			} else {
+				$files = '';
+			}
 	    } else {
 		    $files = get_post_meta($orderId, self::SHIPMENT_SOURCE_TRACKING_FILENAME, true);
 	    }
@@ -904,6 +1033,14 @@ class Mbe_Shipping_Helper_Data
         }
         return $result;
     }
+
+	public function setOrderMbeTrackingStatus( $orderId, $value ) {
+		return $this->updateOrderItemShippingMeta($orderId, $value, self::SHIPMENT_SOURCE_TRACKING_MBE_STATUS);
+	}
+
+	public function getOrderMbeTrackingStatus( $orderId ) {
+		return $this->getOrderItemShippingMeta($orderId, self::SHIPMENT_SOURCE_TRACKING_MBE_STATUS);
+	}
 
     public function getTrackings($shipmentId)
     {
@@ -945,6 +1082,30 @@ class Mbe_Shipping_Helper_Data
     public function getTrackingSetting() {
 	    return $this->getOption(self::XML_PATH_ADD_TRACK_ID);
     }
+
+	public function getTrackingFullData( $orderId ) {
+		$tracking = $this->getOrderMbeTrackingStatus($orderId);
+		if(!empty($tracking)) {
+			return unserialize($tracking);
+		}
+		return null;
+	}
+
+	public function getTrackingMBEstatus( $orderId ) {
+		$tracking = $this->getOrderMbeTrackingStatus($orderId);
+		if(!empty($tracking)) {
+			return unserialize($tracking)['MBEstatus'];
+		}
+		return null;
+	}
+
+	public function getTrackingCourierStatusDescription( $orderId ) {
+		$tracking = $this->getOrderMbeTrackingStatus($orderId);
+		if(!empty($tracking)) {
+			return unserialize($tracking)['courierStatusDescription'];
+		}
+		return null;
+	}
 
     public function isTrackingOpen($trackingNumber)
     {
@@ -1033,9 +1194,9 @@ class Mbe_Shipping_Helper_Data
         $shippingMethod = $this->getShippingMethod($order)??'';
 	    // Handle already shipped orders added with custom mapping, if custom mapping is currently disabled.
 	    if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
-		    $customMappingOrder = !empty($this->getTrackings($order->get_id())) && ($order->get_meta(woocommerce_mbe_tracking_admin::SHIPMENT_SOURCE_TRACKING_CUSTOM_MAPPING) === 'yes');
+		    $customMappingOrder = !empty($this->getTrackings($order->get_id())) && ( $order->get_meta( self::SHIPMENT_SOURCE_TRACKING_CUSTOM_MAPPING ) === 'yes');
 	    } else {
-		    $customMappingOrder = !empty($this->getTrackings($order->get_id())) && (get_post_meta( $order->get_id(), woocommerce_mbe_tracking_admin::SHIPMENT_SOURCE_TRACKING_CUSTOM_MAPPING,true) === 'yes');
+		    $customMappingOrder = !empty($this->getTrackings($order->get_id())) && ( get_post_meta( $order->get_id(), self::SHIPMENT_SOURCE_TRACKING_CUSTOM_MAPPING,true) === 'yes');
 	    }
 	    // Check if the method is an MBE one (old or new) or if is a custom mapped default one
 	    if ( !empty($shippingMethod) && (
@@ -1275,6 +1436,8 @@ class Mbe_Shipping_Helper_Data
         return floatval($this->getOption(self::XML_PATH_SHIPMENTS_CSV_INSURANCE_MIN));
     }
 
+	//TODO : get insurance min per modalità servizi MBE (valori diversi in base al servizio) simile a getShippingMethodCustomLabel
+
     public function getShipmentsCsvInsurancePercentage()
     {
         return floatval($this->getOption(self::XML_PATH_SHIPMENTS_CSV_INSURANCE_PERCENTAGE));
@@ -1284,6 +1447,18 @@ class Mbe_Shipping_Helper_Data
     {
         return $this->getOption(self::XML_PATH_SHIPMENTS_INSURANCE_MODE);
     }
+
+	public function getCanSpecifyMBESafeValue()
+	{
+		$ws = new Mbe_Shipping_Model_Ws();
+		return $ws->getCustomerPermission('canSpecifyMBESafeValue');
+	}
+
+	public function getCanSpecifyMBESafeValue4Business()
+	{
+		$ws = new Mbe_Shipping_Model_Ws();
+		return $ws->getCustomerPermission('canSpecifyMBESafeValue4Business');
+	}
 
     public function getShippingMethodCustomLabel($methodCode)
     {
@@ -1629,7 +1804,7 @@ class Mbe_Shipping_Helper_Data
 		// TODO filter out status wc-checkout-draft from main table
 		if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
 			global $wpdb;
-			return "SELECT DISTINCT order_id FROM {$wpdb->prefix}wc_orders_meta WHERE meta_key = '".woocommerce_mbe_tracking_admin::SHIPMENT_SOURCE_TRACKING_CUSTOM_MAPPING."' AND meta_value = 'yes'";
+			return "SELECT DISTINCT order_id FROM {$wpdb->prefix}wc_orders_meta WHERE meta_key = '" . self::SHIPMENT_SOURCE_TRACKING_CUSTOM_MAPPING . "' AND meta_value = 'yes'";
 		} else {
 			// get orders with custom mapped shipping method
 			$customMappingFilter = array(
@@ -1637,7 +1812,7 @@ class Mbe_Shipping_Helper_Data
 				'post_status' => 'wc-%',
 				'nopaging' => 'true',
 				'fields' => 'ids',
-				'meta_key' => woocommerce_mbe_tracking_admin::SHIPMENT_SOURCE_TRACKING_CUSTOM_MAPPING,
+				'meta_key' => self::SHIPMENT_SOURCE_TRACKING_CUSTOM_MAPPING,
 				'meta_value' => 'yes',
 			);
 
@@ -1745,26 +1920,44 @@ class Mbe_Shipping_Helper_Data
 		return $this->getOrderDeliveryPointShipment($post_id) == 'Yes';
 	}
 
-	public function logErrorAndSetWpAdminMessage($errMsg, $logger = null)
+	public function logErrorAndSetWpAdminMessage($errMsg, $logger = null, $forceLog = false)
 	{
-		if (!empty($logger)) $logger->log( $errMsg );
+		if (!empty($logger)) $logger->log( $errMsg, $forceLog );
 		$this->setWpAdminMessages([
 			'message' => urlencode( $errMsg ),
 			'status'  => urlencode( 'error' )
 		]);
 	}
 
-	public function logErrorAndSetWCAdminMessage($errMsg, $logger = null)
+	public function logErrorAndSetWCAdminMessage($errMsg,Mbe_Shipping_Helper_Logger $logger = null, $forceLog = false)
 	{
-		if (!empty($logger)) $logger->log( $errMsg );
+		if (!empty($logger)) $logger->log( $errMsg, $forceLog );
 		WC_Admin_Settings::add_error(MBE_ESHIP_PLUGIN_NAME . ' - ' . $errMsg);
 	}
 
 	public function mbe_download_file( $filePath, $fileName = '', $fileType = 'text/csv', $deleteAfter = false ) {
+		$helper = new Mbe_Shipping_Helper_Data();
+		$logger = new Mbe_Shipping_Helper_Logger();
+
+		$allowedPath = [
+			$helper->getMbeLogDir(),
+			$helper->mbeUploadDir()
+		];
+
+		$m=[];
+		// Check if the file to download has an allowed path
+		if(empty(preg_match('*^'.implode("|^",array_map("preg_quote",$allowedPath)).'*i',$filePath,$m))) {
+			$message = __( 'MBE Download file - path not allowed: '. $filePath );
+			error_log( $message );
+			$this->logErrorAndSetWpAdminMessage($message, $logger, true);
+			exit;
+		}
+
 		$fileNamefromPath = [];
 		if ( $fileName === '' && preg_match( '/(?P<filename>[\w\-. ]+)$/', $filePath, $fileNamefromPath ) ) {
 			$fileName = $fileNamefromPath['filename'] ?? 'mbe_download_file.csv';
 		}
+
 		try {
 			if ( is_file( $filePath ) ) {
 				header( 'Content-Description: File Transfer' );
@@ -1837,6 +2030,64 @@ class Mbe_Shipping_Helper_Data
 		}
 		if (file_exists(MBE_ESHIP_PLUGIN_OLD_LOG_DIR)) {
 			rmdir(MBE_ESHIP_PLUGIN_OLD_LOG_DIR);
+		}
+	}
+
+	public function hasApiKey( $user_id ) {
+		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+		$keys = $wpdb->get_results( $wpdb->prepare( "SELECT user_id FROM %i WHERE user_id = %s", $wpdb->prefix . 'woocommerce_api_keys', $user_id ),
+			ARRAY_A
+		);
+
+		return count( $keys ) > 0;
+	}
+
+	/**
+	 * @param $user_id
+	 *
+	 * @return array
+	 * @throws DbException
+	 */
+	function generateMbeRestApiKey( $user_id ) {
+		$description     = strtoupper( str_replace( '_', ' ', MBE_ESHIP_ID ) ) . ' API Key';
+		$permissions     = 'write';
+		$consumer_key    = 'ck_' . wc_rand_hash();
+		$consumer_secret = 'cs_' . wc_rand_hash();
+
+		// Insert the new key into the database
+		$data = array(
+			'user_id'         => $user_id,
+			'description'     => $description,
+			'permissions'     => $permissions,
+			'consumer_key'    => wc_api_hash( $consumer_key ),
+			'consumer_secret' => $consumer_secret,
+			'truncated_key'   => substr( $consumer_key, - 7 ),
+			'last_access'     => null,
+		);
+		try {
+			global $wpdb;
+			$table_name = $wpdb->prefix . 'woocommerce_api_keys';
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->replace( $table_name, $data ); // Insert or replace new apikeys
+		} catch ( Exception $e ) {
+			throw new DbException( esc_html($e->getMessage()) );
+		}
+		return array( 'key' => $consumer_key, 'secret' => $consumer_secret );
+	}
+
+	/**
+	 * @throws DbException
+	 */
+	function removeMbeRestApiKey( $user_id ) {
+		try {
+			global $wpdb;
+			$table_name = $wpdb->prefix . 'woocommerce_api_keys';
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->delete( $table_name, array( 'user_id' => $user_id ) );
+			return true;
+		} catch ( Exception $e ) {
+			throw new DbException( esc_html($e->getMessage()) );
 		}
 	}
 

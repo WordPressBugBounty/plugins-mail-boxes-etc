@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2017-11-13 13:46+0000\n"
-"PO-Revision-Date: 2024-07-17 16:07+0200\n"
+"PO-Revision-Date: 2024-12-20 17:19+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.4.4\n"
+"X-Generator: Poedit 3.5\n"
 
 #: mail-boxes-etc.php:163
 msgid "Settings"
@@ -1672,3 +1672,63 @@ msgstr ""
 
 msgid "At the moment this feature is not active, you will receive detailed information as soon as it is released."
 msgstr "Actuellement, cette fonctionnalité n'est pas active, vous recevrez des informations détaillées dès qu'elle sera disponible."
+
+msgid "Minimum threshold for the service"
+msgstr "Seuil minimal du service"
+
+msgid "Delivered"
+msgstr "Livré"
+
+msgid "Your package has successfully reached its destination and the shipment has been handed over to the recipient."
+msgstr "Votre colis est bien arrivé à destination et l'envoi a été remis au destinataire."
+
+msgid "Delivered to sender"
+msgstr "Remis à l'expéditeur"
+
+msgid "Exception"
+msgstr "Exception"
+
+msgid "An unexpected event or obstacle has occurred during the delivery process. This could be due to customs issues, incorrect address, recipient absence, or other circumstances requiring attention. Please contact..."
+msgstr "Un événement inattendu ou un obstacle s'est produit au cours du processus de livraison. Il peut s'agir de problèmes douaniers, d'une adresse incorrecte, de l'absence du destinataire ou d'autres circonstances nécessitant une attention particulière. Veuillez contacter votre Centre MBE."
+
+msgid "In Transit"
+msgstr "En transit"
+
+msgid "Your shipment is on the move. The shipment is progressing through the courier's logistics network and is on track for delivery."
+msgstr "Votre envoi est en cours d'acheminement. L'envoi progresse dans le réseau logistique du service de messagerie et est en bonne voie pour être livré."
+
+msgid "In transit to the sender"
+msgstr "En transit vers l'expéditeur"
+
+msgid "The package is making its way back to the original sender. Due to various factors, delivery couldn't be completed, and the item is now being returned. Please contact."
+msgstr "Le colis est en train d'être renvoyé à l'expéditeur initial. En raison de divers facteurs, la livraison n'a pas pu être effectuée et le colis est maintenant retourné. Veuillez contacter votre Centre MBE."
+
+msgid "Not delivered"
+msgstr "Non livré"
+
+msgid "The delivery hasn't been completed as planned. Your package might be awaiting pickup, temporarily held, or being processed for a new delivery attempt. Please contact."
+msgstr "La livraison n'a pas été effectuée comme prévu. Il se peut que votre colis soit en attente d'enlèvement, qu'il soit temporairement retenu ou qu'il soit en cours de traitement en vue d'une nouvelle tentative de livraison. Veuillez contacter votre Centre MBE."
+
+msgid "Delivered*"
+msgstr "Livré*"
+
+msgid "A new free delivery has been requested following an unsuccessful initial delivery attempt, presumably due to the recipient's absence."
+msgstr "Une nouvelle livraison gratuite a été demandée à la suite d'une première tentative de livraison infructueuse, vraisemblablement en raison de l'absence du destinataire."
+
+msgid "Shipping Status"
+msgstr "État d'expédition"
+
+msgid "Not available"
+msgstr "Non disponible"
+
+msgid "Note"
+msgstr "Remarque"
+
+msgid "You cannot select more than one insurance service at a time."
+msgstr "Vous ne pouvez pas sélectionner plus d'un service d'assurance à la fois."
+
+msgid "Enter the minimum threshold value for the shipping method."
+msgstr "Entrez le montant minimum pour la méthode d'expédition"
+
+msgid "Only one between MBE SafeValue, MBE SafeValue4Business and Courier Insurance can be activated at the same time"
+msgstr "Il n'est possible d'activer qu'une seule assurance à la fois : MBE SafeValue, MBE SafeValue4Business ou assurance transporteur."

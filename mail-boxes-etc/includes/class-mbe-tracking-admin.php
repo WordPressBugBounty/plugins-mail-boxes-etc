@@ -4,13 +4,8 @@ class woocommerce_mbe_tracking_admin
 {
     const TRACKING_TITLE_DISPLAY = "MBE Shipment Tracking";
 
-    const SHIPMENT_SOURCE_TRACKING_NUMBER = "woocommerce_mbe_tracking_number";
-    const SHIPMENT_SOURCE_TRACKING_NAME = "woocommerce_mbe_tracking_name";
-    const SHIPMENT_SOURCE_TRACKING_SERVICE = "woocommerce_mbe_tracking_service";
-    const SHIPMENT_SOURCE_TRACKING_ZONE = "woocommerce_mbe_tracking_zone";
-    const SHIPMENT_SOURCE_TRACKING_URL = "woocommerce_mbe_tracking_url";
-    const SHIPMENT_SOURCE_TRACKING_FILENAME = 'woocommerce_mbe_tracking_filename';
-	const SHIPMENT_SOURCE_TRACKING_CUSTOM_MAPPING = "woocommerce_mbe_tracking_custom_mapping";
+	const SHIPMENT_SOURCE_TRACKING_SERVICE = "woocommerce_mbe_tracking_service";
+	const SHIPMENT_SOURCE_TRACKING_ZONE = "woocommerce_mbe_tracking_zone";
 	const TRACKING_METABOX_KEY = "Tracking_Mbe_box";
 
     protected $helper;
@@ -75,11 +70,11 @@ class woocommerce_mbe_tracking_admin
 			    $this->tracking_string = $this->helper->getTrackingsString($order_id);
 			    $this->tracking_files = $this->helper->getFileNames($order_id);
 			    if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
-				    $this->tracking_name = $order->get_meta(self::SHIPMENT_SOURCE_TRACKING_NAME);
-				    $this->tracking_url = $order->get_meta(self::SHIPMENT_SOURCE_TRACKING_URL);
+				    $this->tracking_name = $order->get_meta( Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NAME );
+				    $this->tracking_url = $order->get_meta( Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_URL );
 			    } else {
-				    $this->tracking_name = get_post_meta($order_id, self::SHIPMENT_SOURCE_TRACKING_NAME, true);
-				    $this->tracking_url = get_post_meta($order_id, self::SHIPMENT_SOURCE_TRACKING_URL, true);
+				    $this->tracking_name = get_post_meta($order_id, Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NAME, true);
+				    $this->tracking_url = get_post_meta($order_id, Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_URL, true);
 			    }
 			    if ( isset( $tracking_data[0]) && !$this->helper->isTrackingOpen( $tracking_data[0])) {
 				    $this->closure_file = $this->helper->mbeUploadUrl().'/MBE_' . $tracking_data[0] . "_closed.pdf";

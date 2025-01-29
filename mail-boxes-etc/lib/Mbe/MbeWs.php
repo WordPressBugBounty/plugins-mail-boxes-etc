@@ -109,7 +109,7 @@ class MbeWs {
     }
 
     public function estimateShipping(
-		$ws, $username, $password, $shipmentType, $system, $country, $region, $city, $postCode, $items, $products, $insurance = false, $insuranceValue = 0.00
+		$ws, $username, $password, $shipmentType, $system, $country, $region, $city, $postCode, $items, $products, $insurance = false, $insuranceValue = 0.00, $insuranceCode = null
     )
     {
 		$messageTitle = 'ESTIMATE SHIPPING';
@@ -145,11 +145,32 @@ class MbeWs {
 //	        $itemsa->Item = $items[0];
 //	        $args->RequestContainer->ShippingParameters->Items = $itemsa;
 
-            $args->RequestContainer->ShippingParameters->Insurance = $insurance;
+	        $this->insuranceParameters( $insurance, $insuranceCode, $insuranceValue, $args->RequestContainer->ShippingParameters );
 
-			if ($insurance) {
-                $args->RequestContainer->ShippingParameters->InsuranceValue = $insuranceValue;
-            }
+//	        if ($insurance) {
+//				switch ($insuranceCode) {
+//					case Mbe_Shipping_Helper_Data::MBE_SHIPPING_WITH_INSURANCE_CODE_SUFFIX:
+//						$args->RequestContainer->ShippingParameters->Insurance = $insurance;
+//						$args->RequestContainer->ShippingParameters->InsuranceValue = $insuranceValue;
+//						break;
+//					case Mbe_Shipping_Helper_Data::MBE_SHIPPING_WITH_SAFE_VALUE_CODE_SUFFIX:
+//						$args->RequestContainer->ShippingParameters->MBESafeValue = $insurance;
+//						$args->RequestContainer->ShippingParameters->MBESafeValueValue = $insuranceValue;
+//						break;
+//					case Mbe_Shipping_Helper_Data::MBE_SHIPPING_WITH_SAFE_VALUE_ART_CODE_SUFFIX:
+//						$args->RequestContainer->ShippingParameters->MBESafeValue = $insurance;
+//						$args->RequestContainer->ShippingParameters->MBESafeValueValue = $insuranceValue;
+//						$args->RequestContainer->ShippingParameters->GoodType = 'ART';
+//						break;
+//					case Mbe_Shipping_Helper_Data::MBE_SHIPPING_WITH_SAFE_VALUE_4B_CODE_SUFFIX:
+//						$args->RequestContainer->ShippingParameters->MBESafeValue4Business = $insurance;
+//						$args->RequestContainer->ShippingParameters->MBESafeValue4BusinessValue = $insuranceValue;
+//						break;
+//					default:
+//						//
+//						break;
+//				}
+//            }
 
 			if($this->helper->getPickupRequestEnabled()
 			   && $this->helper->getShipmentsCreationMode() === Mbe_Shipping_Helper_Data::MBE_CREATION_MODE_AUTOMATICALLY
@@ -220,7 +241,7 @@ class MbeWs {
 		$notes, $firstName, $lastName, $companyName, $address, $phone, $city,
 		$state, $country, $postCode, $email, $items, $products, $shipperType = 'MBE',
 		$goodsValue = 0.0, $reference = "", $isCod = false, $codValue = 0.0,
-		$insurance = false, $insuranceValue = 0.0
+		$insurance = false, $insuranceValue = 0.0, $insuranceCode = null
     )
     {
 	    $messageTitle  = 'CREATE SHIPPING';
@@ -235,7 +256,7 @@ class MbeWs {
             $internalReferenceID = $this->generateRandomString();
 
             //WS ARGS
-	        $args = $this->setShipmentContainer( $system, $username, $password, $internalReferenceID, $firstName, $lastName, $companyName, $address, $phone, $postCode, $city, $state, $country, $email, $subZone, $shipperType, $isCod, $codValue, $insurance, $insuranceValue, $service, $shipmentType, $reference, $items, $products, $goodsValue, $notes );
+	        $args = $this->setShipmentContainer( $system, $username, $password, $internalReferenceID, $firstName, $lastName, $companyName, $address, $phone, $postCode, $city, $state, $country, $email, $subZone, $shipperType, $isCod, $codValue, $insurance, $insuranceValue, $service, $shipmentType, $reference, $items, $products, $goodsValue, $notes, $insuranceCode );
 
 			$logArgs = json_decode(json_encode($args), true);
 	        $logArgs['RequestContainer']['Credentials'] = null;
@@ -343,7 +364,7 @@ class MbeWs {
 			$args->RequestContainer->InternalReferenceID = $internalReferenceID;
 
 			$args->RequestContainer->MbeTracking = $tracking;
-			$args->RequestContainer->CustomerAsReceiver = true;
+//			$args->RequestContainer->CustomerAsReceiver = true;
 			$args->RequestContainer->ShipmentOrigin = MBE_ESHIP_PLUGIN_NAME . " WooCommerce " . MBE_ESHIP_PLUGIN_VERSION;
 			$args->RequestContainer->Referring = '';
 
@@ -443,7 +464,8 @@ class MbeWs {
 		$goodsValue = 0.0, $reference = "", $isCod = false, $codValue = 0.0,
 		$insurance = false, $insuranceValue = 0.0,
 		$senderInfo = [],
-		$pickupData = []
+		$pickupData = [],
+		$insuranceCode = null
 	) {
 		$messageTitle = 'CREATE PICKUP SHIPPING';
 //		$this->log($messageTitle);
@@ -456,7 +478,7 @@ class MbeWs {
 		try {
 			$soapClient          = new MbeSoapClient($ws, array('encoding' => 'utf-8', 'trace' => 1), $username, $password);
 			$internalReferenceID = $this->generateRandomString();
-			$args                = $this->setShipmentContainer( $system, $username, $password, $internalReferenceID, $firstName, $lastName, $companyName, $address, $phone, $postCode, $city, $state, $country, $email, $subZone, $shipperType, $isCod, $codValue, $insurance, $insuranceValue, $service, $shipmentType, $reference, $items, $products, $goodsValue, $notes );
+			$args                = $this->setShipmentContainer( $system, $username, $password, $internalReferenceID, $firstName, $lastName, $companyName, $address, $phone, $postCode, $city, $state, $country, $email, $subZone, $shipperType, $isCod, $codValue, $insurance, $insuranceValue, $service, $shipmentType, $reference, $items, $products, $goodsValue, $notes, $insuranceCode );
 
 			if($this->helper->getPickupRequestEnabled() ) {
 				switch ( $this->helper->getPickupRequestMode() ) {
@@ -845,6 +867,46 @@ class MbeWs {
 	}
 
 	/**
+	 * @throws SoapFault
+	 * @throws \MbeExceptions\ApiRequestException
+	 */
+	public function sendRestApiCredentials($ws, $username, $password, $system, $apiKey, $trackingEndpoint) {
+		$messageTitle = 'SEND REST API CREDENTIALS AND ENDPOINT';
+		$this->log($messageTitle);
+		$internalReferenceID = $this->generateRandomString();
+
+		$result = false;
+
+		try {
+			$soapClient = new MbeSoapClient( $ws, array(
+				'encoding' => 'utf-8',
+				'trace'    => 1
+			), $username, $password, false );
+
+			$args                                        = $this->setBaseClass( $system, $username, $password );
+			$args->RequestContainer->InternalReferenceID = $internalReferenceID;
+
+			$args->RequestContainer->TrackingEndpoint = $trackingEndpoint;
+			$args->RequestContainer->Apikey           = $apiKey;
+			$args->RequestContainer->Source           = MBE_ESHIP_PLUGIN_NAME . " WooCommerce " . MBE_ESHIP_PLUGIN_VERSION;
+
+			$result = $this->sendRequest( $args, 'PushServiceConfigRequest', $messageTitle, $soapClient );
+
+		} catch (\MbeExceptions\ApiRequestException $e) {
+			$this->log( $messageTitle . ' API EXCEPTION' );
+			$this->log( $e->getMessage() );
+			throw $e;
+		} catch (Exception $e) {
+			$this->log($messageTitle . ' EXCEPTION');
+			$this->log($e->getMessage());
+			throw $e;
+		}
+
+		$this->logVar($result, $messageTitle . ' RESULT');
+		return $result;
+	}
+
+	/**
 	 * Generates a proForma object and remove Price from the product object, as it's not needed for the request
 	 *
 	 * @param $products
@@ -1057,6 +1119,10 @@ class MbeWs {
 		$logArgs = json_decode(json_encode($args), true);
 		$logArgs['RequestContainer']['Credentials'] = null;
 
+		if(isset($logArgs['RequestContainer']['Apikey'])) {
+			$logArgs['RequestContainer']['Apikey'] = null;
+		}
+
 		$this->logVar( $logArgs, $messageTitle . ' ARGS' );
 
 		$soapResult = $soapClient->__soapCall( $functionName, array( $args ) );
@@ -1065,13 +1131,13 @@ class MbeWs {
 
 		$this->logVar( $lastResponse, $messageTitle . ' RESPONSE' );
 
-		if ( isset( $soapResult->RequestContainer->Errors ) ) {
-			$this->logVar( $soapResult->RequestContainer->Errors, $messageTitle . ' ERRORS' );
-			throw new \MbeExceptions\ApiRequestException(esc_html($soapResult->RequestContainer->Errors->Error->Description));
-		}
+		$this->checkResponseErrors($soapResult, $lastResponse);
 
-		if ( isset( $soapResult->RequestContainer->Status ) && $soapResult->RequestContainer->Status == "OK" ) {
+		if ( $this->isResponseValid( $soapResult, $args->RequestContainer->InternalReferenceID)) {
 			$result = $soapResult->RequestContainer;
+		} else {
+			$message = ($args->RequestContainer->InternalReferenceID !== $soapResult->RequestContainer->InternalReferenceID ? 'InternalReferenceID doesn\'t match':'');
+			throw new \MbeExceptions\ApiRequestEmptyResponse(esc_html($message));
 		}
 
 		return $result;
@@ -1089,7 +1155,7 @@ class MbeWs {
 		return $args;
 	}
 
-	private function setShipmentContainer( $system, $username, $password, string $internalReferenceID, $firstName, $lastName, $companyName, $address, $phone, $postCode, $city, $state, $country, $email, $subZone, $shipperType, $isCod, $codValue, $insurance, $insuranceValue, $service, $shipmentType, $reference, $items, $products, $goodsValue, $notes ): stdClass {
+	private function setShipmentContainer( $system, $username, $password, string $internalReferenceID, $firstName, $lastName, $companyName, $address, $phone, $postCode, $city, $state, $country, $email, $subZone, $shipperType, $isCod, $codValue, $insurance, $insuranceValue, $service, $shipmentType, $reference, $items, $products, $goodsValue, $notes, $insuranceCode = null ): stdClass {
 //WS ARGS
 		$args = $this->setBaseClass( $system, $username, $password );
 
@@ -1130,10 +1196,7 @@ class MbeWs {
 			$shipmentNode->MethodPayment = "CASH";//CASH - CHECK
 		}
 
-		$shipmentNode->Insurance = $insurance;
-		if ( $insurance ) {
-			$shipmentNode->InsuranceValue = $insuranceValue;
-		}
+		$this->insuranceParameters( $insurance, $insuranceCode, $insuranceValue, $shipmentNode );
 
 		$shipmentNode->Service = $service;//SEE /SSE
 
@@ -1233,6 +1296,46 @@ class MbeWs {
 	protected function getDeliveryPointMolServiceByNetworkCode( $networkCode, $orderId ) {
 		$combined = array_combine( $this->helper->getOrderDeliveryPointServices($orderId)['courier'],  $this->helper->getOrderDeliveryPointServices($orderId)['mol']);
 		return $combined[$networkCode]??null;
+	}
+
+	/**
+	 * @param $insurance
+	 * @param $insuranceCode
+	 * @param stdClass $node
+	 * @param $insuranceValue
+	 *
+	 * @return void
+	 */
+	private function insuranceParameters( $insurance, $insuranceCode, $insuranceValue, stdClass $node ): void {
+		$mbeSafeValue          = false;
+		$mbeSafeValue4Business = false;
+		$mbeInsurance          = false;
+
+		switch ( $insuranceCode ) {
+			case Mbe_Shipping_Helper_Data::MBE_SHIPPING_WITH_INSURANCE_CODE_SUFFIX:
+				$mbeInsurance = true;
+				break;
+			case Mbe_Shipping_Helper_Data::MBE_SHIPPING_WITH_SAFE_VALUE_CODE_SUFFIX:
+				$mbeSafeValue = true;
+				break;
+			case Mbe_Shipping_Helper_Data::MBE_SHIPPING_WITH_SAFE_VALUE_ART_CODE_SUFFIX:
+				$mbeSafeValue   = true;
+				$node->GoodType = 'ART';
+				break;
+			case Mbe_Shipping_Helper_Data::MBE_SHIPPING_WITH_SAFE_VALUE_4B_CODE_SUFFIX:
+				$mbeSafeValue4Business = true;
+				break;
+			default:
+				//
+				break;
+		}
+
+		$node->Insurance                  = $mbeInsurance;
+		$node->InsuranceValue             = $mbeInsurance ? $insuranceValue : '';
+		$node->MBESafeValue               = $mbeSafeValue;
+		$node->MBESafeValueValue          = $mbeSafeValue ? $insuranceValue : '';;
+		$node->MBESafeValue4Business      = $mbeSafeValue4Business;
+		$node->MBESafeValue4BusinessValue = $mbeSafeValue4Business ? $insuranceValue : '';
 	}
 
 }

@@ -35,7 +35,7 @@ class Mbe_Settings extends WC_Settings_Page {
 		$this->csv_package_to_table         = new Mbe_Shipping_CsvPackageToTable();
 		$this->csv_package_product_to_table = new Mbe_Shipping_CsvPackageProductToTable();
 		$this->customer                     = $this->ws->getCustomer();
-		$this->selectedServices             = $this->helper->getAllowedShipmentServicesArray();
+//		$this->selectedServices             = $this->helper->getAllowedShipmentServicesArray();
 		$this->availableShipping            = $this->ws->getAllowedShipmentServices( $this->customer );
 
         $this->mbeAvailableCountries = [
@@ -275,7 +275,7 @@ class Mbe_Settings extends WC_Settings_Page {
 			    'caption'    => __( 'Go to the pickup addresses list', 'mail-boxes-etc' ),
 			    'class'      => 'button-primary',
 			    'confirm'    => false,
-			    'onclick' => get_admin_url() . 'admin.php?page=woocommerce_mbe_csv_tabs&csv=pickup-addresses',
+			    'onclick' => get_admin_url() . 'admin.php?page=woocommerce_mbe_csv_tabs&csv=pickup-addresses&nonce='.wp_create_nonce('woocommerce_mbe_csv_tabs'),
 //			    'parameters' => '{"' . $this->id . '_' . Mbe_Shipping_Helper_Data::XML_PATH_MBE_USERNAME . '":"","' . $this->id . '_' . Mbe_Shipping_Helper_Data::XML_PATH_MBE_PASSWORD . '":"","' . $this->id . '_' . 'country":""}',
 			    'blank'      => false,
 			    'lock'       => false,
@@ -537,7 +537,7 @@ class Mbe_Settings extends WC_Settings_Page {
 					]
 				];
                 // Custom label for selected services
-				$configFields = array_merge($configFields, $this->getCustomLabelSetting( $this->selectedServices ));
+				$configFields = array_merge($configFields, $this->getCustomLabelSetting( $this->helper->getAllowedShipmentServicesArray() ));
 				break;
 			case Mbe_Shipping_Helper_Data::MBE_COURIER_MODE_MAPPING:
 				$defaultMethods = WC()->shipping()->get_shipping_methods();
@@ -557,7 +557,7 @@ class Mbe_Settings extends WC_Settings_Page {
 //				$this->selectedServices = array_diff( $this->selectedServices, MBE_ESTIMATE_DELIVERY_POINT_SERVICES );
 
 				// Remove Delivery point methods as it doesn't make any sense as a mapping
-				foreach ( array_diff( $this->selectedServices, MBE_ESTIMATE_DELIVERY_POINT_SERVICES ) as $key => $value ) {
+				foreach ( array_diff( $this->helper->getAllowedShipmentServicesArray(), MBE_ESTIMATE_DELIVERY_POINT_SERVICES ) as $key => $value ) {
 					$index = array_search( $value, array_column( $this->availableShipping, 'value' ) );
 					if ( isset( $this->availableShipping[ $index ]['label'] ) ) {
 						$selectedOptions[ $value ] = __( $this->availableShipping[ $index ]['label'], 'mail-boxes-etc' );
@@ -580,7 +580,13 @@ class Mbe_Settings extends WC_Settings_Page {
 			case Mbe_Shipping_Helper_Data::MBE_COURIER_MODE_SERVICES:
 				$configDescr = __( "Introductory description of MBE shipments: \n - MBE Standard: is a service that offers you the possibility to ship in Italy and throughout Europe and is the ideal solution for individuals and companies who want to guarantee their customers reliability and punctuality.\n - MBE Express: is a service that guarantees the delivery of your shipments, in Italy, on average in two working days (within 48 hours of collection)\n - MBE Delivery Point: it is a service that allows you to send objects, packages, documents and much more, in a convenient and fast way from an MBE Center of your choice, to one of the many authorized and authorized collection points, both in Italy than abroad.", 'mail-boxes-etc' );
 				// Custom label for selected services
-				$configFields = $this->getCustomLabelSetting( $this->selectedServices );
+				$configFields = $this->getCustomLabelSetting( $this->helper->getAllowedShipmentServicesArray() );
+                // Threshold for insurance // TODO : dynamic fields for services
+				$configFields [] = [
+					'id'    => $this->id . '_' . 'mbe_shipments_csv_insurance_min',
+					'title' => __( 'Minimum threshold for the services '. $this->helper->getSelectedInsuranceLabel() , 'mail-boxes-etc' ),
+					'type'  => 'text',
+				];
 				break;
 		}
 		$configSection = [
@@ -779,7 +785,7 @@ class Mbe_Settings extends WC_Settings_Page {
 						'caption' => __( 'Edit Packages list', 'mail-boxes-etc' ),
 						'class'   => 'button-secondary',
 						'confirm' => false,
-						'onclick' => get_admin_url() . 'admin.php?page=woocommerce_mbe_csv_tabs&csv=packages',
+						'onclick' => get_admin_url() . 'admin.php?page=woocommerce_mbe_csv_tabs&csv=packages&nonce='.wp_create_nonce('woocommerce_mbe_csv_tabs'),
 						'blank'   => false,
 					],
 					[
@@ -789,7 +795,7 @@ class Mbe_Settings extends WC_Settings_Page {
 						'caption' => __( 'Edit Packages for Products list', 'mail-boxes-etc' ),
 						'class'   => 'button-secondary',
 						'confirm' => false,
-						'onclick' => get_admin_url() . 'admin.php?page=woocommerce_mbe_csv_tabs&csv=packages-products',
+						'onclick' => get_admin_url() . 'admin.php?page=woocommerce_mbe_csv_tabs&csv=packages-products&nonce='.wp_create_nonce('woocommerce_mbe_csv_tabs'),
 						'blank'   => false,
 					],
 					[ 'type' => 'sectionend', 'id' => $sectionId ]
@@ -1040,7 +1046,7 @@ class Mbe_Settings extends WC_Settings_Page {
 
 //			$freeTresholds     = [];
 
-		if ( ! empty( $this->selectedServices ) ) {
+		if ( ! empty( $this->helper->getAllowedShipmentServicesArray() ) ) {
 			$sectionId  = 'mbe_markup_freeship';
 			$settings[] = [
 				'title' => sprintf( __( 'Free shipping Thresholds %s', 'mail-boxes-etc' ), '' ),
@@ -1049,7 +1055,7 @@ class Mbe_Settings extends WC_Settings_Page {
 				'id'    => $sectionId,
 			];
 
-            $servicesForThreshold = $this->selectedServices ;
+            $servicesForThreshold = $this->helper->getAllowedShipmentServicesArray() ;
 
             // Remove multiple MOL delivery point services
             $deliveryIsEnabled = false;
@@ -1450,9 +1456,11 @@ class Mbe_Settings extends WC_Settings_Page {
 
     protected function checkStartEndTime($start, $end, $desc=""){
 	    if (!$this->helper->checkStartEndTime($start, $end)) {
+		    $timeStart = new DateTime($start);
+		    $timeEnd = new DateTime($end);
 		    WC_Admin_Settings::add_error(__("Maximum pickup $desc time should be greater than minimum", 'mail-boxes-etc' ));
-            date_add($start, DateInterval::createFromDateString("1 minutes"));
-            return date_format($start, "H:i");
+            date_add($timeStart, DateInterval::createFromDateString("1 minutes"));
+            return date_format($timeStart, "H:i");
 	    }
         return $end;
     }

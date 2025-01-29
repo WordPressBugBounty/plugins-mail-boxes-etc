@@ -40,11 +40,11 @@ class Mbe_Shipping_Csv_Editor extends WP_List_Table
 			array(),			// hidden
 			$this->get_sortable_columns()
 		];
-		$this->process_bulk_action();
+		$this->process_bulk_action(); // Process bulk actioin or single row actions
 		$order = $this->get_items_query_order();
 
 		if($this->isRemote) {
-			$this->items = $this->get_remoteRows($_REQUEST['orderby']??null, $_REQUEST['order']??null);
+			$this->items = $this->get_remoteRows(sanitize_text_field($_REQUEST['orderby'])??null, sanitize_text_field($_REQUEST['order'])??null);
 		} else {
 			$this->items = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM %i {$order}", $this->tableName), ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange
 		}
@@ -106,7 +106,7 @@ class Mbe_Shipping_Csv_Editor extends WP_List_Table
 		$table_name = $this->tableName;
 
 		if ('delete' === $this->current_action()) {
-			$ids = isset($_REQUEST['id']) ? (array)$_REQUEST['id'] : [];
+			$ids = isset($_REQUEST['id']) ? (array)wc_clean($_REQUEST['id']) : [];
 
 			if (!empty($ids)) {
 				do_action(MBE_ESHIP_ID . '_csv_editor_deleting', $ids);
@@ -125,8 +125,8 @@ class Mbe_Shipping_Csv_Editor extends WP_List_Table
 	function column_id($item)
 	{
 		$actions = array(
-			'edit' => sprintf( '<a href="?page=' . MBE_ESHIP_ID . '_csv_edit_form&csv=%s&id=%s">%s</a>', $_REQUEST['csv'], $item[$this->get_ID()], __('Edit', 'mail-boxes-etc')),
-			'delete' => sprintf('<a href="?page=%s&action=delete&csv=%s&id=%s">%s</a>', $_REQUEST['page'], $_REQUEST['csv'], $item[$this->get_ID()], __('Delete', 'mail-boxes-etc')),
+			'edit' => sprintf( '<a href="?page=' . MBE_ESHIP_ID . '_csv_edit_form&csv=%s&id=%s&nonce=%s">%s</a>', sanitize_text_field($_REQUEST['csv']), $item[$this->get_ID()], wp_create_nonce('csv_form_page_handler'), __('Edit', 'mail-boxes-etc')),
+			'delete' => sprintf('<a href="?page=%s&action=delete&csv=%s&id=%s&nonce=%s">%s</a>', sanitize_text_field($_REQUEST['page']), sanitize_text_field($_REQUEST['csv']), $item[$this->get_ID()],  wp_create_nonce($_REQUEST['page']), __('Delete', 'mail-boxes-etc')),
 		);
 
 		return sprintf('%s %s',
@@ -144,10 +144,10 @@ class Mbe_Shipping_Csv_Editor extends WP_List_Table
 	}
 
 	protected function get_items_query_order() {
-		if ( ! empty( $_REQUEST['orderby'] ) && in_array( $_REQUEST['orderby'], array_keys($this->sortable_columns) ) ) {
+		if ( ! empty( $_REQUEST['orderby'] ) && in_array( sanitize_text_field($_REQUEST['orderby']), array_keys($this->sortable_columns) ) ) {
 			$by =esc_sql( wc_clean( $_REQUEST['orderby'] ));
 
-			if ( ! empty( $_REQUEST['order'] ) && 'asc' === strtolower( $_REQUEST['order'] ) ) {
+			if ( ! empty( $_REQUEST['order'] ) && 'asc' === strtolower( sanitize_text_field($_REQUEST['order']) ) ) {
 				$order = 'ASC';
 			} else {
 				$order = 'DESC';
@@ -168,7 +168,7 @@ class Mbe_Shipping_Csv_Editor extends WP_List_Table
 		echo '<div class="alignright actions">';
 
 		if ( 'top' === $which ) {
-			echo sprintf( '<a class="add-new-h2" href="?page=' . esc_attr(MBE_ESHIP_ID) . '_csv_edit_form&action=new&csv=' . esc_attr($this->csvType) . '&id=%s">%s</a>', null, esc_html__('Add') . ' ' . esc_html($this->get_title()));
+			echo sprintf( '<a class="add-new-h2" href="?page=' . esc_attr(MBE_ESHIP_ID) . '_csv_edit_form&action=new&csv=' . esc_attr($this->csvType) . '&id=%s&nonce=%s">%s</a>', null, wp_create_nonce('csv_form_page_handler'), esc_html__('Add') . ' ' . esc_html($this->get_title()));
 		}
 
 		echo '</div>';

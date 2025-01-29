@@ -96,9 +96,38 @@ class Mbe_Shipping_Model_Ws
                                 'label' => $this->helper->convertShippingLabelWithInsurance($serviceDesc),
                             );
                             if (!in_array($currentShippingWithInsuranceType, $result)) {
-                                array_push($result, $currentShippingWithInsuranceType);
+                                $result[] = $currentShippingWithInsuranceType;
                             }
                         }
+
+	                    //SHIPPING WITH Safe Value
+	                    if (isset($customer->Permissions->canSpecifyMBESafeValue) && $customer->Permissions->canSpecifyMBESafeValue) {
+		                    $currentShippingWithSafeValueType = array(
+			                    'value' => $this->helper->convertShippingCodeWithSafeValue($service),
+			                    'label' => $this->helper->convertShippingLabelWithSafeValue($serviceDesc),
+		                    );
+		                    $currentShippingWithSafeValueArtType = array(
+			                    'value' => $this->helper->convertShippingCodeWithSafeValueArt($service),
+			                    'label' => $this->helper->convertShippingLabelWithSafeValueArt($serviceDesc),
+		                    );
+		                    if (!in_array($currentShippingWithSafeValueType, $result)) {
+			                    $result[] = $currentShippingWithSafeValueType;
+		                    }
+		                    if (!in_array($currentShippingWithSafeValueArtType, $result)) {
+			                    $result[] = $currentShippingWithSafeValueArtType;
+		                    }
+	                    }
+
+	                    //SHIPPING WITH Safe Value 4 Business
+	                    if (isset($customer->Permissions->canSpecifyMBESafeValue4Business) && $customer->Permissions->canSpecifyMBESafeValue4Business) {
+		                    $currentShippingWithSafeValue4BusinessType = array(
+			                    'value' => $this->helper->convertShippingCodeWithSafeValue4Business($service),
+			                    'label' => $this->helper->convertShippingLabelWithSafeValue4Business($serviceDesc),
+		                    );
+		                    if (!in_array($currentShippingWithSafeValue4BusinessType, $result)) {
+			                    $result[] = $currentShippingWithSafeValue4BusinessType;
+		                    }
+	                    }
 
                     }
                 }
@@ -120,28 +149,45 @@ class Mbe_Shipping_Model_Ws
         return $result;
     }
 
-    private function convertInsuranceShipping($shippingList)
+    private function convertInsuranceShipping($shippingList, $insuranceValue)
     {
         $result = false;
         if ($shippingList) {
-            $newShippingList = array();
-            foreach ($shippingList as $shipping) {
+	        $newShippingList        = array();
+	        $selectedInsuranceCode  = $this->helper->getSelectedInsuranceCode();
+	        $selectedInsuranceLabel = $this->helper->getSelectedInsuranceLabel();
+	        $insuranceThreshold     = $this->helper->getShipmentsCsvInsuranceMin();
 
-                if ($shipping->InsuranceAvailable) {
-                    $newShipping = $shipping;
-                    $newShipping->Service = $this->helper->convertShippingCodeWithInsurance($newShipping->Service);
-                    $newShipping->ServiceDesc = $this->helper->convertShippingLabelWithInsurance($newShipping->ServiceDesc);
-                    array_push($newShippingList, $newShipping);
-                }
-            }
-            if (!empty($newShippingList)) {
-                $result = $newShippingList;
-            }
+	        switch ($selectedInsuranceCode) {
+				case Mbe_Shipping_Helper_Data::MBE_SHIPPING_WITH_SAFE_VALUE_CODE_SUFFIX:
+				case Mbe_Shipping_Helper_Data::MBE_SHIPPING_WITH_SAFE_VALUE_ART_CODE_SUFFIX:
+					$insuranceAvailable = 'MBESafeValueAvailable';
+					break;
+				case Mbe_Shipping_Helper_Data::MBE_SHIPPING_WITH_SAFE_VALUE_4B_CODE_SUFFIX:
+					$insuranceAvailable = 'MBESafeValue4BusinessAvailable';
+					break;
+				default:
+					$insuranceAvailable = 'InsuranceAvailable';
+					break;
+			}
+
+	        foreach ($shippingList as $shipping) {
+
+		        if ($shipping->$insuranceAvailable && $insuranceValue >= $insuranceThreshold ) {
+			        $newShipping = $shipping;
+			        $newShipping->Service = $newShipping->Service . $selectedInsuranceCode;
+			        $newShipping->ServiceDesc = $newShipping->ServiceDesc . $selectedInsuranceLabel;
+			        $newShippingList[] = $newShipping;
+		        }
+	        }
+	        if (!empty($newShippingList)) {
+		        $result = $newShippingList;
+	        }
         }
         return $result;
     }
 
-	public function estimateShipping($country, $region, $city, $postCode, $weight, $boxes, $insuranceValue, $products)
+	public function estimateShipping($country, $region, $city, $postCode, $weight, $boxes, $insuranceValue, $products, $insuranceCode)
 	{
 		$this->logger->log('ESTIMATESHIPPING');
 //        $weight = $this->helper->convertWeight($weight);
@@ -167,9 +213,9 @@ class Mbe_Shipping_Model_Ws
 
 			//Shipping with insurance
 			$resultWithInsurance = $this->ws->estimateShipping(
-				$wsUrl, $wsUsername, $wsPassword, $shipmentType, $system, $country, $region, $city, $postCode, $items, $products, true, $insuranceValue
+				$wsUrl, $wsUsername, $wsPassword, $shipmentType, $system, $country, $region, $city, $postCode, $items, $products, true, $insuranceValue, $insuranceCode
 			);
-			$resultWithInsurance = $this->convertInsuranceShipping($resultWithInsurance);
+			$resultWithInsurance = $this->convertInsuranceShipping($resultWithInsurance, $insuranceValue);
 
 			if ($resultWithInsurance && $resultWithoutInsurance) {
 				$result = array_merge($resultWithInsurance, $resultWithoutInsurance);
@@ -203,7 +249,7 @@ class Mbe_Shipping_Model_Ws
 	/**
 	 * @throws \MbeExceptions\ApiRequestException
 	 */
-	public function createShipping($country, $region, $postCode, $weight, $boxes, $products, $service, $subzone, $notes, $firstName, $lastName, $companyName, $address, $phone, $city, $email, $goodsValue = 0.0, $reference = "", $isCod = false, $codValue = 0.0, $insurance = false, $insuranceValue = 0.0, $isPickup = false, $senderInfo = [], $pickupData = [])
+	public function createShipping($country, $region, $postCode, $weight, $boxes, $products, $service, $subzone, $notes, $firstName, $lastName, $companyName, $address, $phone, $city, $email, $goodsValue = 0.0, $reference = "", $isCod = false, $codValue = 0.0, $insurance = false, $insuranceValue = 0.0, $isPickup = false, $senderInfo = [], $pickupData = [], $insuranceCode = null)
 	{
 //		$weight = $this->helper->convertWeight($weight, 'kg');
 		$this->logger->log('CREATE SHIPPING');
@@ -227,13 +273,13 @@ class Mbe_Shipping_Model_Ws
 				$result = $this->ws->createPickupShipping(
 					$wsUrl, $wsUsername, $wsPassword, $shipmentType, $service, $subzone, $system, $notes, $firstName, $lastName, $companyName,
 					$address, $phone, $city, $region, $country, $postCode, $email, $items, $products, $shipperType, $goodsValue, $reference,
-					$isCod, $codValue, $insurance, $insuranceValue,	$senderInfo, $pickupData
+					$isCod, $codValue, $insurance, $insuranceValue,	$senderInfo, $pickupData, $insuranceCode
 				);
 			} else {
 				$result = $this->ws->createShipping(
 					$wsUrl, $wsUsername, $wsPassword, $shipmentType, $service, $subzone, $system, $notes, $firstName, $lastName, $companyName,
 					$address, $phone, $city, $region, $country, $postCode, $email, $items, $products, $shipperType, $goodsValue, $reference,
-					$isCod, $codValue, $insurance, $insuranceValue
+					$isCod, $codValue, $insurance, $insuranceValue, $insuranceCode
 				);
 			}
 		}
@@ -437,6 +483,14 @@ class Mbe_Shipping_Model_Ws
 	 */
 	public function getDeliveryPointShippingDocument( $masterTrackingId ) {
 		return $this->ws->getShippingDocument($this->wsUrl, $this->wsUsername, $this->wsPassword, $this->system, $masterTrackingId);
+	}
+
+	/**
+	 * @throws \MbeExceptions\ApiRequestException
+	 * @throws SoapFault
+	 */
+	public function sendRestApiCredentials( $apiKey ) {
+		return $this->ws->sendRestApiCredentials($this->wsUrl, $this->wsUsername, $this->wsPassword, $this->system, $apiKey, get_rest_url(null, MBE_WC_REST_API_NAMESPACE.MBE_REST_API_ENDPOINT_SET_SHIPPING_STATUS));
 	}
 
 }

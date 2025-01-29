@@ -73,8 +73,8 @@ class Mbe_E_Link_Pickup_Batches_List_Table extends WP_List_Table
 
 		$backPage = urlencode(MBE_ESHIP_ID . '_' . WOOCOMMERCE_MBE_TABS_PICKUP_PAGE);
 
-		$orderby = (isset($_REQUEST['orderby']) && in_array($_REQUEST['orderby'], array_keys($this->get_sortable_columns()))) ? $_REQUEST['orderby'] : 'id';
-		$order = (isset($_REQUEST['order']) && in_array($_REQUEST['order'], array('asc', 'desc'))) ? $_REQUEST['order'] : 'desc';
+		$orderby = (isset($_REQUEST['orderby']) && in_array($_REQUEST['orderby'], array_keys($this->get_sortable_columns()))) ? sanitize_text_field($_REQUEST['orderby']) : 'id';
+		$order = (isset($_REQUEST['order']) && in_array($_REQUEST['order'], array('asc', 'desc'))) ? sanitize_text_field($_REQUEST['order']) : 'desc';
 		$orderClause = sanitize_sql_orderby($orderby . ' ' . $order);
 
 		foreach ( $this->items as $item ) {
@@ -84,12 +84,24 @@ class Mbe_E_Link_Pickup_Batches_List_Table extends WP_List_Table
 
 			$orderIds = array_map('absint', array_column($shipments, 'orderid'));
 
-			$editButton = '<a href="'.admin_url('admin.php?page=' . MBE_ESHIP_ID . '_pickup_data_tabs&id=' . urlencode( $item['id'] ) .'&orderids=' . urlencode( json_encode($orderIds))).'&backpage='.$backPage.'">
+			$editButton = '<a href="'.admin_url('admin.php?page=' . MBE_ESHIP_ID . '_pickup_data_tabs&id=' . urlencode( $item['id'] ) .'&orderids=' . urlencode( json_encode($orderIds))).'&backpage='.$backPage.'&nonce='.wp_create_nonce('mbe_edit_pickup').'">
 							<button type="button" style="height:35px; width:35px; margin: 0px 5px 0px 5px; padding:4px 6px 4px 6px; color:#778899FF; cursor:pointer;" title="'.__('Edit pickup batch', 'mail-boxes-etc').'">
 								<svg style="height: 16px;width: 16px;" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="-1 -1 21 21">
 							    	<path d="m13.835 7.578-.005.007-7.137 7.137 2.139 2.138 7.143-7.142-2.14-2.14Zm-10.696 3.59 2.139 2.14 7.138-7.137.007-.005-2.141-2.141-7.143 7.143Zm1.433 4.261L2 12.852.051 18.684a1 1 0 0 0 1.265 1.264L7.147 18l-2.575-2.571Zm14.249-14.25a4.03 4.03 0 0 0-5.693 0L11.7 2.611 17.389 8.3l1.432-1.432a4.029 4.029 0 0 0 0-5.689Z"/>
 							  	</svg>
 						   </button></a>';
+//			$editButton = '<form action="' . esc_url( admin_url( 'admin-post.php' ) ) .'" method="post" id="mbe_edit_pickup" style="display: inline-flex">
+//								<input type="hidden" name="action" value="mbe_edit_pickup"/>
+//								<input type="hidden" name="nonce" value="'.wp_create_nonce('mbe_edit_pickup') .'"/>
+//								<input type="hidden" name="mbe_pickup_id" value="'. urlencode( $item['id'] ).'"/>
+//								<input type="hidden" name="orderids" value="'. json_encode($orderIds).'"/>
+//								<input type="hidden" name="backpage" value="'.urlencode($backPage).'"/>
+//                                <button type="submit" style="height:35px; width:35px; margin: 0px 5px 0px 5px; padding:4px 6px 4px 6px; color:#778899FF; cursor:pointer;" title="'.__('Edit pickup batch', 'mail-boxes-etc').'">
+//                                    <svg style="height: 16px;width: 16px;" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="-1 -1 21 21">
+//                                        <path d="m13.835 7.578-.005.007-7.137 7.137 2.139 2.138 7.143-7.142-2.14-2.14Zm-10.696 3.59 2.139 2.14 7.138-7.137.007-.005-2.141-2.141-7.143 7.143Zm1.433 4.261L2 12.852.051 18.684a1 1 0 0 0 1.265 1.264L7.147 18l-2.575-2.571Zm14.249-14.25a4.03 4.03 0 0 0-5.693 0L11.7 2.611 17.389 8.3l1.432-1.432a4.029 4.029 0 0 0 0-5.689Z"/>
+//                                    </svg>
+//                               </button>
+//						   </form>';
 
 			$sendButton = '<form action="' . esc_url( admin_url( 'admin-post.php' ) ) .'" method="post" id="mbe_send_pickup" style="display: inline-flex">
 								<input type="hidden" name="action" value="mbe_send_pickup"/>
@@ -289,7 +301,24 @@ class Mbe_E_Link_Pickup_Batches_List_Table extends WP_List_Table
         }
     }
 
-    function column_post_date($item)
+	function column_tracking_status($item)
+	{
+		$trackingFullData = $this->helper->getTrackingFullData($this->itemId($item));
+		$trackingMBEstatus = sanitize_text_field($trackingFullData['MBEstatus']??'');
+
+		if (empty($trackingMBEstatus)) {
+			return '';
+		} else {
+			$color = $this->helper->getTrackingStatusColor( $trackingMBEstatus );
+			$trackingcourierStatusDescription = sanitize_text_field($trackingFullData['courierStatusDescription']??'');
+			return "<span style='font-size: small; font-weight: bold; float: left; color:$color; padding:4px ;text-align: center;border-radius: 5px; margin: 3px;' title='" . esc_attr($trackingcourierStatusDescription) . "'>".
+			       esc_html($trackingMBEstatus)
+			       ."</span>";
+		}
+	}
+
+
+	function column_post_date($item)
     {
         $order = wc_get_order($item['orderid']);
 		$date = new DateTimeImmutable($order->get_date_created());
@@ -408,7 +437,8 @@ class Mbe_E_Link_Pickup_Batches_List_Table extends WP_List_Table
         $columns['post_date'] = __('Date', 'mail-boxes-etc');
         $columns['total'] = __('Total', 'mail-boxes-etc');
         $columns['carrier'] = __('Carrier', 'mail-boxes-etc');
-        $columns['tracking'] = __('Tracking', 'mail-boxes-etc');
+	    $columns['tracking_status'] = __('Status', 'mail-boxes-etc');
+	    $columns['tracking'] = __('Tracking', 'mail-boxes-etc');
         $columns['files'] = __('Downloads', 'mail-boxes-etc');
 	    $columns['actions'] = __('', 'mail-boxes-etc');
 
@@ -468,13 +498,13 @@ class Mbe_E_Link_Pickup_Batches_List_Table extends WP_List_Table
 
         $this->process_bulk_action();
 
-        $paged = isset($_REQUEST['paged']) ? max(0, intval($_REQUEST['paged']) - 1) : 0;
+        $paged = isset($_REQUEST['paged']) ? max(0, intval(sanitize_text_field($_REQUEST['paged'])) - 1) : 0;
         $paged = $paged * $per_page;
 
 	    $total_items = $wpdb->get_var( $wpdb->prepare("SELECT COUNT(DISTINCT(ID)) FROM %i", $table_name));  // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange
 
-	    if (isset($_REQUEST["order_search"]) && $_REQUEST["order_search"] != "") {
-            $search = esc_sql($_REQUEST["order_search"]);
+	    if (isset($_REQUEST["order_search"]) && sanitize_text_field($_REQUEST["order_search"]) != "") {
+            $search = esc_sql(sanitize_text_field($_REQUEST["order_search"]));
 
             $query = $wpdb->prepare("SELECT pcd.*, pcd.ID FROM $table_name AS pcd
                                        GROUP BY pcd.ID
@@ -505,4 +535,5 @@ class Mbe_E_Link_Pickup_Batches_List_Table extends WP_List_Table
 			return $item['ID'];
 		}
 	}
+
 }

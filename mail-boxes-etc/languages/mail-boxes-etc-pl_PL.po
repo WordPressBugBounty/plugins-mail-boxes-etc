@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Mail boxes\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-13 13:46+0000\n"
-"PO-Revision-Date: 2024-07-17 16:07+0200\n"
+"PO-Revision-Date: 2024-12-20 17:19+0100\n"
 "Last-Translator: Rafał Borycki <rborycki@mbe.pl>\n"
 "Language-Team: Polish\n"
 "Language: pl_PL\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Poedit 3.4.4\n"
+"X-Generator: Poedit 3.5\n"
 "X-Poedit-KeywordsList: __\n"
 "X-Poedit-Basepath: /home/web/php59/woombe/wordpress46/wp-content/plugins/mbe-woocommerce-shipping-method\n"
 "X-Poedit-SearchPath-0: .\n"
@@ -1501,3 +1501,57 @@ msgstr ""
 
 msgid "At the moment this feature is not active, you will receive detailed information as soon as it is released."
 msgstr "W tej chwili ta funkcja nie jest aktywna, otrzymasz szczegółowe informacje, jak tylko zostanie udostępniona."
+
+msgid "Minimum threshold for the service"
+msgstr "Minimalny próg usługi"
+
+msgid "Your package has successfully reached its destination and the shipment has been handed over to the recipient."
+msgstr "Twoja paczka pomyślnie dotarła do miejsca przeznaczenia, a przesyłka została przekazana odbiorcy."
+
+msgid "Delivered to sender"
+msgstr "Dostarczone do nadawcy"
+
+msgid "Exception"
+msgstr "Wyjątek"
+
+msgid "An unexpected event or obstacle has occurred during the delivery process. This could be due to customs issues, incorrect address, recipient absence, or other circumstances requiring attention. Please contact..."
+msgstr "Podczas procesu dostawy wystąpiło nieoczekiwane zdarzenie lub przeszkoda. Może to być spowodowane kwestiami celnymi, nieprawidłowym adresem, nieobecnością odbiorcy lub innymi okolicznościami wymagającymi uwagi. Prosimy o kontakt z centrum"
+
+msgid "In Transit"
+msgstr "W drodze"
+
+msgid "In transit to the sender"
+msgstr "W drodze do nadawcy"
+
+msgid "The package is making its way back to the original sender. Due to various factors, delivery couldn't be completed, and the item is now being returned. Please contact."
+msgstr "Paczka wraca do pierwotnego nadawcy. Ze względu na różne czynniki, dostawa nie mogła zostać zrealizowana, a przedmiot jest teraz zwracany. Prosimy o kontakt."
+
+msgid "Not delivered"
+msgstr "Nie dostarczono"
+
+msgid "The delivery hasn't been completed as planned. Your package might be awaiting pickup, temporarily held, or being processed for a new delivery attempt. Please contact."
+msgstr "Dostawa nie została zrealizowana zgodnie z planem. Paczka może oczekiwać na odbiór, być tymczasowo wstrzymana lub przetwarzana w celu podjęcia nowej próby doręczenia. Skontaktuj się ze swoim centrum MBE."
+
+msgid "Delivered*"
+msgstr "Dostarczony*"
+
+msgid "A new free delivery has been requested following an unsuccessful initial delivery attempt, presumably due to the recipient's absence."
+msgstr "Po nieudanej pierwszej próbie dostawy, prawdopodobnie z powodu nieobecności odbiorcy, złożono wniosek o nową bezpłatną dostawę."
+
+msgid "Not available"
+msgstr "Niedostępne"
+
+msgid "Shipping Status"
+msgstr "Stan wysyłki"
+
+msgid "Note"
+msgstr "Uwaga"
+
+msgid "You cannot select more than one insurance service at a time."
+msgstr "Jednocześnie nie można wybrać więcej niż jednej usługi ubezpieczeniowej."
+
+msgid "Enter the minimum threshold value for the shipping method."
+msgstr "Wprowadź minimalną wartość progową dla metody wysyłki."
+
+msgid "Only one between MBE SafeValue, MBE SafeValue4Business and Courier Insurance can be activated at the same time"
+msgstr "Tylko jedna z opcji: MBE SafeValue, MBE SafeValue4Business lub Ubezpieczenie kurierskie może być aktywowane w tym samym czasie."

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Mail boxes\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-13 13:46+0000\n"
-"PO-Revision-Date: 2024-07-17 16:07+0200\n"
+"PO-Revision-Date: 2024-12-20 17:19+0100\n"
 "Last-Translator: Samuele Carpene <samuele.carpene@intesys.it>\n"
 "Language-Team: Italian\n"
 "Language: it_IT\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Poedit 3.4.4\n"
+"X-Generator: Poedit 3.5\n"
 "X-Poedit-KeywordsList: __\n"
 "X-Poedit-Basepath: /home/web/php59/woombe/wordpress46/wp-content/plugins/mbe-woocommerce-shipping-method\n"
 "X-Poedit-SearchPath-0: .\n"
@@ -1595,3 +1595,66 @@ msgstr ""
 
 msgid "At the moment this feature is not active, you will receive detailed information as soon as it is released."
 msgstr "Al momento questa funzione non è attiva, riceverai informazioni dettagliate non appena sarà rilasciata."
+
+msgid "Delivered MBE"
+msgstr "Consegnato MBE"
+
+msgid "Minimum threshold for the service"
+msgstr "Soglia minima per il servizio"
+
+msgid "Delivered"
+msgstr "Consegnato"
+
+msgid "Your package has successfully reached its destination and the shipment has been handed over to the recipient."
+msgstr "Il vostro pacco è arrivato a destinazione e la spedizione è stata consegnata al destinatario."
+
+msgid "Delivered to sender"
+msgstr "Consegnato al mittente"
+
+msgid "Exception"
+msgstr "Eccezione"
+
+msgid "An unexpected event or obstacle has occurred during the delivery process. This could be due to customs issues, incorrect address, recipient absence, or other circumstances requiring attention. Please contact..."
+msgstr "Si è verificato un evento o un problema imprevisto durante il processo di consegna. Ciò potrebbe essere dovuto a problemi doganali, indirizzo errato, assenza del destinatario o altre circostanze che richiedono attenzione. Si prega di contattare il proprio centro"
+
+msgid "In Transit"
+msgstr "In transito"
+
+msgid "Your shipment is on the move. The shipment is progressing through the courier's logistics network and is on track for delivery."
+msgstr "La vostra spedizione è in transito e sarà consegnata al più presto."
+
+msgid "In transit to the sender"
+msgstr "In transito verso il mittente"
+
+msgid "The package is making its way back to the original sender. Due to various factors, delivery couldn't be completed, and the item is now being returned. Please contact."
+msgstr "Il pacco sta ritornando al mittente originale. A causa di vari fattori, la consegna non è stata completata e l'articolo è stato restituito. Si prega di contattare il proprio centro."
+
+msgid "Not delivered"
+msgstr "Non consegnato"
+
+msgid "The delivery hasn't been completed as planned. Your package might be awaiting pickup, temporarily held, or being processed for a new delivery attempt. Please contact."
+msgstr "La consegna non è stata completata come previsto. Il pacco potrebbe essere in attesa di essere ritirato, temporaneamente trattenuto o in fase di elaborazione per un nuovo tentativo di consegna. Si prega di contattare il proprio centro."
+
+msgid "Delivered*"
+msgstr "Consegnato*"
+
+msgid "A new free delivery has been requested following an unsuccessful initial delivery attempt, presumably due to the recipient's absence."
+msgstr "È stata richiesta una nuova consegna gratuita dopo un primo tentativo di consegna non riuscito, probabilmente a causa dell'assenza del destinatario."
+
+msgid "Shipping Status"
+msgstr "Stato della spedizione"
+
+msgid "Not available"
+msgstr "Non disponibile"
+
+msgid "Note"
+msgstr "Note"
+
+msgid "You cannot select more than one insurance service at a time."
+msgstr "Non è possibile selezionare più di un servizio assicurativo alla volta."
+
+msgid "Enter the minimum threshold value for the shipping method."
+msgstr "Inserire il valore di soglia minimo per il metodo di spedizione."
+
+msgid "Only one between MBE SafeValue, MBE SafeValue4Business and Courier Insurance can be activated at the same time"
+msgstr "E' possibile attivare solo una copertura alla volta fra MBE SafeValue, MBE SafeValue4Business e Assicurazione Corriere"

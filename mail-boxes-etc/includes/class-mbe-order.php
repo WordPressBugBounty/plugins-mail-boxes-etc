@@ -38,7 +38,6 @@ class Mbe_E_Link_Order_List_Table extends WP_List_Table
         $actions = array(
             'edit' => sprintf('<a href="' . get_home_url() . '/wp-admin/post.php?post=%s&action=edit">%s</a>', $this->itemId($item), __('Edit', 'mail-boxes-etc')),
         );
-	    https://mbe-wordpress/wp-admin/post.php?post=20452&action=edit
         return sprintf('%s %s',
             $this->itemId($item),
             $this->row_actions($actions)
@@ -103,6 +102,22 @@ class Mbe_E_Link_Order_List_Table extends WP_List_Table
             return $html;
         }
     }
+
+	function column_tracking_status($item)
+	{
+		$trackingFullData = $this->helper->getTrackingFullData($this->itemId($item));
+		$trackingMBEstatus = sanitize_text_field($trackingFullData['mbeStatusDescription']??'');
+
+		if (empty($trackingMBEstatus)) {
+			return '';
+		} else {
+			$color = $this->helper->getTrackingStatusColor( $trackingMBEstatus );
+			$trackingcourierStatusDescription = sanitize_text_field(__($trackingFullData['courierStatusDescription']??'', 'mail-boxes-etc'));
+			return "<span style='font-size: small; font-weight: bold; float: left; color:$color; padding:4px ;text-align: center;border-radius: 5px; margin: 3px;' title='" . esc_attr($trackingcourierStatusDescription) . "'>".
+                       esc_html(__($trackingMBEstatus, 'mail-boxes-etc'))
+                     ."</span>";
+		}
+	}
 
     function column_post_date($item)
     {
@@ -220,7 +235,8 @@ class Mbe_E_Link_Order_List_Table extends WP_List_Table
         $columns['post_date'] = __('Date', 'mail-boxes-etc');
         $columns['total'] = __('Total', 'mail-boxes-etc');
         $columns['carrier'] = __('Carrier', 'mail-boxes-etc');
-        $columns['tracking'] = __('Tracking', 'mail-boxes-etc');
+	    $columns['tracking_status'] = __('Status', 'mail-boxes-etc');
+	    $columns['tracking'] = __('Tracking', 'mail-boxes-etc');
         $columns['files'] = __('Downloads', 'mail-boxes-etc');
 	    $columns['pickup_manifest'] = __('Pickup manifest', 'mail-boxes-etc');
 
@@ -267,7 +283,7 @@ class Mbe_E_Link_Order_List_Table extends WP_List_Table
     {
 
         if (isset($_REQUEST['id'])) {
-            $post_ids = array_map('absint', (array)$_REQUEST['id']);
+            $post_ids = array_map('absint', (array)wc_clean($_REQUEST['id']));
 
             switch ($this->current_action()) {
                 case 'creation':
@@ -332,9 +348,9 @@ class Mbe_E_Link_Order_List_Table extends WP_List_Table
 
 					            if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
 						            $order = wc_get_order($post_id);
-						            $masterTrackingNumber = $order->get_meta(woocommerce_mbe_tracking_admin::SHIPMENT_SOURCE_TRACKING_NUMBER);
+						            $masterTrackingNumber = $order->get_meta( Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NUMBER );
 					            } else {
-						            $masterTrackingNumber = get_post_meta( $post_id, woocommerce_mbe_tracking_admin::SHIPMENT_SOURCE_TRACKING_NUMBER, true );
+						            $masterTrackingNumber = get_post_meta( $post_id, Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NUMBER, true );
 					            }
 
 					            $response = $this->ws->getDeliveryPointShippingDocument( $masterTrackingNumber );
@@ -366,7 +382,7 @@ class Mbe_E_Link_Order_List_Table extends WP_List_Table
 				            ] );
 
 				            if ( file_put_contents( $outputPdfPath, $outputPdf ) !== false ) {
-					            wp_redirect( admin_url( 'admin.php?page=' . WOOCOMMERCE_MBE_TABS_PAGE . '&reload-download=' . urlencode( $outputPdfPath ) ) );
+					            wp_redirect( admin_url( 'admin.php?page=' . WOOCOMMERCE_MBE_TABS_PAGE . '&reload-download=' . urlencode( $outputPdfPath ).'&nonce='.wp_create_nonce(WOOCOMMERCE_MBE_TABS_PAGE) ) );
 					            exit;
 				            } else {
 					            $errMess = __( 'MBE Download shipping labels - error writing to file ' . $outputPdfPath, 'mail-boxes-etc' );
@@ -403,9 +419,9 @@ class Mbe_E_Link_Order_List_Table extends WP_List_Table
 
 				            if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
 					            $order = wc_get_order($post_id);
-					            $masterTrackingNumber = $order->get_meta(woocommerce_mbe_tracking_admin::SHIPMENT_SOURCE_TRACKING_NUMBER, false);
+					            $masterTrackingNumber = $order->get_meta( Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NUMBER, false);
 				            } else {
-					            $masterTrackingNumber = get_post_meta($post_id, woocommerce_mbe_tracking_admin::SHIPMENT_SOURCE_TRACKING_NUMBER);
+					            $masterTrackingNumber = get_post_meta($post_id, Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NUMBER );
 				            }
 
 							// This shouldn't be necessary, but we check it just to avoid unexpected issues
@@ -665,7 +681,7 @@ class Mbe_E_Link_Order_List_Table extends WP_List_Table
 			    $postTypeWhere     = "post_type = 'shop_order'";
 		    }
 
-		    $paged   = isset( $_REQUEST['paged'] ) ? max( 0, intval( $_REQUEST['paged'] ) - 1 ) : 0;
+		    $paged   = isset( $_REQUEST['paged'] ) ? max( 0, intval( sanitize_text_field($_REQUEST['paged']) ) - 1 ) : 0;
 		    $paged   = $paged * $per_page;
 		    $orderby = ( isset( $_REQUEST['orderby'] ) && in_array( $_REQUEST['orderby'], array_keys( $this->get_sortable_columns() ) ) ) ? sanitize_sql_orderby( $_REQUEST['orderby'] ) : 'id';
 		    $order   = ( isset( $_REQUEST['order'] ) && in_array( $_REQUEST['order'], array(
@@ -678,8 +694,9 @@ class Mbe_E_Link_Order_List_Table extends WP_List_Table
 
 		    $order_filter              = 'AND ((ID IN (' . $order_ids . ') OR ID IN (' . $orders_custom_mapping_ids . ')) AND ID NOT IN (' . $orders_pickup_batch_ids . '))';
 
-		    if ( isset( $_REQUEST["s"] ) && $_REQUEST["s"] != "" ) {
-			    $search = esc_sql( $_REQUEST["s"] );
+			$searchTerm = sanitize_text_field($_REQUEST["s"]??null);
+		    if ( isset( $searchTerm ) && $searchTerm != "" ) {
+			    $search = esc_sql($searchTerm );
 
 			    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange
 			    $total_items = $wpdb->get_var( "SELECT COUNT(DISTINCT(p.ID)) FROM $table_name AS p 

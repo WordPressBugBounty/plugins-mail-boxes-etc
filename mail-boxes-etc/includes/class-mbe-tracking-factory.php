@@ -39,7 +39,8 @@ class mbe_tracking_factory
 	    $val            = explode( ':', $shippingMethod );
 	    $shippingMethod = $val[1]??'';
 
-	    $insurance = $shippingHelper->isShippingWithInsurance( $shippingMethod );
+		$insuranceCode = $shippingHelper->isShippingWithInsurance( $shippingMethod );
+		$insurance     = !empty( $insuranceCode );
 	    if ( $insurance ) {
 		    $shippingMethod = $shippingHelper->convertShippingCodeWithoutInsurance( $shippingMethod );
 	    }
@@ -131,7 +132,7 @@ class mbe_tracking_factory
 				    $qty[ $id_product ] = 1;
 
 				    // $boxesDimensionWeight is used directly, since we use 1 box for each shipment
-				    $result = $result && self::createSingleShipment( $order, $service, $subzone, $boxesDimensionWeight, $products, 1, $insurance, $insuranceValue, [], $goodsValue, $isCod, $codValue, $pickupInfo);
+				    $result = $result && self::createSingleShipment( $order, $service, $subzone, $boxesDimensionWeight, $products, 1, $insurance, $insuranceValue, [], $goodsValue, $isCod, $codValue, $pickupInfo, $insuranceCode);
 			    }
 		    }
 	    } elseif ( $shipmentConfigurationMode == Mbe_Shipping_Model_Carrier::SHIPMENT_CONFIGURATION_MODE_ONE_SHIPMENT_PER_SHOPPING_CART_WEIGHT_MULTI_PARCEL ) {
@@ -198,7 +199,8 @@ class mbe_tracking_factory
 			    $goodsValue,
 			    $isCod,
 			    $codValue,
-			    $pickupInfo
+			    $pickupInfo,
+			    $insuranceCode
 		    );
 	    }
         elseif ($shipmentConfigurationMode == Mbe_Shipping_Model_Carrier::SHIPMENT_CONFIGURATION_MODE_ONE_SHIPMENT_PER_SHOPPING_CART_ITEMS_MULTI_PARCEL) {
@@ -247,7 +249,7 @@ class mbe_tracking_factory
             $logger->logVar($goodsValue, "goods value");
 
 			// $boxesSingleParcelDimensionWeight is used directly, since we always use 1 box for each item (we're not using packages CSV)
-            $result = self::createSingleShipment($order, $service, $subzone, $boxesSingleParcelDimensionWeight, $products, $numBoxes, $insurance, $insuranceValue, [], $goodsValue, $isCod, $codValue, $pickupInfo);
+            $result = self::createSingleShipment($order, $service, $subzone, $boxesSingleParcelDimensionWeight, $products, $numBoxes, $insurance, $insuranceValue, [], $goodsValue, $isCod, $codValue, $pickupInfo, $insuranceCode);
 
         }
         return $result;
@@ -257,7 +259,7 @@ class mbe_tracking_factory
 	 *
 	 * @throws \MbeExceptions\ApiRequestException
 	 */
-    public static function createSingleShipment($order, $service, $subzone, $weight, $products, $boxes, $insurance, $insuranceValue, $qty = [], $goodsValue = 0.0, $isCod = false, $codValue = 0.0, $pickupInfo = [])
+    public static function createSingleShipment($order, $service, $subzone, $weight, $products, $boxes, $insurance, $insuranceValue, $qty = [], $goodsValue = 0.0, $isCod = false, $codValue = 0.0, $pickupInfo = [], $insuranceCode = null)
     {
 
         $logger = new Mbe_Shipping_Helper_Logger();
@@ -338,7 +340,7 @@ class mbe_tracking_factory
 
 	            }
 
-                $mbeShipment = $ws->createShipping($countryId, $region, $postCode, $weight, $boxes, $products, $service, $subzone, $notes, $firstName, $lastName, $companyName, $address, $phone, $city, $email, $goodsValue, $reference, $isCod, $codValue, $insurance, $insuranceValue, $isPickup, $senderInfo, $pickupData);
+                $mbeShipment = $ws->createShipping($countryId, $region, $postCode, $weight, $boxes, $products, $service, $subzone, $notes, $firstName, $lastName, $companyName, $address, $phone, $city, $email, $goodsValue, $reference, $isCod, $codValue, $insurance, $insuranceValue, $isPickup, $senderInfo, $pickupData, $insuranceCode);
 
                 $logger->logVar($mbeShipment, "MBE SHIPMENT");
 
@@ -351,7 +353,7 @@ class mbe_tracking_factory
 			            foreach ($label as $l) {
 				            $fileName = 'MBE_' . $orderId . '_' . $trackingNumber . '_' . $i;
 				            if(!empty($l) && self::saveShipmentDocument($l->Type, $l->Stream, $fileName)) {
-					            self::saveMultipleShipmentInfo($orderId, woocommerce_mbe_tracking_admin::SHIPMENT_SOURCE_TRACKING_FILENAME, $fileName . '.' . strtolower($l->Type), true);
+					            self::saveMultipleShipmentInfo($orderId, Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_FILENAME, $fileName . '.' . strtolower($l->Type), true);
 				            }
 				            $i++;
 			            }
@@ -359,27 +361,27 @@ class mbe_tracking_factory
 		            else {
 			            $fileName = 'MBE_' . $orderId . '_' . $trackingNumber;
 			            if(!empty($label) && self::saveShipmentDocument($label->Type, $label->Stream, $fileName)) {
-				            self::saveMultipleShipmentInfo( $orderId, woocommerce_mbe_tracking_admin::SHIPMENT_SOURCE_TRACKING_FILENAME, $fileName . '.' . strtolower( $label->Type ), true );
+				            self::saveMultipleShipmentInfo( $orderId, Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_FILENAME, $fileName . '.' . strtolower( $label->Type ), true );
 			            } else {
 							$logger->log('Missing label in response or error saving the label file');
 			            }
 		            }
 
-		            self::saveMultipleShipmentInfo($orderId, woocommerce_mbe_tracking_admin::SHIPMENT_SOURCE_TRACKING_NUMBER, $trackingNumber);
+		            self::saveMultipleShipmentInfo($orderId, Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NUMBER, $trackingNumber);
 
 		            if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
-			            $order->update_meta_data( woocommerce_mbe_tracking_admin::SHIPMENT_SOURCE_TRACKING_NUMBER, $trackingNumber);
-			            $order->update_meta_data( woocommerce_mbe_tracking_admin::SHIPMENT_SOURCE_TRACKING_NAME, $serviceName);
+			            $order->update_meta_data( Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NUMBER, $trackingNumber);
+			            $order->update_meta_data( Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NAME, $serviceName);
 			            $order->update_meta_data( woocommerce_mbe_tracking_admin::SHIPMENT_SOURCE_TRACKING_SERVICE, $service);
 			            $order->update_meta_data( woocommerce_mbe_tracking_admin::SHIPMENT_SOURCE_TRACKING_ZONE, $subzone);
-			            $order->update_meta_data( woocommerce_mbe_tracking_admin::SHIPMENT_SOURCE_TRACKING_URL, self::getTrackingUrlBySystem() );
+			            $order->update_meta_data( Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_URL, self::getTrackingUrlBySystem() );
 						$order->save();
 		            } else {
-			            update_post_meta( $orderId, woocommerce_mbe_tracking_admin::SHIPMENT_SOURCE_TRACKING_NUMBER, $trackingNumber, true );
-			            update_post_meta( $orderId, woocommerce_mbe_tracking_admin::SHIPMENT_SOURCE_TRACKING_NAME, $serviceName, true );
+			            update_post_meta( $orderId, Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NUMBER, $trackingNumber, true );
+			            update_post_meta( $orderId, Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NAME, $serviceName, true );
 			            update_post_meta( $orderId, woocommerce_mbe_tracking_admin::SHIPMENT_SOURCE_TRACKING_SERVICE, $service, true );
 			            update_post_meta( $orderId, woocommerce_mbe_tracking_admin::SHIPMENT_SOURCE_TRACKING_ZONE, $subzone, true );
-			            update_post_meta( $orderId, woocommerce_mbe_tracking_admin::SHIPMENT_SOURCE_TRACKING_URL, self::getTrackingUrlBySystem() );
+			            update_post_meta( $orderId, Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_URL, self::getTrackingUrlBySystem() );
 		            }
 
 		            if(array_key_exists('is-pickup', $pickupInfo) && $pickupInfo['is-pickup']) {

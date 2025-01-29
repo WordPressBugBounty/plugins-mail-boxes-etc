@@ -74,7 +74,6 @@ class Mbe_Shipping_Model_Carrier {
 
 
 			$shipments = array();
-			//$baseSubtotalInclTax = $request['contents_cost'];//wrong because it is without taxes
 			$baseSubtotalInclTax = 0;
 			foreach ( $request['contents'] as $item ) {
 				$baseSubtotalInclTax += $item['line_total'] + $item['line_tax'];
@@ -107,17 +106,17 @@ class Mbe_Shipping_Model_Carrier {
 						$this->logger->log( "Product Iteration: " . $iteration );
 //						$weight = $item['data']->get_weight();
 						if ( $this->shippingHelper->getShipmentsInsuranceMode() == Mbe_Shipping_Helper_Data::MBE_INSURANCE_WITH_TAXES ) {
-							if ( version_compare( WC()->version, '3', '>=' ) ) {
+//							if ( version_compare( WC()->version, '3', '>=' ) ) {
 								$insuranceValue = wc_get_price_including_tax( $item["data"] );
-							} else {
-								$insuranceValue = $item["data"]->get_price_including_tax();
-							}
+//							} else {
+//								$insuranceValue = $item["data"]->get_price_including_tax();
+//							}
 						} else {
-							if ( version_compare( WC()->version, '3', '>=' ) ) {
+//							if ( version_compare( WC()->version, '3', '>=' ) ) {
 								$insuranceValue = wc_get_price_excluding_tax( $item["data"] );
-							} else {
-								$insuranceValue = $item["data"]->get_price_excluding_tax();
-							}
+//							} else {
+//								$insuranceValue = $item["data"]->get_price_excluding_tax();
+//							}
 						}
 						// $boxesDimensionWeight is used directly, since we use 1 box for each shipment and this method is run for every item (1 item - 1 box - 1 shipment)
 						$shipments = $this->getRates( $destCountry, $destRegion, $city, $destPostCode, $baseSubtotalInclTax, $boxesDimensionWeight, 1, $products, $shipments, $iteration, $insuranceValue );
@@ -257,13 +256,15 @@ class Mbe_Shipping_Model_Carrier {
 				wp_cache_delete( self::MBE_CACHE_ID );
 			}
 			$this->logger->log( "getRates" );
+			$insuranceCode = $this->shippingHelper->getSelectedInsuranceCode();
 
 			if ( $ratesHelper->useCustomRates( $destCountry ) ) {
+				// Use CSV Values
 				$totalWeight = $this->shippingHelper->totalWeightBoxesArray( $weight );
 				$shipments = $ratesHelper->getCustomRates( $destCountry, $destRegion, $city, $destPostCode, $totalWeight, $insuranceValue );
-				if($this->shippingHelper->isEnabledTaxAndDuties()) $molRatesforCsv = $ws->estimateShipping( $destCountry, $destRegion, $city, $destPostCode, $weight, $boxes, $insuranceValue, $products );
+				if($this->shippingHelper->isEnabledTaxAndDuties()) $molRatesforCsv = $ws->estimateShipping( $destCountry, $destRegion, $city, $destPostCode, $weight, $boxes, $insuranceValue, $products, $insuranceCode );
 			} else {
-				$shipments = $ws->estimateShipping( $destCountry, $destRegion, $city, $destPostCode, $weight, $boxes, $insuranceValue, $products );
+				$shipments = $ws->estimateShipping( $destCountry, $destRegion, $city, $destPostCode, $weight, $boxes, $insuranceValue, $products, $insuranceCode );
 			}
 			$this->logger->logVar( $shipments, 'ws estimateShipping result' );
 			// set cache

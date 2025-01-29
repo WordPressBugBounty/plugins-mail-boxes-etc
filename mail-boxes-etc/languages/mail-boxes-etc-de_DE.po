@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Mail boxes\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-13 13:47+0000\n"
-"PO-Revision-Date: 2024-07-17 16:07+0200\n"
+"PO-Revision-Date: 2024-12-20 17:19+0100\n"
 "Last-Translator: Samuele Carpene <samuele.carpene@intesys.it>\n"
 "Language-Team: German\n"
 "Language: de_DE\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Poedit 3.4.4\n"
+"X-Generator: Poedit 3.5\n"
 "X-Poedit-KeywordsList: __\n"
 "X-Poedit-Basepath: /home/web/php59/woombe/wordpress46/wp-content/plugins/mbe-woocommerce-shipping-method\n"
 "X-Poedit-SearchPath-0: .\n"
@@ -1736,3 +1736,63 @@ msgstr ""
 
 msgid "At the moment this feature is not active, you will receive detailed information as soon as it is released."
 msgstr "Diese Funktion ist momentan nicht aktiv, Sie erhalten detaillierte Informationen, sobald sie freigegeben wird."
+
+msgid "Minimum threshold for the service"
+msgstr "Mindestschwelle für den Dienst"
+
+msgid "Delivered"
+msgstr "Ausgeliefert"
+
+msgid "Your package has successfully reached its destination and the shipment has been handed over to the recipient."
+msgstr "Ihr Paket hat seinen Bestimmungsort erfolgreich erreicht und die Sendung wurde dem Empfänger ausgehändigt."
+
+msgid "Delivered to sender"
+msgstr "Dem Absender zugestellt"
+
+msgid "Exception"
+msgstr "Ausnahme"
+
+msgid "An unexpected event or obstacle has occurred during the delivery process. This could be due to customs issues, incorrect address, recipient absence, or other circumstances requiring attention. Please contact..."
+msgstr "Während der Zustellung ist ein unerwartetes Ereignis oder Hindernis aufgetreten. Dies könnte auf Zollprobleme, eine falsche Adresse, die Abwesenheit des Empfängers oder andere Umstände zurückzuführen sein, die Aufmerksamkeit erfordern. Bitte kontaktieren Sie Ihr MBE Center"
+
+msgid "In Transit"
+msgstr "Im Transit"
+
+msgid "Your shipment is on the move. The shipment is progressing through the courier's logistics network and is on track for delivery."
+msgstr "Ihre Sendung ist auf dem Weg. Die Sendung durchläuft das Logistiknetz des Kurierdienstes und ist auf dem Weg zur Zustellung."
+
+msgid "In transit to the sender"
+msgstr "Auf dem Weg zum Absender"
+
+msgid "The package is making its way back to the original sender. Due to various factors, delivery couldn't be completed, and the item is now being returned. Please contact."
+msgstr "Das Paket befindet sich auf dem Weg zurück zum ursprünglichen Absender. Aufgrund verschiedener Faktoren konnte die Zustellung nicht abgeschlossen werden, und der Artikel wird nun zurückgeschickt."
+
+msgid "Not delivered"
+msgstr "Nicht geliefert"
+
+msgid "The delivery hasn't been completed as planned. Your package might be awaiting pickup, temporarily held, or being processed for a new delivery attempt. Please contact."
+msgstr "Die Zustellung wurde nicht wie geplant abgeschlossen. Ihr Paket wartet möglicherweise auf die Abholung, wird vorübergehend zurückgehalten oder für einen neuen Zustellversuch bearbeitet."
+
+msgid "Delivered*"
+msgstr "Ausgeliefert*"
+
+msgid "A new free delivery has been requested following an unsuccessful initial delivery attempt, presumably due to the recipient's absence."
+msgstr "Nach einem erfolglosen ersten Zustellungsversuch, der vermutlich auf die Abwesenheit des Empfängers zurückzuführen ist, wurde eine neue Zustellung terminiert."
+
+msgid "Shipping Status"
+msgstr "Versandstatus"
+
+msgid "Not available"
+msgstr "Nicht verfügbar"
+
+msgid "Note"
+msgstr "Hinweis"
+
+msgid "You cannot select more than one insurance service at a time."
+msgstr "Sie können nicht mehr als eine Versicherungsleistung gleichzeitig auswählen."
+
+msgid "Enter the minimum threshold value for the shipping method."
+msgstr "Geben Sie den Mindestschwellenwert für die Versandmethode ein."
+
+msgid "Only one between MBE SafeValue, MBE SafeValue4Business and Courier Insurance can be activated at the same time"
+msgstr "Es kann nur eine der Versicherungen MBE SafeValue, MBE SafeValue4Business, MBE SafeValue Art oder Kurier Haftung aktiviert werden."
