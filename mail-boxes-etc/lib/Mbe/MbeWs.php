@@ -1397,6 +1397,10 @@ class MbeWs {
 
 			$result = [];
 
+			if(!property_exists($soapResult->RequestContainer, 'Department')) {
+				return $result;
+			}
+			
 			if (is_array($soapResult->RequestContainer->Department)) {
 				$result = array_map(function ($address) {
 					return get_object_vars($address);
