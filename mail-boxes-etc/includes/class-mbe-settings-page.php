@@ -833,6 +833,19 @@ class Mbe_Settings extends WC_Settings_Page {
 			$shipmentTypeOptions['ENVELOPE'] = __( 'Envelope', 'mail-boxes-etc' );
 		}
 
+        // Deafult department selection
+        if($this->helper->isCreationAutomatically() && $this->helper->getCustomerAddressAsSender()) {
+            $molDepartments = $this->helper->getMolDepartmentsAddress();
+
+	        $defaultDepartment = [
+		        'id'      => $this->id . '_' . 'default_department_address',
+		        'title'   => __( 'Default department address', 'mail-boxes-etc' ),
+		        'type'    => 'select',
+		        'options' => $molDepartments,
+		        'desc'    => '',
+	        ];
+        }
+
 		return [
 			[
 				'title' => '',
@@ -909,6 +922,7 @@ class Mbe_Settings extends WC_Settings_Page {
                 'desc_tip' => true,
 				'default' => 0,
 			],
+			$defaultDepartment??[],
 			[ 'type' => 'sectionend', 'id' => $sectionId ]
 		];
 	}

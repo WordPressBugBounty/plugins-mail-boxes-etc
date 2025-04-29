@@ -17,6 +17,8 @@ class Mbe_Shipping_Helper_Data
 	const MBE_SETTINGS_CSV_PACKAGE = MBE_ESHIP_ID . '_' . self::XML_PATH_PACKAGES_CSV;
 	const MBE_SETTINGS_CSV_PACKAGE_PRODUCT = MBE_ESHIP_ID . '_' . self::XML_PATH_PACKAGES_PRODUCT_CSV;
 	const SHIPMENT_SOURCE_TRACKING_NUMBER = "woocommerce_mbe_tracking_number";
+	const SHIPMENT_SOURCE_COURIER_TRACKING_NUMBER = "woocommerce_mbe_courier_tracking_number";
+	const SHIPMENT_SOURCE_COURIER_NAME = "woocommerce_mbe_courier_name";
 	const SHIPMENT_SOURCE_TRACKING_FILENAME = 'woocommerce_mbe_tracking_filename';
 	const SHIPMENT_SOURCE_TRACKING_MBE_STATUS = "woocommerce_mbe_tracking_mbe_status";
 	const SHIPMENT_SOURCE_TRACKING_URL = "woocommerce_mbe_tracking_url";
@@ -160,6 +162,10 @@ class Mbe_Shipping_Helper_Data
 	const XML_PATH_TAX_DUTIES_MODE = 'mbe_taxduties_mode';
 	const MBE_TAX_AND_DUTIES_DDP = 1;
 	const MBE_TAX_AND_DUTIES_DAP = 0;
+
+	// Departments
+	const XML_PATH_DEPARTMENTS_DEFAULT_ADDRESS = "default_department_address";
+	const SHIPMENT_SOURCE_DEPARTMENTS_ADDRESS = "woocommerce_mbe_department_address";
 
 	protected $csv_package_model;
 	protected $csv_package_product_model;
@@ -1064,6 +1070,37 @@ class Mbe_Shipping_Helper_Data
         })) : $value;
     }
 
+	public function getCourierTrackings($shipmentId)
+	{
+		if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
+			$order = wc_get_order($shipmentId);
+			$tracking = $order->get_meta(self::SHIPMENT_SOURCE_COURIER_TRACKING_NUMBER);
+		} else {
+			$tracking = get_post_meta($shipmentId, self::SHIPMENT_SOURCE_COURIER_TRACKING_NUMBER, true);
+		}
+
+		if ( str_contains( $tracking, self::MBE_SHIPPING_TRACKING_SEPARATOR ) ) {
+			$value = explode(self::MBE_SHIPPING_TRACKING_SEPARATOR, $tracking);
+
+		}
+		else {
+			$value = explode(self::MBE_SHIPPING_TRACKING_SEPARATOR__OLD, $tracking);
+		}
+
+		return is_array($value) ? (array_filter($value, function ($value) {
+			return $value !== '';
+		})) : $value;
+	}
+
+	public function getCourierName( $shipmentId ) {
+		if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
+			$order = wc_get_order($shipmentId);
+			return $order->get_meta(self::SHIPMENT_SOURCE_COURIER_NAME);
+		} else {
+			return get_post_meta($shipmentId, self::SHIPMENT_SOURCE_COURIER_NAME, true);
+		}
+	}
+
     public function getTrackingsString($shipmentId)
     {
 	    if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
@@ -1460,6 +1497,72 @@ class Mbe_Shipping_Helper_Data
 		return $ws->getCustomerPermission('canSpecifyMBESafeValue4Business');
 	}
 
+	public function getCustomerID()
+	{
+		$ws = new Mbe_Shipping_Model_Ws();
+		return $ws->getCustomer()->customerID ?? null;
+	}
+
+	public function getCustomerAddressAsSender()
+	{
+		$ws = new Mbe_Shipping_Model_Ws();
+		return $ws->getCustomerPermission('customerAddressAsSender');
+	}
+
+	public function getMandatoryDepartment()
+	{
+		$ws = new Mbe_Shipping_Model_Ws();
+		return $ws->getCustomerPermission('mandatoryDepartment');
+	}
+
+	public function hasDepartmentDefault()
+	{
+		$ws = new Mbe_Shipping_Model_Ws();
+		return $ws->getCustomerPermission('departmentDefault');
+	}
+
+	public function canSelectDepartmentForOrders() {
+		return !$this->isCreationAutomatically() && $this->getCustomerAddressAsSender();
+	}
+
+	public function getDepartmentDefaultAddress(){
+		$defaultAddress = $this->getOption(self::XML_PATH_DEPARTMENTS_DEFAULT_ADDRESS);
+		if(empty($defaultAddress)) {return null;}
+		//Check if the address is still valid and return it otherwise unset the value
+		$addressesList = $this->getMolDepartmentsAddress();
+		if (key_exists($defaultAddress, $addressesList)) {
+			return $defaultAddress;
+		} else {
+			$this->setOption(self::XML_PATH_DEPARTMENTS_DEFAULT_ADDRESS, '');
+			return null;
+		}
+	}
+
+	public function getMolDepartmentsAddress() {
+		$ws = new Mbe_Shipping_Model_Ws();
+		$molDepartmentsArray =  $ws->getDepartmentsAddresses();
+		$defaultLabel = __( 'Select a department address', 'mail-boxes-etc' );
+		$molDepartments = ['' => $defaultLabel];
+		foreach ($molDepartmentsArray as $item) {
+			$label = $item['Name'] . ' | ' . $item['Address'] . ' | ' . $item['ZipCode']. ' | ' .$item['City']. ' | ' .$item['Country'];
+			$molDepartments[$item['ID']] = $label;
+		}
+		ksort($molDepartments);
+		return $molDepartments;
+	}
+
+	public function setOrderDepartmentAddressId( $orderId, $value ) {
+		return $this->updateOrderItemShippingMeta($orderId, $value, self::SHIPMENT_SOURCE_DEPARTMENTS_ADDRESS);
+	}
+
+	public function getOrderDepartmentAddressId( $orderId ) {
+		if($this->isCreationAutomatically()){
+			return $this->getDepartmentDefaultAddress();
+		} else {
+			return $this->getOrderItemShippingMeta($orderId, self::SHIPMENT_SOURCE_DEPARTMENTS_ADDRESS);
+		}
+	}
+
     public function getShippingMethodCustomLabel($methodCode)
     {
     	$customLabel = trim($this->getOption(self::XML_PATH_SHIPMENT_CUSTOM_LABEL . '_' . strtolower($methodCode)));
@@ -1786,13 +1889,27 @@ class Mbe_Shipping_Helper_Data
 
 	public function select_mbe_ids()
 	{
-		// TODO filter out status wc-checkout-draft
 		global $wpdb;
 		$postmetaTableName = $wpdb->prefix . 'postmeta';
 		$shippingMethods = MBE_ESHIP_ID.'|wf_mbe_shipping'; // search also for orders created with the old plugin
 
 		if (version_compare(WC()->version, '2.1', '>=')) {
-			return "SELECT order_id FROM {$wpdb->prefix}woocommerce_order_items AS oi INNER JOIN $wpdb->order_itemmeta AS oim ON oi.order_item_id = oim.order_item_id WHERE oi.order_item_type = 'shipping' AND oim.meta_key = 'method_id' AND oim.meta_value REGEXP '{$shippingMethods}'";
+			if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
+				$order_table =  'wc_orders';
+				$order_status_column = 'status';
+			} else {
+				$order_table =  'posts';
+				$order_status_column = 'post_status';
+			}
+
+			return "SELECT order_id FROM {$wpdb->prefix}woocommerce_order_items AS oi
+	                    INNER JOIN $wpdb->order_itemmeta AS oim ON oi.order_item_id = oim.order_item_id
+	                    INNER JOIN {$wpdb->prefix}$order_table AS o ON oi.order_id = o.id
+	                WHERE oi.order_item_type = 'shipping'
+	                  AND oim.meta_key = 'method_id'
+	                  AND oim.meta_value REGEXP '{$shippingMethods}'
+	                  AND o.$order_status_column <> 'wc-checkout-draft'
+	                ";
 		}
 		else {
 			return "SELECT post_id FROM {$postmetaTableName} AS pm WHERE pm.meta_key = '_shipping_method' AND pm.meta_value REGEXP '{$shippingMethods}'";
@@ -1801,15 +1918,15 @@ class Mbe_Shipping_Helper_Data
 
 	public function select_custom_mapping_ids()
 	{
-		// TODO filter out status wc-checkout-draft from main table
 		if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
 			global $wpdb;
 			return "SELECT DISTINCT order_id FROM {$wpdb->prefix}wc_orders_meta WHERE meta_key = '" . self::SHIPMENT_SOURCE_TRACKING_CUSTOM_MAPPING . "' AND meta_value = 'yes'";
 		} else {
+			$statusFilter = array_keys(array_diff_key(wc_get_order_statuses(), ['wc-checkout-draft'=>''])); // Exclude wc-checkout-draft from the valid statuses for the orders to be listed
 			// get orders with custom mapped shipping method
 			$customMappingFilter = array(
 				'post_type' => 'shop_order',
-				'post_status' => 'wc-%',
+				'post_status' => $statusFilter,
 				'nopaging' => 'true',
 				'fields' => 'ids',
 				'meta_key' => self::SHIPMENT_SOURCE_TRACKING_CUSTOM_MAPPING,

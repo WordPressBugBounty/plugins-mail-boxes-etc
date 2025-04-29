@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Mail boxes\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-13 13:47+0000\n"
-"PO-Revision-Date: 2024-12-20 17:19+0100\n"
+"PO-Revision-Date: 2025-04-29 10:36+0200\n"
 "Last-Translator: Samuele Carpene <samuele.carpene@intesys.it>\n"
 "Language-Team: Spanish (Spain)\n"
 "Language: es_ES\n"
@@ -1712,3 +1712,54 @@ msgstr "Introduzca el umbral mínimo para el método de envío."
 
 msgid "Only one between MBE SafeValue, MBE SafeValue4Business and Courier Insurance can be activated at the same time"
 msgstr "Solo se puede activar una póliza de seguro al mismo tiempo: MBE SafeValue, MBE SafeValue4Business o Seguro Courier."
+
+msgid "Associate Department"
+msgstr "Departamento asociado"
+
+msgid "Department Address"
+msgstr "Dirección del departamento "
+
+msgid "Department Order"
+msgstr "Orden del departamento"
+
+msgid "Default Department Address"
+msgstr "Dirección del departamento por defecto"
+
+msgid "Department is mandatory for shipments. However, we detected that a default department is already configured in your MOL user settings. If you don't specify a department, the system will automatically use your MOL default department. You can override this by selecting a different department, when creating the shipment"
+msgstr "El departamento es obligatorio para los envíos. Sin embargo, detectamos que ya hay un departamento predeterminado configurado en sus ajustes de usuario MOL. Si no especifica un departamento, el sistema utilizará automáticamente su departamento predeterminado de MOL. Puede anular esta opción seleccionando un departamento diferente al crear el envío."
+
+msgid "Department is mandatory for shipments. To create shipments successfully, please specify a department manually for each shipment. If you proceed without setting a department, shipment creation will fail"
+msgstr "El departamento es obligatorio para los envíos. Para crear envíos correctamente, especifique un departamento manualmente para cada envío. Si procede sin especificar un departamento, la creación del envío fallará."
+
+msgid "Department is mandatory for shipments. However, we detected that a default department is already configured in your MOL user settings. If you don't specify an eShip default department here, the system will automatically use your MOL default department. You can override it by selecting a different eShip default department"
+msgstr "El departamento es obligatorio para los envíos. Sin embargo, hemos detectado que ya hay un departamento predeterminado configurado en sus ajustes de usuario MOL. Si no especifica un departamento predeterminado de eShip aquí, el sistema utilizará automáticamente su departamento predeterminado de MOL. Puede anularlo seleccionando un departamento predeterminado de eShip diferente"
+
+msgid "Department is mandatory for shipments. To create shipments successfully, please specify, in the plugin Shipping section, an eShip Default Department. If you proceed without setting an eShip Default Department, shipment creation will faill"
+msgstr "El Departamento es obligatorio para los envíos. Para crear envíos correctamente, especifique, en la sección Envío del complemento, un Departamento predeterminado de eShip. Si procede sin establecer un Departamento predeterminado de eShip, la creación del envío fallará."
+
+msgid "Department address"
+msgstr "Dirección del departamento"
+
+msgid "Department address selection"
+msgstr "Selección de la dirección del departamento"
+
+msgid "There was an error while updating the orders: "
+msgstr "Se ha producido un error al actualizar los pedidos:"
+
+msgid "Select a department address"
+msgstr "Seleccione una dirección de departamento"
+
+msgid "Department data associated"
+msgstr "Datos del departamento asociado"
+
+msgid "Associate department data"
+msgstr "Datos del departamento asociado"
+
+msgid "Department address not set or not valid, shipment not created”"
+msgstr "Dirección de departamento no establecida o no válida, envío no creado\""
+
+msgid "The shipping cost includes an amount of XXXX€ to cover customs duties and taxes applied to your shipment. Please be advised that additional charges may occur depending on your country's customs regulations"
+msgstr "El coste de envío incluye un importe de XXXX€ para cubrir los derechos de aduana y los impuestos aplicados a su envío. Tenga en cuenta que pueden producirse cargos adicionales en función de la normativa aduanera de su país."
+
+msgid "The shipping cost includes an amount of XXXX€ which estimates customs duties and taxes applied to your shipment. Please be advised that additional charges may occur depending on your country's customs regulations"
+msgstr "El coste de envío incluye un importe de XXXX€ que estima los derechos de aduana e impuestos aplicados a su envío. Tenga en cuenta que pueden producirse cargos adicionales en función de la normativa aduanera de su país."

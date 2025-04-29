@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2017-11-13 13:46+0000\n"
-"PO-Revision-Date: 2024-12-20 17:19+0100\n"
+"PO-Revision-Date: 2025-04-29 10:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -1732,3 +1732,54 @@ msgstr "Entrez le montant minimum pour la méthode d'expédition"
 
 msgid "Only one between MBE SafeValue, MBE SafeValue4Business and Courier Insurance can be activated at the same time"
 msgstr "Il n'est possible d'activer qu'une seule assurance à la fois : MBE SafeValue, MBE SafeValue4Business ou assurance transporteur."
+
+msgid "Associate Department"
+msgstr "Département associé"
+
+msgid "Department Address"
+msgstr "Adresse du département"
+
+msgid "Department Order"
+msgstr "Ordre du département"
+
+msgid "Default Department Address"
+msgstr "Adresse par défaut du département"
+
+msgid "Department is mandatory for shipments. However, we detected that a default department is already configured in your MOL user settings. If you don't specify a department, the system will automatically use your MOL default department. You can override this by selecting a different department, when creating the shipment"
+msgstr "Le département est obligatoire pour les envois. Cependant, nous avons détecté qu'un département par défaut est déjà configuré dans vos paramètres utilisateur MOL. Si vous ne spécifiez pas de département, le système utilisera automatiquement votre département par défaut MOL. Vous pouvez remplacer cela en sélectionnant un département différent lors de la création de l'envoi."
+
+msgid "Department is mandatory for shipments. To create shipments successfully, please specify a department manually for each shipment. If you proceed without setting a department, shipment creation will fail"
+msgstr "Le département est obligatoire pour les envois. Pour créer des envois avec succès, veuillez spécifier un département manuellement pour chaque envoi. Si vous continuez sans définir de département, la création de l'envoi échouera."
+
+msgid "Department is mandatory for shipments. However, we detected that a default department is already configured in your MOL user settings. If you don't specify an eShip default department here, the system will automatically use your MOL default department. You can override it by selecting a different eShip default department"
+msgstr "Le département est obligatoire pour les envois. Cependant, nous avons détecté qu'un département par défaut est déjà configuré dans vos paramètres utilisateur MOL. Si vous ne spécifiez pas de département par défaut eShip ici, le système utilisera automatiquement votre département par défaut MOL. Vous pouvez le remplacer en sélectionnant un département par défaut eShip différent."
+
+msgid "Department is mandatory for shipments. To create shipments successfully, please specify, in the plugin Shipping section, an eShip Default Department. If you proceed without setting an eShip Default Department, shipment creation will faill"
+msgstr "Le département est obligatoire pour les envois. Pour créer des envois avec succès, veuillez spécifier, dans la section Expédition du plugin, un département par défaut eShip. Si vous continuez sans définir de département par défaut eShip, la création de l'envoi échouera."
+
+msgid "Department address"
+msgstr "Adresse du département"
+
+msgid "Department address selection"
+msgstr "Sélection de l'adresse du département"
+
+msgid "There was an error while updating the orders: "
+msgstr "Il y a eu une erreur lors de la mise à jour des commandes :"
+
+msgid "Select a department address"
+msgstr "Sélectionnez une adresse de département"
+
+msgid "Department data associated"
+msgstr "Données du département associé"
+
+msgid "Associate department data"
+msgstr "Données du département associé"
+
+msgid "Department address not set or not valid, shipment not created”"
+msgstr "Adresse du département non définie ou non valide, envoi non créé\""
+
+msgid "The shipping cost includes an amount of XXXX€ to cover customs duties and taxes applied to your shipment. Please be advised that additional charges may occur depending on your country's customs regulations"
+msgstr "Les frais de livraison incluent un montant de XXXX€ destiné à couvrir les droits de douane et les taxes applicables à votre commande. Veuillez noter que des frais supplémentaires peuvent être exigés selon la réglementation douanière de votre pays"
+
+msgid "The shipping cost includes an amount of XXXX€ which estimates customs duties and taxes applied to your shipment. Please be advised that additional charges may occur depending on your country's customs regulations"
+msgstr "Les frais de livraison incluent un montant estimatif de XXXX€, correspondant aux droits de douane et taxes susceptibles d’être appliqués à votre commande. Veuillez noter que des frais supplémentaires peuvent s’ajouter en fonction de la réglementation douanière de votre pays"

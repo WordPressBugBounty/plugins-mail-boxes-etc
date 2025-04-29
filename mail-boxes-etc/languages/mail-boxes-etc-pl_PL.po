@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Mail boxes\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-13 13:46+0000\n"
-"PO-Revision-Date: 2024-12-20 17:19+0100\n"
+"PO-Revision-Date: 2025-04-29 10:36+0200\n"
 "Last-Translator: Rafał Borycki <rborycki@mbe.pl>\n"
 "Language-Team: Polish\n"
 "Language: pl_PL\n"
@@ -1555,3 +1555,54 @@ msgstr "Wprowadź minimalną wartość progową dla metody wysyłki."
 
 msgid "Only one between MBE SafeValue, MBE SafeValue4Business and Courier Insurance can be activated at the same time"
 msgstr "Tylko jedna z opcji: MBE SafeValue, MBE SafeValue4Business lub Ubezpieczenie kurierskie może być aktywowane w tym samym czasie."
+
+msgid "Associate Department"
+msgstr "Przypisz dział"
+
+msgid "Department Address"
+msgstr "Adres działu"
+
+msgid "Department Order"
+msgstr "Zamówienie działu"
+
+msgid "Default Department Address"
+msgstr "Domyślny adres działu"
+
+msgid "Department is mandatory for shipments. However, we detected that a default department is already configured in your MOL user settings. If you don't specify a department, the system will automatically use your MOL default department. You can override this by selecting a different department, when creating the shipment"
+msgstr "Dział jest wymagany przy wysyłkach. Wykryliśmy jednak, że w Twoich ustawieniach użytkownika MOL jest już skonfigurowany domyślny dział. Jeśli nie wskażesz działu, system automatycznie użyje działu z MOL. Możesz to nadpisać, wybierając inny dział podczas tworzenia przesyłki"
+
+msgid "Department is mandatory for shipments. To create shipments successfully, please specify a department manually for each shipment. If you proceed without setting a department, shipment creation will fail"
+msgstr "Dział jest wymagany przy wysyłkach. Aby pomyślnie utworzyć przesyłkę, proszę ręcznie przypisać dział do każdej z nich. Jeśli przejdziesz dalej bez wskazania działu, tworzenie przesyłki zakończy się niepowodzeniem"
+
+msgid "Department is mandatory for shipments. However, we detected that a default department is already configured in your MOL user settings. If you don't specify an eShip default department here, the system will automatically use your MOL default department. You can override it by selecting a different eShip default department"
+msgstr "Dział jest wymagany przy wysyłkach. Wykryliśmy jednak, że w Twoich ustawieniach użytkownika MOL jest już skonfigurowany domyślny dział. Jeśli tutaj nie wskażesz domyślnego działu eShip, system automatycznie użyje działu z MOL. Możesz to nadpisać, wybierając inny domyślny dział eShip"
+
+msgid "Department is mandatory for shipments. To create shipments successfully, please specify, in the plugin Shipping section, an eShip Default Department. If you proceed without setting an eShip Default Department, shipment creation will faill"
+msgstr "Dział jest wymagany przy wysyłkach. Aby poprawnie utworzyć przesyłkę, proszę wskazać w sekcji Wysyłka wtyczki eShip domyślny dział. Jeśli przejdziesz dalej bez ustawienia domyślnego działu eShip, tworzenie przesyłki zakończy się niepowodzeniem"
+
+msgid "Department address"
+msgstr "Adres działu"
+
+msgid "Department address selection"
+msgstr "Wybór adresu działu"
+
+msgid "There was an error while updating the orders: "
+msgstr "Wystąpił błąd podczas aktualizacji zamówień:"
+
+msgid "Select a department address"
+msgstr "Wybierz adres działu"
+
+msgid "Department data associated"
+msgstr "Dane działu zostały przypisane"
+
+msgid "Associate department data"
+msgstr "Przypisz dane działu"
+
+msgid "Department address not set or not valid, shipment not created”"
+msgstr "Adres działu nie został ustawiony lub jest nieprawidłowy, przesyłka nie została utworzona"
+
+msgid "The shipping cost includes an amount of XXXX€ to cover customs duties and taxes applied to your shipment. Please be advised that additional charges may occur depending on your country's customs regulations"
+msgstr "T&D DDP"
+
+msgid "The shipping cost includes an amount of XXXX€ which estimates customs duties and taxes applied to your shipment. Please be advised that additional charges may occur depending on your country's customs regulations"
+msgstr "T&D DAP"

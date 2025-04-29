@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Mail boxes\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-13 13:47+0000\n"
-"PO-Revision-Date: 2024-12-20 17:19+0100\n"
+"PO-Revision-Date: 2025-04-29 10:36+0200\n"
 "Last-Translator: Samuele Carpene <samuele.carpene@intesys.it>\n"
 "Language-Team: German\n"
 "Language: de_DE\n"
@@ -1796,3 +1796,54 @@ msgstr "Geben Sie den Mindestschwellenwert für die Versandmethode ein."
 
 msgid "Only one between MBE SafeValue, MBE SafeValue4Business and Courier Insurance can be activated at the same time"
 msgstr "Es kann nur eine der Versicherungen MBE SafeValue, MBE SafeValue4Business, MBE SafeValue Art oder Kurier Haftung aktiviert werden."
+
+msgid "Associate Department"
+msgstr "Assoziierte Abteilung"
+
+msgid "Department Address"
+msgstr "Abteilungsadresse"
+
+msgid "Department Order"
+msgstr "Abteilungsordnung"
+
+msgid "Default Department Address"
+msgstr "Standard-Abteilungsadresse"
+
+msgid "Department is mandatory for shipments. However, we detected that a default department is already configured in your MOL user settings. If you don't specify a department, the system will automatically use your MOL default department. You can override this by selecting a different department, when creating the shipment"
+msgstr "Für Sendungen ist die Angabe der Abteilung obligatorisch. Wir haben jedoch festgestellt, dass in Ihren MOL-Benutzereinstellungen bereits eine Standardabteilung konfiguriert ist. Wenn Sie keine Abteilung angeben, verwendet das System automatisch Ihre MOL-Standardabteilung. Sie können dies überschreiben, indem Sie beim Erstellen der Sendung eine andere Abteilung auswählen"
+
+msgid "Department is mandatory for shipments. To create shipments successfully, please specify a department manually for each shipment. If you proceed without setting a department, shipment creation will fail"
+msgstr "Für Sendungen ist die Angabe der Abteilung obligatorisch. Um Sendungen erfolgreich zu erstellen, geben Sie bitte für jede Sendung manuell eine Abteilung an. Wenn Sie fortfahren, ohne eine Abteilung festzulegen, schlägt die Sendungserstellung fehl"
+
+msgid "Department is mandatory for shipments. However, we detected that a default department is already configured in your MOL user settings. If you don't specify an eShip default department here, the system will automatically use your MOL default department. You can override it by selecting a different eShip default department"
+msgstr "Für Sendungen ist die Angabe der Abteilung obligatorisch. Wir haben jedoch festgestellt, dass in Ihren MOL-Benutzereinstellungen bereits eine Standardabteilung konfiguriert ist. Wenn Sie hier keine eShip-Standardabteilung angeben, verwendet das System automatisch Ihre MOL-Standardabteilung. Sie können es überschreiben, indem Sie eine andere eShip-Standardabteilung auswählen"
+
+msgid "Department is mandatory for shipments. To create shipments successfully, please specify, in the plugin Shipping section, an eShip Default Department. If you proceed without setting an eShip Default Department, shipment creation will faill"
+msgstr "Für Sendungen ist die Angabe der Abteilung obligatorisch. Um Sendungen erfolgreich zu erstellen, geben Sie bitte im Abschnitt „Versand“ des Plugins eine eShip-Standardabteilung an. Wenn Sie fortfahren, ohne eine eShip-Standardabteilung festzulegen, schlägt die Sendungserstellung fehl"
+
+msgid "Department address"
+msgstr "Abteilungsadresse"
+
+msgid "Department address selection"
+msgstr "Auswahl der Abteilungsadresse"
+
+msgid "There was an error while updating the orders: "
+msgstr "Beim Aktualisieren der Bestellungen ist ein Fehler aufgetreten: "
+
+msgid "Select a department address"
+msgstr "Wählen Sie eine Abteilungsadresse aus"
+
+msgid "Department data associated"
+msgstr "Zugehörige Abteilungsdaten"
+
+msgid "Associate department data"
+msgstr "Abteilungsdaten zuordnen"
+
+msgid "Department address not set or not valid, shipment not created”"
+msgstr "Abteilungsadresse nicht eingestellt oder ungültig, Sendung nicht erstellt“"
+
+msgid "The shipping cost includes an amount of XXXX€ to cover customs duties and taxes applied to your shipment. Please be advised that additional charges may occur depending on your country's customs regulations"
+msgstr "Die Versandkosten beinhalten einen Betrag von XXXX € der die Zölle und Steuern beinhaltet.Bitte beachten Sie, dass je nach Zollbestimmungen Ihres Landes zusätzliche Gebühren anfallen können."
+
+msgid "The shipping cost includes an amount of XXXX€ which estimates customs duties and taxes applied to your shipment. Please be advised that additional charges may occur depending on your country's customs regulations"
+msgstr "Die Versandkosten beinhalten einen Betrag von XXXX €, der eine Schätzung der auf Ihre Sendung anfallenden Zollgebühren und Steuern darstellt.Bitte beachten Sie, dass je nach Zollbestimmungen Ihres Landes zusätzliche Gebühren anfallen können. "

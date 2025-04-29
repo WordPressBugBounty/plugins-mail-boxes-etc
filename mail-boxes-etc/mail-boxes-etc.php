@@ -2,7 +2,7 @@
 /*
 	Plugin Name: MBE eShip
 	Description: Mail Boxes Etc. Online MBE Plugin integration for main Ecommerce platforms.
-	Version: 2.3.0
+	Version: 2.5.0
 	Author: MBE Worldwide S.p.A.
 	Author URI: https://www.mbeglobal.com/
 	Text Domain: mail-boxes-etc
@@ -142,6 +142,8 @@ require_once( MBE_ESHIP_PLUGIN_DIR . '/lib/Model/CsvPackage.php' );
 require_once( MBE_ESHIP_PLUGIN_DIR . '/lib/Model/CsvPackageProduct.php' );
 require_once( MBE_ESHIP_PLUGIN_DIR . '/lib/Model/CsvPickupAddress.php' );
 require_once( MBE_ESHIP_PLUGIN_DIR . '/lib/Model/PickupCustomData.php' );
+
+require_once (MBE_ESHIP_PLUGIN_DIR . '/lib/Metaboxes/DepartmentAddressData.php' );
 
 require_once( MBE_ESHIP_PLUGIN_DIR . '/lib/Mbe/MbeWs.php' );
 require_once( MBE_ESHIP_PLUGIN_DIR . '/lib/Mbe/MbeSoapClient.php' );
@@ -732,6 +734,12 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                     // Set or update pickup data on shipment creation
 					add_action(MBE_ESHIP_ID.'_before_create_pickup', array($this, 'mbe_edit_pickup_data' ));
 
+					// Set or update department address data in shipment list
+					add_action(MBE_ESHIP_ID.'_add_department_data', array($this, 'mbe_edit_department_address_data' ));
+
+					// Action to select a department address for the pickup order
+					add_action('admin_post_mbe_select_department_address_pickup', array($this, 'mbe_select_department_address_pickup'));
+
                     // Show Tax and Duties in Checkout shortcodes
                     add_action('woocommerce_review_order_before_submit', array($this, 'mbe_show_tax_and_duties_checkout_message' ));
 
@@ -868,7 +876,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                     if(!empty($trackingNumber)) {
 	                    if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
                             $orders = wc_get_orders( [
-                                'meta_key'   => 'woocommerce_mbe_tracking_number',
+                                'meta_key'   => Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NUMBER,
                                 'meta_value' => $trackingNumber
                             ] );
 	                    } else {
@@ -1208,6 +1216,14 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		                'pickup_data_form_page_handler'
 	                ) );
                 }
+
+				//DEPARTMENT Address Selection Page
+				if(!$this->helper->isCreationAutomatically()) {
+	                add_submenu_page( null, __( 'MBE Department Data Selection', 'mail-boxes-etc' ), __( 'MBE Department Data Selection', 'mail-boxes-etc' ), 'manage_woocommerce', MBE_ESHIP_ID . '_department_address_data_tabs', array(
+		                $this,
+                        'department_address_data_form_page_handler'
+	                ) );
+                }
 			}
 
 			/**
@@ -1423,10 +1439,10 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				$orderId      = $this->helper->getOrderId( $order );
 				$trackings    = $this->helper->getTrackings( $orderId );
 				if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
-					$tracking_url = $order->get_meta('woocommerce_mbe_tracking_url');
+					$tracking_url = $order->get_meta(Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_URL);
 					$trackingName = $this->tracking_name = $order->get_meta('woocommerce_mbe_tracking_name');
 				} else {
-					$tracking_url = get_post_meta( $orderId, 'woocommerce_mbe_tracking_url', true );
+					$tracking_url = get_post_meta( $orderId, Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_URL, true );
 					$trackingName = $this->tracking_name = get_post_meta( $orderId, 'woocommerce_mbe_tracking_name', true );
 				}
 
@@ -2222,7 +2238,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 					// check Post back and correct nonce
 					$requestId = wc_clean($_REQUEST['id']??null);
-					if ( isset( $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], basename( __FILE__ ) ) ) {
+					if ( wp_verify_nonce( $_REQUEST['nonce'], basename( __FILE__ ) ) ) {
 						$default['date'] = '';
 						$default['pickup_address_id'] = '';
 						$default['pickup_batch_id'] = null;
@@ -2306,7 +2322,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 					$item['order_ids'] = is_array($orderIds)?$orderIds:[$orderIds];
 
-                    add_meta_box( MBE_ESHIP_ID . '_pickup_data_form_meta_box',' ',
+                    add_meta_box( MBE_ESHIP_ID . '_pickup_data_form_meta_box',
+                        ' ',
                         array( $pickupModel, 'form_meta_box' ),
                         'pickup-data-editor','normal','default'
                     );
@@ -2502,7 +2519,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				}
 			}
 
-			function mbe_eship_add_tax_and_duties_fee($data) {
+			function mbe_eship_add_tax_and_duties_fee($data) { // TODO : Check if run it only when Tax and Duty TRUE
 				$selectedMethod = WC()->session->get('chosen_shipping_methods');
 				WC()->session->set( 'mbe_tax_and_duties_show_info_text', '');
 
@@ -2559,7 +2576,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                             Mbe_Shipping_Helper_Data::META_FIELD_DELIVERY_POINT_SHIPMENT,
 						    Mbe_Shipping_Helper_Data::META_FIELD_PICKUP_CUSTOM_DATA_ID,
 						    Mbe_Shipping_Helper_Data::META_FIELD_IS_PICKUP_SHIPPING,
-						    Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_MBE_STATUS
+						    Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_MBE_STATUS,
+                            Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_DEPARTMENTS_ADDRESS
                     ))) {
 						unset($formatted_meta[$key]);
 					}
@@ -2604,6 +2622,99 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				}
 
 				return $found_rate;
+			}
+
+			public function mbe_edit_department_address_data($post_ids) {
+				if($this->helper->canSelectDepartmentForOrders()) {
+							// Open default data editor and create a row for the batch ( pre-fill with default values from MOL ) and link it to the selected orders
+							$backPage = '&backpage='.urlencode( WOOCOMMERCE_MBE_TABS_PAGE);
+							wp_redirect( esc_url_raw(admin_url( 'admin.php?page=' . MBE_ESHIP_ID . '_department_address_data_tabs&orderids=' . urlencode( json_encode( $post_ids ) ).$backPage.'&nonce='.wp_create_nonce('mbe_select_department') ) ) );
+					}
+			}
+
+			public function department_address_data_form_page_handler() {
+//				$departmentAddressMeta = new \Metaboxes\DepartmentAddressData();
+				$orderIds    = isset($_REQUEST['orderids'])?json_decode(wc_clean($_REQUEST['orderids'])) : null;
+				$backPage = 'page=' . (isset( $_REQUEST['backpage'] ) ? sanitize_text_field( $_REQUEST['backpage'] ) :  MBE_ESHIP_ID . '_' . WOOCOMMERCE_MBE_TABS_PICKUP_PAGE);
+				if ( ! empty( $orderIds )
+				     && isset($_REQUEST['nonce'])
+				     && (
+					     wp_verify_nonce($_REQUEST['nonce'], 'mbe_select_department')
+					     || wp_verify_nonce($_REQUEST['nonce'], basename( __FILE__ )) // check nonce for post back (save)
+				     )
+				) {
+					if ( wp_verify_nonce( $_REQUEST['nonce'], basename( __FILE__ ) ) ) {
+                        $departmentAddressId = sanitize_key($_REQUEST['department_address_id']);
+                        $failed = [];
+						foreach ( $orderIds as $order_id ) {
+                            // get the old values to check if it needs to be updated
+							$oldValue = $this->helper->getOrderDepartmentAddressId($order_id);
+                            if ($oldValue !== $departmentAddressId) {
+	                            // Update order's meta data
+	                            if (!$this->helper->setOrderDepartmentAddressId( $order_id, $departmentAddressId)) {
+                                    $failed[] = $order_id;
+	                            }
+                            }
+                        }
+                        if(count($failed) > 0) {
+                            $notice = __('There was an error while updating the orders: ', 'mail-boxes-etc') . implode(',', $failed);
+                        } else {
+                            $this->helper->setWpAdminMessages(['message' => __('Department data associated', 'mail-boxes-etc'), 'status' => 'success']);
+	                        wp_redirect( esc_url_raw(admin_url('admin.php?'.$backPage ) ) );
+	                        exit;
+                        }
+                    }
+
+                    \Metaboxes\DepartmentAddressData::add(MBE_ESHIP_ID . '_department_address_data_form_meta_box', 'department-address-data-selection');
+
+					?>
+
+                    <div class="wrap">
+                        <div class="icon32 icon32-posts-post" id="icon-edit"><br></div>
+                        <h2><?php esc_html_e('Department address selection', 'mail-boxes-etc') ?>
+                            <a class="add-new-h2"
+                               href="<?php echo esc_url(get_admin_url( get_current_blog_id(), 'admin.php?'.$backPage )); ?>">
+								<?php esc_html_e( 'Back to list', 'mail-boxes-etc' ) ?>
+                            </a>
+                        </h2>
+
+						<?php $this->mbe_eship_wp_notification() ?>
+						<?php if ( ! empty( $notice ) ): ?>
+                            <div id="notice" class="notice notice-error is-dismissible"><p><?php echo wp_kses_post($notice) ?></p></div>
+						<?php endif; ?>
+						<?php if ( ! empty( $message ) ): ?>
+                            <div id="message" class="notice notice-success is-dismissible"><p><?php echo wp_kses_post($message) ?></p></div>
+						<?php endif; ?>
+                        <form id="form" method="POST">
+                            <input type="hidden" name="nonce" value="<?php esc_attr_e(wp_create_nonce( basename( __FILE__ ) ) )?>"/>
+<!--                            <input type="hidden" name="id" value="--><?php //esc_attr_e($item['id']) ?><!--"-->
+                            <div class="metabox-holder" id="poststuff">
+                                <div id="post-body">
+                                    <div id="post-body-content">
+										<?php do_meta_boxes('department-address-data-selection', 'normal' , $orderIds)?>
+
+                                        <input type="submit" value="<?php esc_html_e( 'Save', 'mail-boxes-etc' ) ?>" id="submit_save"
+                                               class="button-primary" name="submit_save">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <?php
+				} else {
+					wp_redirect( esc_url_raw(admin_url('admin.php?'.$backPage ) ) );
+				}
+            }
+
+			public function mbe_select_department_address_pickup() {
+				$backPage = '&backpage=' . (isset( $_REQUEST['backpage'] ) ? sanitize_text_field( $_REQUEST['backpage'] ) :  MBE_ESHIP_ID . '_' . WOOCOMMERCE_MBE_TABS_PICKUP_PAGE);
+                $post_ids = array((int)sanitize_key($_REQUEST['mbe_pickup_postid']));
+
+				if ( isset( $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], 'mbe_select_department_address_pickup' ) && $this->helper->canSelectDepartmentForOrders()) {
+					wp_redirect(esc_url_raw(admin_url( 'admin.php?page=' . MBE_ESHIP_ID . '_department_address_data_tabs&orderids=' . urlencode( json_encode( $post_ids ) ).$backPage.'&nonce='.wp_create_nonce('mbe_select_department') ) ) );
+					exit;
+				}
+				wp_redirect( esc_url_raw(get_admin_url( get_current_blog_id(), 'admin.php?' . $backPage ) ) );
 			}
 
 		}

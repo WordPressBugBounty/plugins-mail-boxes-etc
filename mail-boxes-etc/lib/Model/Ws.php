@@ -149,6 +149,14 @@ class Mbe_Shipping_Model_Ws
         return $result;
     }
 
+	public function getDepartmentsAddresses() {
+		$result=[];
+		if ($this->wsUrl && $this->wsUsername && $this->wsPassword) {
+			$result = $this->ws->getDepartmentsAddress($this->wsUrl, $this->wsUsername, $this->wsPassword);
+		}
+		return $result;
+	}
+
     private function convertInsuranceShipping($shippingList, $insuranceValue)
     {
         $result = false;

@@ -143,6 +143,8 @@ class mbe_tracking_factory
 		    $insuranceValue = 0.0;
 		    $codValue       = $orderTotal;
 
+			$logger->logVar( $order->get_items(), "order items" );
+
 		    foreach ( $order->get_items() as $item ) {
 			    $itemQty = $item['qty'];
 //                $id_product = $item['product_id'];
@@ -345,8 +347,10 @@ class mbe_tracking_factory
                 $logger->logVar($mbeShipment, "MBE SHIPMENT");
 
 	            if ($mbeShipment) {
-		            $trackingNumber = $mbeShipment->MasterTrackingMBE;
-		            $label = !empty($mbeShipment->Labels)?$mbeShipment->Labels->Label:null;
+		            $trackingNumber = $mbeShipment->MasterTrackingMBE??'';
+		            $courierTrackingNumber = $mbeShipment->CourierMasterTrk??'';
+					$courierName = $mbeShipment->Courier??'';
+		            $label = isset($mbeShipment->Labels) ? ($mbeShipment->Labels->Label ?? null) : null;
 
 		            if (is_array($label)) {
 			            $i = 1;
@@ -371,6 +375,8 @@ class mbe_tracking_factory
 
 		            if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
 			            $order->update_meta_data( Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NUMBER, $trackingNumber);
+			            $order->update_meta_data( Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_COURIER_TRACKING_NUMBER, $courierTrackingNumber);
+			            $order->update_meta_data( Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_COURIER_NAME, $courierName);
 			            $order->update_meta_data( Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NAME, $serviceName);
 			            $order->update_meta_data( woocommerce_mbe_tracking_admin::SHIPMENT_SOURCE_TRACKING_SERVICE, $service);
 			            $order->update_meta_data( woocommerce_mbe_tracking_admin::SHIPMENT_SOURCE_TRACKING_ZONE, $subzone);
@@ -378,6 +384,8 @@ class mbe_tracking_factory
 						$order->save();
 		            } else {
 			            update_post_meta( $orderId, Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NUMBER, $trackingNumber, true );
+						update_post_meta( $orderId, Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_COURIER_TRACKING_NUMBER, $courierTrackingNumber, true );
+						update_post_meta( $orderId, Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_COURIER_NAME, $courierName, true );
 			            update_post_meta( $orderId, Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NAME, $serviceName, true );
 			            update_post_meta( $orderId, woocommerce_mbe_tracking_admin::SHIPMENT_SOURCE_TRACKING_SERVICE, $service, true );
 			            update_post_meta( $orderId, woocommerce_mbe_tracking_admin::SHIPMENT_SOURCE_TRACKING_ZONE, $subzone, true );

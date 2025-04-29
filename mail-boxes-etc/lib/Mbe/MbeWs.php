@@ -261,6 +261,7 @@ class MbeWs {
 			$logArgs = json_decode(json_encode($args), true);
 	        $logArgs['RequestContainer']['Credentials'] = null;
 
+
 	        $this->logVar($logArgs, $messageTitle . ' ARGS');
 
 
@@ -1113,7 +1114,7 @@ class MbeWs {
 	/**
 	 * @throws \MbeExceptions\ApiRequestException
 	 */
-	private function sendRequest($args, $functionName, $messageTitle, $soapClient) {
+	private function sendRequest($args, $functionName, $messageTitle, $soapClient, $checkInternalId = true) {
 		$result = false;
 
 		$logArgs = json_decode(json_encode($args), true);
@@ -1133,10 +1134,12 @@ class MbeWs {
 
 		$this->checkResponseErrors($soapResult, $lastResponse);
 
-		if ( $this->isResponseValid( $soapResult, $args->RequestContainer->InternalReferenceID)) {
+		$internalReferenceIDMatches = $args->RequestContainer->InternalReferenceID === ($soapResult->RequestContainer->InternalReferenceID??null);
+
+		if ($this->isResponseValid($soapResult, $args->RequestContainer->InternalReferenceID, $checkInternalId)) {
 			$result = $soapResult->RequestContainer;
-		} else {
-			$message = ($args->RequestContainer->InternalReferenceID !== $soapResult->RequestContainer->InternalReferenceID ? 'InternalReferenceID doesn\'t match':'');
+		} elseif (!$internalReferenceIDMatches && $checkInternalId) {
+			$message = 'InternalReferenceID doesn\'t match';
 			throw new \MbeExceptions\ApiRequestEmptyResponse(esc_html($message));
 		}
 
@@ -1155,6 +1158,9 @@ class MbeWs {
 		return $args;
 	}
 
+	/**
+	 * @throws \MbeExceptions\ApiRequestException
+	 */
 	private function setShipmentContainer( $system, $username, $password, string $internalReferenceID, $firstName, $lastName, $companyName, $address, $phone, $postCode, $city, $state, $country, $email, $subZone, $shipperType, $isCod, $codValue, $insurance, $insuranceValue, $service, $shipmentType, $reference, $items, $products, $goodsValue, $notes, $insuranceCode = null ): stdClass {
 //WS ARGS
 		$args = $this->setBaseClass( $system, $username, $password );
@@ -1184,6 +1190,17 @@ class MbeWs {
 		$args->RequestContainer->Recipient->Email   = $email;
 		if ( $subZone ) {
 			$args->RequestContainer->Recipient->SubzoneId = $subZone;
+		}
+
+		//Department ID if any
+
+		if($this->helper->getCustomerAddressAsSender()){
+			$departmentAddressId = $this->helper->getOrderDepartmentAddressId($reference);
+			// If address is missing, but it's mandatory, it will throw an error
+			if ($this->helper->getMandatoryDepartment() && empty($departmentAddressId) && !$this->helper->hasDepartmentDefault()) {
+				throw new \MbeExceptions\ApiRequestException(__('Order', 'mail-boxes-etc') . ':' . $reference . ' - ' . __('Department address not set or not valid, shipment not created', 'mail-boxes-etc'));
+			}
+			$args->RequestContainer->DepartmentID = $departmentAddressId ?? '';
 		}
 
 		$shipmentNode = new stdClass;
@@ -1286,12 +1303,18 @@ class MbeWs {
 		}
 	}
 
-	private function isResponseValid(object $soapResult, string $internalReferenceID): bool {
-		return isset($soapResult->RequestContainer->Status)
-		       && $soapResult->RequestContainer->Status == self::EXPECTED_STATUS
-		       && isset($soapResult->RequestContainer->InternalReferenceID)
-		       && $soapResult->RequestContainer->InternalReferenceID == $internalReferenceID;
+	private function isResponseValid(object $soapResult, string $internalReferenceID, bool $checkInternalId = true): bool {
+		$isValid = isset($soapResult->RequestContainer->Status)
+		           && $soapResult->RequestContainer->Status == self::EXPECTED_STATUS;
+
+		if ($checkInternalId) {
+			$isValid = $isValid && isset($soapResult->RequestContainer->InternalReferenceID)
+			           && $soapResult->RequestContainer->InternalReferenceID == $internalReferenceID;
+		}
+
+		return $isValid;
 	}
+
 
 	protected function getDeliveryPointMolServiceByNetworkCode( $networkCode, $orderId ) {
 		$combined = array_combine( $this->helper->getOrderDeliveryPointServices($orderId)['courier'],  $this->helper->getOrderDeliveryPointServices($orderId)['mol']);
@@ -1336,6 +1359,59 @@ class MbeWs {
 		$node->MBESafeValueValue          = $mbeSafeValue ? $insuranceValue : '';;
 		$node->MBESafeValue4Business      = $mbeSafeValue4Business;
 		$node->MBESafeValue4BusinessValue = $mbeSafeValue4Business ? $insuranceValue : '';
+	}
+
+	public function getDepartmentsAddress( $ws, $username, $password ) {
+		$messageTitle = 'GET CUSTOMER DEPARTMENTS ADDRESS ';
+		$this->log($messageTitle);
+		$internalReferenceID = $this->generateRandomString();
+
+		$result = false;
+
+		try {
+			$soapClient = new MbeSoapClient( $ws, array(
+				'encoding' => 'utf-8',
+				'trace'    => 1
+			), $username, $password, false );
+
+			$args = new stdClass;
+			$args->RequestContainer = new stdClass;
+//			$args->RequestContainer->System = $system;
+			$args->RequestContainer->Credentials = new stdClass();
+			$args->RequestContainer->Credentials->Username = $username;
+			$args->RequestContainer->Credentials->Passphrase = $password;
+			$args->RequestContainer->CustomerID = $this->helper->getCustomerID();
+			$args->RequestContainer->OnlyWithEmptyAddress = false;
+
+			$args->RequestContainer->InternalReferenceID = $internalReferenceID;
+
+			$soapResult = $soapClient->__soapCall( "ListDepartmentsRequest", array( $args ) );
+
+			$lastResponse = $soapClient->__getLastResponse();
+
+			$this->logVar( $lastResponse, $messageTitle . ' RESPONSE' );
+
+			$this->checkResponseErrors($soapResult, $lastResponse);
+
+			$this->logVar($args, $messageTitle . ' REQUEST ');
+
+			$result = [];
+
+			if (is_array($soapResult->RequestContainer->Department)) {
+				$result = array_map(function ($address) {
+					return get_object_vars($address);
+				}, $soapResult->RequestContainer->Department);
+			} else {
+				$result[] = get_object_vars($soapResult->RequestContainer->Department);
+			}
+
+		} catch (Exception $e) {
+			$this->log($messageTitle . ' EXCEPTION');
+			$this->log($e->getMessage());
+		}
+
+		$this->logVar($result, $messageTitle . ' RESULT');
+		return $result;
 	}
 
 }

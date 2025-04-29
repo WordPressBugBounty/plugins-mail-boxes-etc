@@ -90,18 +90,6 @@ class Mbe_E_Link_Pickup_Batches_List_Table extends WP_List_Table
 							    	<path d="m13.835 7.578-.005.007-7.137 7.137 2.139 2.138 7.143-7.142-2.14-2.14Zm-10.696 3.59 2.139 2.14 7.138-7.137.007-.005-2.141-2.141-7.143 7.143Zm1.433 4.261L2 12.852.051 18.684a1 1 0 0 0 1.265 1.264L7.147 18l-2.575-2.571Zm14.249-14.25a4.03 4.03 0 0 0-5.693 0L11.7 2.611 17.389 8.3l1.432-1.432a4.029 4.029 0 0 0 0-5.689Z"/>
 							  	</svg>
 						   </button></a>';
-//			$editButton = '<form action="' . esc_url( admin_url( 'admin-post.php' ) ) .'" method="post" id="mbe_edit_pickup" style="display: inline-flex">
-//								<input type="hidden" name="action" value="mbe_edit_pickup"/>
-//								<input type="hidden" name="nonce" value="'.wp_create_nonce('mbe_edit_pickup') .'"/>
-//								<input type="hidden" name="mbe_pickup_id" value="'. urlencode( $item['id'] ).'"/>
-//								<input type="hidden" name="orderids" value="'. json_encode($orderIds).'"/>
-//								<input type="hidden" name="backpage" value="'.urlencode($backPage).'"/>
-//                                <button type="submit" style="height:35px; width:35px; margin: 0px 5px 0px 5px; padding:4px 6px 4px 6px; color:#778899FF; cursor:pointer;" title="'.__('Edit pickup batch', 'mail-boxes-etc').'">
-//                                    <svg style="height: 16px;width: 16px;" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="-1 -1 21 21">
-//                                        <path d="m13.835 7.578-.005.007-7.137 7.137 2.139 2.138 7.143-7.142-2.14-2.14Zm-10.696 3.59 2.139 2.14 7.138-7.137.007-.005-2.141-2.141-7.143 7.143Zm1.433 4.261L2 12.852.051 18.684a1 1 0 0 0 1.265 1.264L7.147 18l-2.575-2.571Zm14.249-14.25a4.03 4.03 0 0 0-5.693 0L11.7 2.611 17.389 8.3l1.432-1.432a4.029 4.029 0 0 0 0-5.689Z"/>
-//                                    </svg>
-//                               </button>
-//						   </form>';
 
 			$sendButton = '<form action="' . esc_url( admin_url( 'admin-post.php' ) ) .'" method="post" id="mbe_send_pickup" style="display: inline-flex">
 								<input type="hidden" name="action" value="mbe_send_pickup"/>
@@ -279,9 +267,9 @@ class Mbe_E_Link_Pickup_Batches_List_Table extends WP_List_Table
             $html = '';
 	        if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
 		        $order = wc_get_order($item['orderid']);
-		        $url = $order->get_meta('woocommerce_mbe_tracking_url');
+		        $url = $order->get_meta(Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_URL);
 	        } else {
-		        $url = get_post_meta($item['orderid'], 'woocommerce_mbe_tracking_url', true);
+		        $url = get_post_meta($item['orderid'], Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_URL, true);
 	        }
 
             $trackingString = $this->helper->getTrackingsString($item['orderid']);
@@ -404,6 +392,17 @@ class Mbe_E_Link_Pickup_Batches_List_Table extends WP_List_Table
 								</button>
 						</form>';
 
+		$departmentButton = '<form action="' . esc_url( admin_url( 'admin-post.php' ) ) .'" method="post" id="mbe_select_department_address_pickup" style="display: inline-flex">
+								<input type="hidden" name="action" value="mbe_select_department_address_pickup"/>
+								<input type="hidden" name="nonce" value="'.wp_create_nonce('mbe_select_department_address_pickup') .'"/>
+								<input type="hidden" name="mbe_pickup_postid" value="'. urlencode( $item['orderid'] ).'"/>
+								<button type="submit" class="mbe_pickup_order_button" title="'.__('Department address selection', 'mail-boxes-etc').'">
+                                    <svg style="height: 18px;width: 18px; padding-top: 4px;" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 4h12M6 4v16M6 4H5m13 0v16m0-16h1m-1 16H6m12 0h1M6 20H5M9 7h1v1H9V7Zm5 0h1v1h-1V7Zm-5 4h1v1H9v-1Zm5 0h1v1h-1v-1Zm-3 4h2a1 1 0 0 1 1 1v4h-4v-4a1 1 0 0 1 1-1Z"/>
+                                    </svg>
+								</button>
+						</form>';
+
 		return '<div style="float: right">' .
 		       '<style>' .
 		       'button.mbe_pickup_order_button {
@@ -419,7 +418,7 @@ class Mbe_E_Link_Pickup_Batches_List_Table extends WP_List_Table
                     background-color:#e3e3e3;
                   }' .
 		       '</style>' .
-		       ($this->helper->hasTracking($item['orderid'])?$returnButton:$detachButton) .
+		       ($this->helper->hasTracking($item['orderid'])?$returnButton:$detachButton.($this->helper->canSelectDepartmentForOrders()?$departmentButton:'')).
 		       '</div>';
 
 	}

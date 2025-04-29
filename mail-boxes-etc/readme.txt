@@ -4,7 +4,7 @@ Tags: woocommerce,mbe,eShip,mailbox
 Requires at least: 6.2
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 2.3.0
+Stable tag: 2.5.0
 WC requires at least: 6.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -78,6 +78,13 @@ Yes. Please refer to http://php.net/manual/en/book.soap.php
 11. Shipping rates plugin choices in cart totals
 
 == Changelog ==
+=  =
+* Removed checkout draft orders from MBE shipment list
+
+= 2.4.0 =
+* Courier tracking
+* Department management
+
 = 2.3.0 =
 * Integration of the shipment insurance service
 * Integration of the service for tracking shipping statuses
