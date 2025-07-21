@@ -64,7 +64,7 @@ class Mbe_Shipping_Helper_Csv
 				$result[$currentKey] = $currentRowValue;
 			}
 		} else {
-			throw new ValidationException(esc_html__('Expected ('. count($headerDefinition) .') columns, found ('. count($row) .').'));
+			throw new ValidationException(esc_html__('Expected ('. count($headerDefinition) .') columns, found ('. count($row) .').', 'mail-boxes-etc'));
 		}
 		return $result;
 	}

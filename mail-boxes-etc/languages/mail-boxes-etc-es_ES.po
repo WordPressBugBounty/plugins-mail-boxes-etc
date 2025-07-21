@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Mail boxes\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-13 13:47+0000\n"
-"PO-Revision-Date: 2025-04-29 10:36+0200\n"
+"PO-Revision-Date: 2025-07-01 12:10+0200\n"
 "Last-Translator: Samuele Carpene <samuele.carpene@intesys.it>\n"
 "Language-Team: Spanish (Spain)\n"
 "Language: es_ES\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.6\n"
 "X-Poedit-KeywordsList: __\n"
 "X-Poedit-Basepath: /home/web/php59/woombe/wordpress46/wp-content/plugins/mbe-woocommerce-shipping-method\n"
 "X-Poedit-SearchPath-0: .\n"
@@ -1755,11 +1755,41 @@ msgstr "Datos del departamento asociado"
 msgid "Associate department data"
 msgstr "Datos del departamento asociado"
 
-msgid "Department address not set or not valid, shipment not created”"
-msgstr "Dirección de departamento no establecida o no válida, envío no creado\""
+msgid "Department address not set or not valid, shipment not created"
+msgstr "Dirección de departamento no establecida o no válida, envío no creado"
 
 msgid "The shipping cost includes an amount of XXXX€ to cover customs duties and taxes applied to your shipment. Please be advised that additional charges may occur depending on your country's customs regulations"
 msgstr "El coste de envío incluye un importe de XXXX€ para cubrir los derechos de aduana y los impuestos aplicados a su envío. Tenga en cuenta que pueden producirse cargos adicionales en función de la normativa aduanera de su país."
 
 msgid "The shipping cost includes an amount of XXXX€ which estimates customs duties and taxes applied to your shipment. Please be advised that additional charges may occur depending on your country's customs regulations"
 msgstr "El coste de envío incluye un importe de XXXX€ que estima los derechos de aduana e impuestos aplicados a su envío. Tenga en cuenta que pueden producirse cargos adicionales en función de la normativa aduanera de su país."
+
+msgid "Create return shipment - pickup"
+msgstr "Crear envío de devolución - recogida"
+
+msgid "Please select only one shipped order"
+msgstr "Por favor, seleccione solo un pedido enviado"
+
+msgid "Please select only an order not already returned"
+msgstr "Por favor, seleccione solo un pedido que no haya sido devuelto"
+
+msgid "Return shipment"
+msgstr "Envío de devolución"
+
+msgid "Return shipment created"
+msgstr "Envío de devolución creado"
+
+msgid "Order not selected or not found"
+msgstr "Pedido no seleccionado o no encontrado"
+
+msgid "Recipient Address"
+msgstr "Dirección del destinatario"
+
+msgid "Sender Address"
+msgstr "Dirección del remitente"
+
+msgid "Pickup Details"
+msgstr "Detalles de la recogida"
+
+msgid "The field \"Province\" must not exceed 2 characters."
+msgstr "El campo \"Provincia\" no debe tener más de 2 caracteres."

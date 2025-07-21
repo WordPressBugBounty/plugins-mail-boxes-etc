@@ -25,6 +25,11 @@ class Mbe_Shipping_Helper_Data
 	const SHIPMENT_SOURCE_TRACKING_CUSTOM_MAPPING = "woocommerce_mbe_tracking_custom_mapping";
 	const SHIPMENT_SOURCE_TRACKING_NAME = "woocommerce_mbe_tracking_name";
 	const SHIPMENT_SOURCE_RETURN_TRACKING_NUMBER = "woocommerce_mbe_return_tracking_number";
+	const SHIPMENT_SOURCE_RETURN_COURIER_TRACKING_NUMBER = "woocommerce_mbe_return_courier_tracking_number";
+	const SHIPMENT_SOURCE_RETURN_TRACKING_FILENAME = 'woocommerce_mbe_return_tracking_filename';
+	const SHIPMENT_SOURCE_RETURN_TRACKING_MBE_STATUS = "woocommerce_mbe_return_tracking_mbe_status";
+	const SHIPMENT_SOURCE_RETURN_COURIER_NAME = "woocommerce_mbe_return_courier_name";
+
 
 	const MBE_CSV_PACKAGES_TABLE_NAME = MBE_ESHIP_ID . '_' . 'standard_packages';
 	const MBE_CSV_PACKAGES_PRODUCT_TABLE_NAME = MBE_ESHIP_ID . '_' . 'standard_packages_products';
@@ -487,6 +492,11 @@ class Mbe_Shipping_Helper_Data
 		return $ws->getCustomerPermission('enabledThirdPartyPickups');
 	}
 
+	public function getEnabledAdvanceReturn() {
+		$ws = new Mbe_Shipping_Model_Ws();
+		return $ws->getCustomerPermission('enabledAdvanceReturn');
+	}
+
 	public function getGelProximityMerchantCode() {
 		$ws = new Mbe_Shipping_Model_Ws();
 		$customer = $ws->getCustomer();
@@ -897,7 +907,7 @@ class Mbe_Shipping_Helper_Data
 
 	    if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
 		    $order = wc_get_order($post_id);
-		    $value = $order->get_meta(self::SHIPMENT_SOURCE_TRACKING_NUMBER);
+		    $value = $order===false?'':$order->get_meta(self::SHIPMENT_SOURCE_TRACKING_NUMBER);
 	    } else {
 		    $value = get_post_meta($post_id, self::SHIPMENT_SOURCE_TRACKING_NUMBER, true);
 	    }
@@ -1016,18 +1026,14 @@ class Mbe_Shipping_Helper_Data
         return $result;
     }
 
-    public function getFileNames($orderId)
+    public function getFileNames($orderId, $metaKey = self::SHIPMENT_SOURCE_TRACKING_FILENAME)
     {
         $result = array();
 	    if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
 		    $order = wc_get_order($orderId);
-			if($order) {
-				$files = $order->get_meta(self::SHIPMENT_SOURCE_TRACKING_FILENAME);
-			} else {
-				$files = '';
-			}
+			$files = $order === false ? '' :$order->get_meta($metaKey);
 	    } else {
-		    $files = get_post_meta($orderId, self::SHIPMENT_SOURCE_TRACKING_FILENAME, true);
+		    $files = get_post_meta($orderId, $metaKey, true);
 	    }
         if ($files != '') {
             if (strpos($files, self::MBE_SHIPPING_TRACKING_SEPARATOR) !== false) {
@@ -1048,11 +1054,19 @@ class Mbe_Shipping_Helper_Data
 		return $this->getOrderItemShippingMeta($orderId, self::SHIPMENT_SOURCE_TRACKING_MBE_STATUS);
 	}
 
+	public function setOrderMbeAdvancedReturnTrackingStatus( $orderId, $value ) {
+		return $this->updateOrderItemShippingMeta($orderId, $value, self::SHIPMENT_SOURCE_RETURN_TRACKING_MBE_STATUS);
+	}
+
+	public function getOrderMbeAdvancedReturnTrackingStatus( $orderId ) {
+		return $this->getOrderItemShippingMeta($orderId, self::SHIPMENT_SOURCE_RETURN_TRACKING_MBE_STATUS);
+	}
+
     public function getTrackings($shipmentId)
     {
 	    if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
 		    $order = wc_get_order($shipmentId);
-		    $tracking = $order->get_meta(self::SHIPMENT_SOURCE_TRACKING_NUMBER);
+		    $tracking = $order===false?'':$order->get_meta(self::SHIPMENT_SOURCE_TRACKING_NUMBER);
 	    } else {
 		    $tracking = get_post_meta($shipmentId, self::SHIPMENT_SOURCE_TRACKING_NUMBER, true);
 	    }
@@ -1070,11 +1084,23 @@ class Mbe_Shipping_Helper_Data
         })) : $value;
     }
 
+	public function getReturnTrackings($shipmentId)
+	{
+		if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
+			$order = wc_get_order($shipmentId);
+			$tracking = $order===false?'':$order->get_meta(self::SHIPMENT_SOURCE_RETURN_TRACKING_NUMBER);
+		} else {
+			$tracking = get_post_meta($shipmentId, self::SHIPMENT_SOURCE_RETURN_TRACKING_NUMBER, true);
+		}
+
+		return $tracking;
+	}
+
 	public function getCourierTrackings($shipmentId)
 	{
 		if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
 			$order = wc_get_order($shipmentId);
-			$tracking = $order->get_meta(self::SHIPMENT_SOURCE_COURIER_TRACKING_NUMBER);
+			$tracking = $order===false?'':$order->get_meta(self::SHIPMENT_SOURCE_COURIER_TRACKING_NUMBER);
 		} else {
 			$tracking = get_post_meta($shipmentId, self::SHIPMENT_SOURCE_COURIER_TRACKING_NUMBER, true);
 		}
@@ -1092,12 +1118,45 @@ class Mbe_Shipping_Helper_Data
 		})) : $value;
 	}
 
+	public function getReturnCourierTrackings($shipmentId)
+	{
+		if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
+			$order = wc_get_order($shipmentId);
+			$tracking = $order===false?'':$order->get_meta(self::SHIPMENT_SOURCE_RETURN_COURIER_TRACKING_NUMBER);
+		} else {
+			$tracking = get_post_meta($shipmentId, self::SHIPMENT_SOURCE_RETURN_COURIER_TRACKING_NUMBER, true);
+		}
+
+		return $tracking;
+
+//		if ( str_contains( $tracking, self::MBE_SHIPPING_TRACKING_SEPARATOR ) ) {
+//			$value = explode(self::MBE_SHIPPING_TRACKING_SEPARATOR, $tracking);
+//
+//		}
+//		else {
+//			$value = explode(self::MBE_SHIPPING_TRACKING_SEPARATOR__OLD, $tracking);
+//		}
+//
+//		return is_array($value) ? (array_filter($value, function ($value) {
+//			return $value !== '';
+//		})) : $value;
+	}
+
 	public function getCourierName( $shipmentId ) {
 		if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
 			$order = wc_get_order($shipmentId);
-			return $order->get_meta(self::SHIPMENT_SOURCE_COURIER_NAME);
+			return $order===false?'':$order->get_meta(self::SHIPMENT_SOURCE_COURIER_NAME);
 		} else {
 			return get_post_meta($shipmentId, self::SHIPMENT_SOURCE_COURIER_NAME, true);
+		}
+	}
+
+	public function getReturnCourierName( $shipmentId ) {
+		if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
+			$order = wc_get_order($shipmentId);
+			return $order===false?'':$order->get_meta(self::SHIPMENT_SOURCE_RETURN_COURIER_NAME);
+		} else {
+			return get_post_meta($shipmentId, self::SHIPMENT_SOURCE_RETURN_COURIER_NAME, true);
 		}
 	}
 
@@ -1105,7 +1164,7 @@ class Mbe_Shipping_Helper_Data
     {
 	    if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
 		    $order = wc_get_order($shipmentId);
-		    $result = $order->get_meta(self::SHIPMENT_SOURCE_TRACKING_NUMBER);
+		    $result = $order===false?'':$order->get_meta(self::SHIPMENT_SOURCE_TRACKING_NUMBER);
 	    } else {
 		    $result = get_post_meta($shipmentId, self::SHIPMENT_SOURCE_TRACKING_NUMBER, true);
 	    }
@@ -1116,12 +1175,36 @@ class Mbe_Shipping_Helper_Data
         return $result;
     }
 
-    public function getTrackingSetting() {
+	public function  getCourierTrackingsString($shipmentId)
+	{
+		if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
+			$order = wc_get_order($shipmentId);
+			$result = $order===false?'':$order->get_meta(self::SHIPMENT_SOURCE_COURIER_TRACKING_NUMBER);
+		} else {
+			$result = get_post_meta($shipmentId, self::SHIPMENT_SOURCE_COURIER_TRACKING_NUMBER, true);
+		}
+		//compatibility replace
+		if ( str_contains( $result, self::MBE_SHIPPING_TRACKING_SEPARATOR__OLD ) ) {
+			$result = str_replace(self::MBE_SHIPPING_TRACKING_SEPARATOR__OLD, self::MBE_SHIPPING_TRACKING_SEPARATOR, $result);
+		}
+		return $result;
+	}
+
+
+	public function getTrackingSetting() {
 	    return $this->getOption(self::XML_PATH_ADD_TRACK_ID);
     }
 
 	public function getTrackingFullData( $orderId ) {
 		$tracking = $this->getOrderMbeTrackingStatus($orderId);
+		if(!empty($tracking)) {
+			return unserialize($tracking);
+		}
+		return null;
+	}
+
+	public function getAdvancedReturnTrackingFullData( $orderId ) {
+		$tracking = $this->getOrderMbeAdvancedReturnTrackingStatus($orderId);
 		if(!empty($tracking)) {
 			return unserialize($tracking);
 		}
@@ -1289,7 +1372,7 @@ class Mbe_Shipping_Helper_Data
 	        $orderId = $this->getOrderId($order);
 	        if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
 		        $order = wc_get_order($orderId);
-		        return $order->get_meta('_shipping_method_title');
+		        return $order===false?'':$order->get_meta('_shipping_method_title');
 	        } else {
 		        return get_post_meta($orderId, '_shipping_method_title', true);
 	        }
@@ -1864,11 +1947,20 @@ class Mbe_Shipping_Helper_Data
 		return (strpos(strtolower($this->getWsUrl()),'onlinembe') !== false);
 	}
 
+	public function canAdvancedReturn() {
+		if ( $this->getCanCreateCourierWaybill() && $this->isEnabledThirdPartyPickups() && $this->getEnabledAdvanceReturn() ) {
+			return true;
+		}
+		return false;
+	}
+
 	public function isReturned($post_id) {
 		if(empty($post_id)) {return false;}
 		if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
 			$order = wc_get_order($post_id);
-			return $order->get_meta(self::SHIPMENT_SOURCE_RETURN_TRACKING_NUMBER);
+			return !empty(
+				($order===false?'':$order->get_meta(self::SHIPMENT_SOURCE_RETURN_TRACKING_NUMBER) )
+			);
 		} else {
 			return !empty(get_post_meta($post_id, self::SHIPMENT_SOURCE_RETURN_TRACKING_NUMBER, true));
 		}
@@ -2207,5 +2299,159 @@ class Mbe_Shipping_Helper_Data
 			throw new DbException( esc_html($e->getMessage()) );
 		}
 	}
+
+	/**
+	 * Get product weight and price
+	 * 
+	 * @param WC_Product $product The product object
+	 * @return array Array with weight and price
+	 */
+	public function getProductWeightPrice($product)
+	{
+		if (version_compare(WC()->version, '3', '>=')) {
+			$productResult['weight'] = (float)$product->get_weight();
+			$productResult['price'] = (float)$product->get_price();
+		} else {
+			$productResult['weight'] = (float)$product->weight;
+			$productResult['price'] = (float)$product->price;
+		}
+
+		return $productResult;
+	}
+
+	/**
+	 * Get insurance value for an item
+	 * 
+	 * @param array $item The order item
+	 * @return float The insurance value
+	 */
+	public function getInsuranceValue($item)
+	{
+		$subTotalKey     = isset($item["subtotal"]) ? "subtotal" : "line_subtotal";
+		$subTotalTaxKey  = isset($item["subtotal"]) ? "subtotal_tax" : "line_subtotal_tax";
+
+		$subTotal    = $item[$subTotalKey];
+		$subTotalTax = $item[$subTotalTaxKey];
+
+		if ($this->getShipmentsInsuranceMode() === self::MBE_INSURANCE_WITH_TAXES) {
+			return $subTotal + $subTotalTax;
+		}
+
+		return $subTotal;
+	}
+
+	/**
+	 * Create products array for MBE shipping
+	 *
+	 * @param WC_Order $order The order object
+	 * @param bool $singleProduct Whether to create a product array for a single product or all products
+	 * @param array $singleProductItem Optional item data when $singleProduct is true
+	 * @return array Array of product objects for MBE shipping
+	 */
+	public function createProductsArrayForShipping($order, $singleProduct = false, $singleProductItem = null)
+	{
+		$products = array();
+
+		// If single product mode and item is provided
+		if ($singleProduct && $singleProductItem) {
+			$item = $singleProductItem;
+			$itemQty = $item['qty'];
+			$product = $this->getProductFromItem($item);
+
+			$p = new stdClass;
+			$p->SKUCode = $product->get_sku();
+			$p->Description = $this->getProductTitleFromItem($item);
+			$p->Quantity = 1; // Always 1 for single product mode
+			$p->Currency = $order->get_currency();
+
+			// Calculate price based on subtotal
+			if (isset($item["subtotal"])) {
+				$subTotal = $item["subtotal"];
+			} else {
+				$subTotal = $item["line_subtotal"];
+			}
+
+			$p->Price = ($subTotal) / $itemQty;
+			$products[] = $p;
+		} 
+		// Process all items in the order
+		else {
+			foreach ($order->get_items() as $item) {
+				$itemQty = $item['qty'];
+				$product = $this->getProductFromItem($item);
+
+				$p = new stdClass;
+				$p->SKUCode = $product->get_sku();
+				$p->Description = $this->getProductTitleFromItem($item);
+				$p->Quantity = $itemQty;
+				$p->Currency = $order->get_currency();
+
+				// Get the product weight and price
+				$weightPrice = $this->getProductWeightPrice($product);
+
+				$p->Price = $weightPrice['price'];
+				$products[] = $p;
+			}
+		}
+
+		return $products;
+	}
+
+	public static function saveShipmentDocument($type, $content, $filename)
+	{
+		$helper = new Mbe_Shipping_Helper_Data();
+		$logger = new Mbe_Shipping_Helper_Logger();
+
+		$ext = "txt";
+		if ($type == "HTML") {
+			$ext = "html";
+		}
+		elseif ($type == "PDF") {
+			$ext = "pdf";
+		}
+		elseif ($type == "GIF") {
+			$ext = "gif";
+		}
+		$filePath = $helper->getShipmentFilePath($filename, $ext);
+		$saveResult = file_put_contents($filePath, $content);
+
+		$message = "Saving shipping document :" . $filePath;
+
+		if ($saveResult) {
+			$message .= " OK";
+		}
+		else {
+			$message .= " FAILURE";
+		}
+
+		$logger->log($message);
+		return $saveResult;
+	}
+
+	public static function saveMultipleShipmentInfo($post_id, $key, $value)
+	{
+		if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
+			$order = wc_get_order($post_id);
+			$old_meta = $order === false? '' : $order->get_meta($key);
+			if (!empty($old_meta)) {
+				$old_meta = $old_meta . Mbe_Shipping_Helper_Data::MBE_SHIPPING_TRACKING_SEPARATOR . $value;
+				$order->update_meta_data($key,$old_meta);
+			} else {
+				$order->add_meta_data($key, $value, true);
+			}
+			$order->save();
+		} else {
+			$old_meta = get_post_meta($post_id, $key, true);
+			// Update post meta
+			if (!empty($old_meta)) {
+				$old_meta = $old_meta . Mbe_Shipping_Helper_Data::MBE_SHIPPING_TRACKING_SEPARATOR . $value;
+				update_post_meta($post_id, $key, $old_meta);
+			}
+			else {
+				add_post_meta($post_id, $key, $value, true);
+			}
+		}
+	}
+
 
 }

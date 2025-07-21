@@ -13,7 +13,6 @@ trait ShipmentActions {
 		$helper           = new \Mbe_Shipping_Helper_Data();
 
 		include_once MBE_ESHIP_PLUGIN_DIR . 'includes/class-mbe-tracking-factory.php';
-//		$orderId = $helper->getOrderId($order);
 		return mbe_tracking_factory::create($orderId, $pickupInfo);
 	}
 
@@ -66,7 +65,6 @@ trait ShipmentActions {
 			if ( $helper->hasTracking( $post_id ) ) {
 				array_push( $alreadyCreatedIds, $post_id );
 			} else {
-//				$order = new \WC_Order( $post_id );
 				if ( $this->process_order( $post_id, $pickupInfo ) ) {
 					array_push( $toCreationIds, $post_id );
 				} else {
@@ -81,7 +79,6 @@ trait ShipmentActions {
 				'status'  => urlencode( 'updated' )
 			] );
 			$return['count'] = count( $toCreationIds );
-//                        echo '<div class="updated"><p>' . sprintf(__('Total of %d order shipment(s) have been created.', 'mail-boxes-etc'), $toCreationIds)  . '</p></div>';
 		}
 		if ( count( $alreadyCreatedIds ) > 0 ) {
 			$helper->setWpAdminMessages( [
@@ -299,4 +296,70 @@ trait ShipmentActions {
 		return true;
 	}
 
+	/**
+	 * @throws \Exception
+	 */
+	public function createAdvancedReturnShipment( $orderId, $returnData = [] ) {
+		$ws               = new \Mbe_Shipping_Model_Ws();
+
+		$returnedShipping = $ws->advancedReturnShipping( $orderId, $returnData );
+
+		if ( $returnedShipping ) {
+			$logger = new \Mbe_Shipping_Helper_Logger();
+
+			$trackingNumber        = $returnedShipping->MasterTrackingMBE ?? '';
+			$courierTrackingNumber = $returnedShipping->CourierMasterTrk ?? '';
+			$courierName           = $returnedShipping->Courier ?? '';
+
+			$label = isset($returnedShipping->Labels) ? ($returnedShipping->Labels->Label ?? null) : null;
+
+			if (is_array($label)) {
+				$i = 1;
+				foreach ($label as $l) {
+					$fileName = 'MBE_' . $orderId . '_' . $trackingNumber . '_' . $i;
+					if(!empty($l) && self::saveShipmentDocument($l->Type, $l->Stream, $fileName)) {
+						self::saveMultipleShipmentInfo($orderId, \Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_RETURN_TRACKING_FILENAME, $fileName . '.' . strtolower($l->Type));
+					}
+					$i++;
+				}
+			}
+			else {
+				$fileName = 'MBE_' . $orderId . '_' . $trackingNumber;
+				if(!empty($label) && self::saveShipmentDocument($label->Type, $label->Stream, $fileName)) {
+					self::saveMultipleShipmentInfo( $orderId, \Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_RETURN_TRACKING_FILENAME, $fileName . '.' . strtolower( $label->Type ));
+				} else {
+					$logger->log('Missing label in advanced return response or error saving the label file');
+				}
+			}
+
+			// add or update metadata
+			if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
+				$order = wc_get_order( $orderId );
+				$order->update_meta_data( \Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_RETURN_TRACKING_NUMBER, $trackingNumber );
+				$order->update_meta_data( \Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_RETURN_COURIER_TRACKING_NUMBER, $courierTrackingNumber );
+				$order->update_meta_data( \Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_RETURN_COURIER_NAME, $courierName );
+				$order->save();
+			} else {
+				update_post_meta( $orderId, \Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_RETURN_TRACKING_NUMBER, $trackingNumber, true );
+				update_post_meta( $orderId, \Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_RETURN_COURIER_TRACKING_NUMBER, $courierTrackingNumber, true );
+				update_post_meta( $orderId, \Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_RETURN_COURIER_NAME, $courierName, true );
+			}
+
+			return true;
+		}
+
+		return false;
+
+	}
+	public static function saveShipmentDocument($type, $content, $filename)
+	{
+		$helper = new \Mbe_Shipping_Helper_Data();
+		return $helper->saveShipmentDocument($type, $content, $filename);
+	}
+
+	public static function saveMultipleShipmentInfo($post_id, $key, $value)
+	{
+		$helper = new \Mbe_Shipping_Helper_Data();
+		$helper->saveMultipleShipmentInfo($post_id, $key, $value);
+	}
 }

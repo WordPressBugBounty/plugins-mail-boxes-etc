@@ -24,7 +24,7 @@ trait Mbe_Entity_Model_Trait {
 				'message' => urlencode( $wpdb->last_error ),
 				'status'  => urlencode( 'error' )
 			] );
-			\WC_Admin_Settings::add_error( __( 'Error while truncating table ' ) . $this->getTableName() . ' :' . $wpdb->last_error );
+			\WC_Admin_Settings::add_error( __( 'Error while truncating table ', 'mail-boxes-etc' ) . $this->getTableName() . ' :' . $wpdb->last_error );
 
 			return false;
 		}
@@ -37,7 +37,7 @@ trait Mbe_Entity_Model_Trait {
 		try {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange
 			if ( false === $wpdb->insert( $tableName, $row ) ) {
-				$message = __( 'Error while adding data to the table ' ) . $tableName . ' :' . $wpdb->last_error;
+				$message = __( 'Error while adding data to the table ', 'mail-boxes-etc' ) . $tableName . ' :' . $wpdb->last_error;
 				$helper = new \Mbe_Shipping_Helper_Data();
 				$helper->setWpAdminMessages( [
 					'message' => urlencode( $message ),
@@ -48,7 +48,7 @@ trait Mbe_Entity_Model_Trait {
 				return false;
 			}
 		} catch ( \Exception $e ) {
-			$message = __( 'Unexpected error' ) . ': ' . $e->getMessage();
+			$message = __( 'Unexpected error', 'mail-boxes-etc' ) . ': ' . $e->getMessage();
 			$helper = new \Mbe_Shipping_Helper_Data();
 			$helper->setWpAdminMessages( [
 				'message' => urlencode( $message ),
@@ -65,7 +65,7 @@ trait Mbe_Entity_Model_Trait {
 		try {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange
 			if ( false === $wpdb->update( $tableName, $row, [ 'id' => $id ] ) ) {
-				$message = __( 'Error while updating data in the table ' ) . $tableName . ' :' . $wpdb->last_error;
+				$message = __( 'Error while updating data in the table ', 'mail-boxes-etc' ) . $tableName . ' :' . $wpdb->last_error;
 				$helper = new \Mbe_Shipping_Helper_Data();
 				$helper->setWpAdminMessages( [
 					'message' => urlencode( $message ),
@@ -76,7 +76,7 @@ trait Mbe_Entity_Model_Trait {
 				return false;
 			}
 		} catch ( \Exception $e ) {
-			$message = __( 'Unexpected error' ) . ': ' . $e->getMessage();
+			$message = __( 'Unexpected error', 'mail-boxes-etc' ) . ': ' . $e->getMessage();
 			$helper = new \Mbe_Shipping_Helper_Data();
 			$helper->setWpAdminMessages( [
 				'message' => urlencode( $message ),
@@ -93,7 +93,7 @@ trait Mbe_Entity_Model_Trait {
 		try {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange
 			if ( false === $wpdb->delete( $tableName,[ 'id' => $id ] ) ) {
-				$message = __( 'Error while updating data in the table ' ) . $tableName . ' :' . $wpdb->last_error;
+				$message = __( 'Error while updating data in the table ', 'mail-boxes-etc' ) . $tableName . ' :' . $wpdb->last_error;
 				$helper = new \Mbe_Shipping_Helper_Data();
 				$helper->setWpAdminMessages( [
 					'message' => urlencode( $message ),

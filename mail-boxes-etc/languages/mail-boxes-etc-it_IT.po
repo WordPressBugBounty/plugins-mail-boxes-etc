@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Mail boxes\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-13 13:46+0000\n"
-"PO-Revision-Date: 2025-04-29 10:36+0200\n"
+"PO-Revision-Date: 2025-07-01 12:10+0200\n"
 "Last-Translator: Samuele Carpene <samuele.carpene@intesys.it>\n"
 "Language-Team: Italian\n"
 "Language: it_IT\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.6\n"
 "X-Poedit-KeywordsList: __\n"
 "X-Poedit-Basepath: /home/web/php59/woombe/wordpress46/wp-content/plugins/mbe-woocommerce-shipping-method\n"
 "X-Poedit-SearchPath-0: .\n"
@@ -313,7 +313,7 @@ msgstr "Importo fisso"
 
 #: includes/data-mbe-settings.php:185
 msgid "Markup - Amount"
-msgstr "Ricarico - Applicato a…"
+msgstr "Ricarico - Applicato a"
 
 #: includes/data-mbe-settings.php:188
 msgid "Shipment"
@@ -1686,7 +1686,7 @@ msgstr "Il Dipartimento è obbligatorio per le spedizioni. Per creare correttame
 msgid "Department is mandatory for shipments. However, we detected that a default department is already configured in your MOL user settings. If you don't specify an eShip default department here, the system will automatically use your MOL default department. You can override it by selecting a different eShip default department"
 msgstr "Il Dipartimento è obbligatorio per le spedizioni. Tuttavia, abbiamo rilevato che un dipartimento predefinito è già configurato nelle impostazioni utente MOL. Se non specifichi qui un dipartimento predefinito eShip, il sistema utilizzerà automaticamente il tuo dipartimento predefinito MOL. Puoi annullare questa scelta selezionando un dipartimento predefinito eShip diverso."
 
-msgid "Department is mandatory for shipments. To create shipments successfully, please specify, in the plugin Shipping section, an eShip Default Department. If you proceed without setting an eShip Default Department, shipment creation will faill"
+msgid "Department is mandatory for shipments. To create shipments successfully, please specify, in the plugin Shipping section, an eShip Default Department. If you proceed without setting an eShip Default Department, shipment creation will fail"
 msgstr "Il Dipartimento è obbligatorio per le spedizioni. Per creare correttamente le spedizioni, specifica, nella sezione Spedizioni del plugin, un Dipartimento predefinito. Se procedi senza impostarlo, la spedizione non verrà creata."
 
 msgid "Department address"
@@ -1711,7 +1711,37 @@ msgid "Department address not set or not valid, shipment not created"
 msgstr "Indirizzo del Dipartimento non impostato o non valido, spedizione non creata"
 
 msgid "The shipping cost includes an amount of XXXX€ to cover customs duties and taxes applied to your shipment. Please be advised that additional charges may occur depending on your country's customs regulations"
-msgstr "Le spedizioni internazionali possono essere soggette all'addebito di dazi e tasse calcolati in base a quanto previsto dalle normative di ciascun Paese di destino per le categorie di merci acquistate. ​Si tratta di costi previsti dalla dogana del Paese che hai indicato per la consegna dei prodotti acquistati e non dipendenti dalle nostre tariffe e politiche commerciali. L'importo di dazi e tasse relativo al tuo carrello/ordine ammonta a xxxx€ e ti verrà addebitato al checkout per assicurare il corretto espletamento delle procedure di sdoganamento effettuato da parte del vettore."
+msgstr "Le spedizioni internazionali possono essere soggette all'addebito di dazi e tasse calcolati in base a quanto previsto dalle normative di ciascun Paese di destino per le categorie di merci acquistate. Si tratta di costi previsti dalla dogana del Paese che hai indicato per la consegna dei prodotti acquistati e non dipendenti dalle nostre tariffe e politiche commerciali. L'importo di dazi e tasse relativo al tuo carrello/ordine ammonta a xxxx€ e ti verrà addebitato al checkout per assicurare il corretto espletamento delle procedure di sdoganamento effettuato da parte del vettore."
 
 msgid "The shipping cost includes an amount of XXXX€ which estimates customs duties and taxes applied to your shipment. Please be advised that additional charges may occur depending on your country's customs regulations"
-msgstr "Le spedizioni internazionali possono essere soggette all'addebito di dazi e tasse calcolati in base a quanto previsto dalle normative di ciascun Paese di destino per le categorie di merci acquistate. ​Si tratta di costi previsti dalla dogana del Paese che hai indicato per la consegna dei prodotti acquistati e non dipendenti dalle nostre tariffe e politiche commerciali.   L' importo stimato* di dazi e tasse relativo al tuo carrello/ordine, che ti sarà richiesto di pagare dal corriere in fase di consegna, ammonta a xxxx€.  *Tale importo potrebbe essere soggetto a variazioni sulla base delle normative in vigore nel Paese di destino. "
+msgstr "Le spedizioni internazionali possono essere soggette all'addebito di dazi e tasse calcolati in base a quanto previsto dalle normative di ciascun Paese di destino per le categorie di merci acquistate. Si tratta di costi previsti dalla dogana del Paese che hai indicato per la consegna dei prodotti acquistati e non dipendenti dalle nostre tariffe e politiche commerciali.   L' importo stimato* di dazi e tasse relativo al tuo carrello/ordine, che ti sarà richiesto di pagare dal corriere in fase di consegna, ammonta a xxxx€.  *Tale importo potrebbe essere soggetto a variazioni sulla base delle normative in vigore nel Paese di destino. "
+
+msgid "Create return shipment - pickup"
+msgstr "Crea Spedizione di Reso - Ritiro"
+
+msgid "Please select only one shipped order"
+msgstr "Seleziona solo un ordine spedito"
+
+msgid "Please select only an order not already returned"
+msgstr "Seleziona solo un ordine non ancora restituito"
+
+msgid "Return shipment"
+msgstr "Spedizione di reso"
+
+msgid "Return shipment created"
+msgstr "Spedizione di reso creata"
+
+msgid "Order not selected or not found"
+msgstr "Ordine non selezionato o non trovato"
+
+msgid "Recipient Address"
+msgstr "Indirizzo del destinatario"
+
+msgid "Sender Address"
+msgstr "Indirizzo del mittente"
+
+msgid "Pickup Details"
+msgstr "Dettagli del ritiro"
+
+msgid "The field \"Province\" must not exceed 2 characters."
+msgstr "Il campo \"Provincia\" non può superare i 2 caratteri"

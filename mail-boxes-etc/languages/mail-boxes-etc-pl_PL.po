@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Mail boxes\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-13 13:46+0000\n"
-"PO-Revision-Date: 2025-04-29 10:36+0200\n"
+"PO-Revision-Date: 2025-07-01 12:11+0200\n"
 "Last-Translator: Rafał Borycki <rborycki@mbe.pl>\n"
 "Language-Team: Polish\n"
 "Language: pl_PL\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.6\n"
 "X-Poedit-KeywordsList: __\n"
 "X-Poedit-Basepath: /home/web/php59/woombe/wordpress46/wp-content/plugins/mbe-woocommerce-shipping-method\n"
 "X-Poedit-SearchPath-0: .\n"
@@ -1577,7 +1577,7 @@ msgstr "Dział jest wymagany przy wysyłkach. Aby pomyślnie utworzyć przesyłk
 msgid "Department is mandatory for shipments. However, we detected that a default department is already configured in your MOL user settings. If you don't specify an eShip default department here, the system will automatically use your MOL default department. You can override it by selecting a different eShip default department"
 msgstr "Dział jest wymagany przy wysyłkach. Wykryliśmy jednak, że w Twoich ustawieniach użytkownika MOL jest już skonfigurowany domyślny dział. Jeśli tutaj nie wskażesz domyślnego działu eShip, system automatycznie użyje działu z MOL. Możesz to nadpisać, wybierając inny domyślny dział eShip"
 
-msgid "Department is mandatory for shipments. To create shipments successfully, please specify, in the plugin Shipping section, an eShip Default Department. If you proceed without setting an eShip Default Department, shipment creation will faill"
+msgid "Department is mandatory for shipments. To create shipments successfully, please specify, in the plugin Shipping section, an eShip Default Department. If you proceed without setting an eShip Default Department, shipment creation will fail"
 msgstr "Dział jest wymagany przy wysyłkach. Aby poprawnie utworzyć przesyłkę, proszę wskazać w sekcji Wysyłka wtyczki eShip domyślny dział. Jeśli przejdziesz dalej bez ustawienia domyślnego działu eShip, tworzenie przesyłki zakończy się niepowodzeniem"
 
 msgid "Department address"
@@ -1606,3 +1606,33 @@ msgstr "T&D DDP"
 
 msgid "The shipping cost includes an amount of XXXX€ which estimates customs duties and taxes applied to your shipment. Please be advised that additional charges may occur depending on your country's customs regulations"
 msgstr "T&D DAP"
+
+msgid "Create return shipment - pickup"
+msgstr "Utwórz przesyłkę zwrotną - odbiór"
+
+msgid "Please select only one shipped order"
+msgstr "Wybierz tylko jedno wysłane zamówienie"
+
+msgid "Please select only an order not already returned"
+msgstr "Wybierz tylko zamówienie, które nie zostało jeszcze zwrócone"
+
+msgid "Return shipment"
+msgstr "Przesyłka zwrotna"
+
+msgid "Return shipment created"
+msgstr "Przesyłka zwrotna utworzona"
+
+msgid "Order not selected or not found"
+msgstr "Zamówienie nie zostało wybrane lub nie zostało znalezione"
+
+msgid "Recipient Address"
+msgstr "Adres odbiorcy"
+
+msgid "Sender Address"
+msgstr "Adres nadawcy"
+
+msgid "Pickup Details"
+msgstr "Szczegóły odbioru"
+
+msgid "The field \"Province\" must not exceed 2 characters."
+msgstr "Pole nie może przekraczać 2 znaków."

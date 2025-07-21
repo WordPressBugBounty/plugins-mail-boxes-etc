@@ -17,135 +17,147 @@ class MbeWs {
 		$this->_log                 = $log;
 		$this->helper               = new Mbe_Shipping_Helper_Data();
 		$this->pluginVersionMessage = MBE_ESHIP_PLUGIN_NAME . ' version ' . MBE_ESHIP_PLUGIN_VERSION . ' :';
-		$this->wsUrl       = $this->helper->getWsUrl();
-		$this->apiToken    = null;
-		$this->apiCustomer = null;
+		$this->wsUrl                = $this->helper->getWsUrl();
+		$this->apiToken             = null;
+		$this->apiCustomer          = null;
 	}
 
-    private function log($message)
-    {
-        if ($this->_log) {
-            $row = date_format(new DateTime(), 'Y-m-d\TH:i:s\Z');
-            $row .= " - ";
-            $row .= $this->pluginVersionMessage . $message . "\n\r";
-            file_put_contents($this->helper->getLogWsPath(), $row, FILE_APPEND);
-        }
-    }
+	private function log( $message ) {
+		if ( $this->_log ) {
+			$row = date_format( new DateTime(), 'Y-m-d\TH:i:s\Z' );
+			$row .= " - ";
+			$row .= $this->pluginVersionMessage . $message . "\n\r";
+			file_put_contents( $this->helper->getLogWsPath(), $row, FILE_APPEND );
+		}
+	}
 
-    public function logVar($var, $message = null)
-    {
-        if ($this->_log) {
-            if ($message) {
-                $this->log($message);
-            }
-            $this->log(print_r($var, true));
-        }
-    }
+	public function logVar( $var, $message = null ) {
+		if ( $this->_log ) {
+			if ( $message ) {
+				$this->log( $message );
+			}
+			$this->log( print_r( $var, true ) );
+		}
+	}
 
-    function generateRandomString($length = 10)
-    {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $charactersLength = strlen($characters);
-        $randomString = '';
-        for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, $charactersLength - 1)];
-        }
-        return $randomString;
-    }
+	public function logVarNoCredentials( $var, $message = null ) {
+		$logArgs                                    = json_decode( json_encode( $var ), true );
+		$logArgs['RequestContainer']['Credentials'] = null;
 
-    public function getCustomer($ws, $username, $password, $system)
-    {
-        $this->log('GET CUSTOMER');
-        $result = false;
+		if ( $this->_log ) {
+			if ( $message ) {
+				$this->log( $message );
+			}
+			$this->log( print_r( $logArgs, true ) );
+		}
+	}
 
-        try {
-            $soapClient = new MbeSoapClient($ws, array('encoding' => 'utf-8', 'trace' => 1), $username, $password, false);
-            $internalReferenceID = $this->generateRandomString();
 
-            //WS ARGS
-            $args = new stdClass;
-            $args->RequestContainer = new stdClass;
+	function generateRandomString( $length = 10 ) {
+		$characters       = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		$charactersLength = strlen( $characters );
+		$randomString     = '';
+		for ( $i = 0; $i < $length; $i ++ ) {
+			$randomString .= $characters[ rand( 0, $charactersLength - 1 ) ];
+		}
 
-            $args->RequestContainer->Action = "GET";
+		return $randomString;
+	}
 
-            $args->RequestContainer->SystemType = $system;
+	public function getCustomer( $ws, $username, $password, $system ) {
+		$this->log( 'GET CUSTOMER' );
+		$result = false;
 
-            $args->RequestContainer->Customer = new stdClass;
-            $args->RequestContainer->Customer->Login = "";
+		try {
+			$soapClient          = new MbeSoapClient( $ws, array(
+				'encoding' => 'utf-8',
+				'trace'    => 1
+			), $username, $password, false );
+			$internalReferenceID = $this->generateRandomString();
 
-            $args->RequestContainer->Credentials = new stdClass;
-            $args->RequestContainer->Credentials->Username = $username;
-            $args->RequestContainer->Credentials->Passphrase = $password;
+			//WS ARGS
+			$args                   = new stdClass;
+			$args->RequestContainer = new stdClass;
 
-            $args->RequestContainer->InternalReferenceID = $internalReferenceID;
+			$args->RequestContainer->Action = "GET";
 
-            $args->RequestContainer->Action = "GET";
+			$args->RequestContainer->SystemType = $system;
 
-			$logArgs = json_decode(json_encode($args), true);
-			$logArgs['RequestContainer']['Credentials'] = null;
+			$args->RequestContainer->Customer        = new stdClass;
+			$args->RequestContainer->Customer->Login = "";
 
-            $this->logVar($logArgs, 'GET CUSTOMER ARGS');
-            $soapResult = $soapClient->__soapCall("ManageCustomerRequest", array($args));
+			$args->RequestContainer->Credentials             = new stdClass;
+			$args->RequestContainer->Credentials->Username   = $username;
+			$args->RequestContainer->Credentials->Passphrase = $password;
 
-            $lastResponse = $soapClient->__getLastResponse();
-            $this->logVar($lastResponse, 'GET CUSTOMER RESPONSE');
+			$args->RequestContainer->InternalReferenceID = $internalReferenceID;
 
-            if (isset($soapResult->RequestContainer->Errors)) {
-                $this->logVar($soapResult->RequestContainer->Errors, 'GET CUSTOMER ERRORS');
-            }
+			$args->RequestContainer->Action = "GET";
 
-            if (isset($soapResult->RequestContainer->Status) && $soapResult->RequestContainer->Status == "OK") {
-                //if (isset($soapResult->RequestContainer->InternalReferenceID) && $soapResult->RequestContainer->InternalReferenceID == $internalReferenceID) {
-                $result = $soapResult->RequestContainer->Customer;
-                //}
-            }
-        }
-        catch (Exception $e) {
-            $this->log('GET CUSTOMER EXCEPTION');
-            $this->log($e->getMessage());
-        }
-        $this->logVar($result, 'GET CUSTOMER RESULT');
-        return $result;
-    }
+			$this->logVarNoCredentials( $args, 'GET CUSTOMER ARGS' );
+			$soapResult = $soapClient->__soapCall( "ManageCustomerRequest", array( $args ) );
 
-    public function estimateShipping(
+			$lastResponse = $soapClient->__getLastResponse();
+			$this->logVar( $lastResponse, 'GET CUSTOMER RESPONSE' );
+
+			if ( isset( $soapResult->RequestContainer->Errors ) ) {
+				$this->logVar( $soapResult->RequestContainer->Errors, 'GET CUSTOMER ERRORS' );
+			}
+
+			if ( isset( $soapResult->RequestContainer->Status ) && $soapResult->RequestContainer->Status == "OK" ) {
+				//if (isset($soapResult->RequestContainer->InternalReferenceID) && $soapResult->RequestContainer->InternalReferenceID == $internalReferenceID) {
+				$result = $soapResult->RequestContainer->Customer;
+				//}
+			}
+		} catch ( Exception $e ) {
+			$this->log( 'GET CUSTOMER EXCEPTION' );
+			$this->log( $e->getMessage() );
+		}
+		$this->logVar( $result, 'GET CUSTOMER RESULT' );
+
+		return $result;
+	}
+
+	public function estimateShipping(
 		$ws, $username, $password, $shipmentType, $system, $country, $region, $city, $postCode, $items, $products, $insurance = false, $insuranceValue = 0.00, $insuranceCode = null
-    )
-    {
+	) {
 		$messageTitle = 'ESTIMATE SHIPPING';
-        $this->log($messageTitle);
-        $result = false;
+		$this->log( $messageTitle );
+		$result = false;
 
-        try {
-            $soapClient = new MbeSoapClient($ws, array('encoding' => 'utf-8', 'trace' => 1), $username, $password);
-            $internalReferenceID = $this->generateRandomString();
+		try {
+			$soapClient          = new MbeSoapClient( $ws, array(
+				'encoding' => 'utf-8',
+				'trace'    => 1
+			), $username, $password );
+			$internalReferenceID = $this->generateRandomString();
 
-            //WS ARGS
-	        $args = $this->setBaseClass( $system, $username, $password );
+			//WS ARGS
+			$args = $this->setBaseClass( $system, $username, $password );
 
-	        $args->RequestContainer->InternalReferenceID = $internalReferenceID;
+			$args->RequestContainer->InternalReferenceID = $internalReferenceID;
 
 
-            $args->RequestContainer->ShippingParameters = new stdClass;
+			$args->RequestContainer->ShippingParameters = new stdClass;
 
-            $args->RequestContainer->ShippingParameters->DestinationInfo = new stdClass;
+			$args->RequestContainer->ShippingParameters->DestinationInfo = new stdClass;
 
-            $args->RequestContainer->ShippingParameters->DestinationInfo->ZipCode = $postCode;
-            $args->RequestContainer->ShippingParameters->DestinationInfo->City = $city;
-            $args->RequestContainer->ShippingParameters->DestinationInfo->State = $region;
-            $args->RequestContainer->ShippingParameters->DestinationInfo->Country = $country;
-            //$args->RequestContainer->ShippingParameters->DestinationInfo->idSubzone = "";
+			$args->RequestContainer->ShippingParameters->DestinationInfo->ZipCode = $postCode;
+			$args->RequestContainer->ShippingParameters->DestinationInfo->City    = $city;
+			$args->RequestContainer->ShippingParameters->DestinationInfo->State   = $region;
+			$args->RequestContainer->ShippingParameters->DestinationInfo->Country = $country;
+			//$args->RequestContainer->ShippingParameters->DestinationInfo->idSubzone = "";
 
-            $args->RequestContainer->ShippingParameters->ShipType = "EXPORT";
+			$args->RequestContainer->ShippingParameters->ShipType = "EXPORT";
 
-            $args->RequestContainer->ShippingParameters->PackageType = $shipmentType;
+			$args->RequestContainer->ShippingParameters->PackageType = $shipmentType;
 
-            $args->RequestContainer->ShippingParameters->Items = $items;
+			$args->RequestContainer->ShippingParameters->Items = $items;
 //	        $itemsa = new stdClass();
 //	        $itemsa->Item = $items[0];
 //	        $args->RequestContainer->ShippingParameters->Items = $itemsa;
 
-	        $this->insuranceParameters( $insurance, $insuranceCode, $insuranceValue, $args->RequestContainer->ShippingParameters );
+			$this->insuranceParameters( $insurance, $insuranceCode, $insuranceValue, $args->RequestContainer->ShippingParameters );
 
 //	        if ($insurance) {
 //				switch ($insuranceCode) {
@@ -172,66 +184,65 @@ class MbeWs {
 //				}
 //            }
 
-			if($this->helper->getPickupRequestEnabled()
-			   && $this->helper->getShipmentsCreationMode() === Mbe_Shipping_Helper_Data::MBE_CREATION_MODE_AUTOMATICALLY
-			   && $this->helper->getPickupRequestMode() === Mbe_Shipping_Helper_Data::MBE_PICKUP_REQUEST_AUTOMATIC
+			if ( $this->helper->getPickupRequestEnabled()
+			     && $this->helper->getShipmentsCreationMode() === Mbe_Shipping_Helper_Data::MBE_CREATION_MODE_AUTOMATICALLY
+			     && $this->helper->getPickupRequestMode() === Mbe_Shipping_Helper_Data::MBE_PICKUP_REQUEST_AUTOMATIC
 			) {
-		        $defaultPickupAddress = $this->getDefaultPickupAddress( $ws, $username, $password, $system );
+				$defaultPickupAddress = $this->getDefaultPickupAddress( $ws, $username, $password, $system );
 
-				if (empty($defaultPickupAddress)) {
-					throw new Exception('Default pickup address is missing');
+				if ( empty( $defaultPickupAddress ) ) {
+					throw new Exception( 'Default pickup address is missing' );
 				}
 
-				$args->RequestContainer->ShippingParameters->SenderInfo = new stdClass();
+				$args->RequestContainer->ShippingParameters->SenderInfo          = new stdClass();
 				$args->RequestContainer->ShippingParameters->SenderInfo->ZipCode = $defaultPickupAddress[0]['ZipCode'];
-				$args->RequestContainer->ShippingParameters->SenderInfo->City = $defaultPickupAddress[0]['City'];
-				$args->RequestContainer->ShippingParameters->SenderInfo->State = $defaultPickupAddress[0]['Province'];
+				$args->RequestContainer->ShippingParameters->SenderInfo->City    = $defaultPickupAddress[0]['City'];
+				$args->RequestContainer->ShippingParameters->SenderInfo->State   = $defaultPickupAddress[0]['Province'];
 				$args->RequestContainer->ShippingParameters->SenderInfo->Country = $defaultPickupAddress[0]['Country'];
 			}
 
-			if($this->helper->isEnabledTaxAndDuties()) {
-				$args->RequestContainer->ShippingParameters->LanguageCode = $this->helper->getCountry();
+			if ( $this->helper->isEnabledTaxAndDuties() ) {
+				$args->RequestContainer->ShippingParameters->LanguageCode        = $this->helper->getCountry();
 				$args->RequestContainer->ShippingParameters->TaxAndDutyPluginAct = true;
-				$args->RequestContainer->ShippingParameters->ProformaIncoterms = $this->helper->getTaxAndDutiesModeName();
-				$args->RequestContainer->ShippingParameters->ProformaInvoice = $this->generateProforma($products);
+				$args->RequestContainer->ShippingParameters->ProformaIncoterms   = $this->helper->getTaxAndDutiesModeName();
+				$args->RequestContainer->ShippingParameters->ProformaInvoice     = $this->generateProforma( $products );
 			}
 
-	        $soapResult = $soapClient->__soapCall("ShippingOptionsRequest", array($args));
+			$soapResult = $soapClient->__soapCall( "ShippingOptionsRequest", array( $args ) );
 
-	        $logArgs = json_decode(json_encode($args));
-	        $logArgs->RequestContainer->Credentials = null;
+			$logArgs                                = json_decode( json_encode( $args ) );
+			$logArgs->RequestContainer->Credentials = null;
 
-	        $this->logVar($logArgs, $messageTitle . ' ARGS');
-	        $this->logVar($soapClient->__getLastRequest(), $messageTitle . ' XML REQUEST');
+			$this->logVar( $logArgs, $messageTitle . ' ARGS' );
+			$this->logVar( $soapClient->__getLastRequest(), $messageTitle . ' XML REQUEST' );
 
-            $lastResponse = $soapClient->__getLastResponse();
-            $this->logVar($lastResponse, $messageTitle . ' XML RESPONSE');
+			$lastResponse = $soapClient->__getLastResponse();
+			$this->logVar( $lastResponse, $messageTitle . ' XML RESPONSE' );
 
-            if (isset($soapResult->RequestContainer->Errors)) {
-                $this->logVar($soapResult->RequestContainer->Errors, $messageTitle . ' ERRORS');
-            }
+			if ( isset( $soapResult->RequestContainer->Errors ) ) {
+				$this->logVar( $soapResult->RequestContainer->Errors, $messageTitle . ' ERRORS' );
+			}
 
-            if (isset($soapResult->RequestContainer->Status) && $soapResult->RequestContainer->Status == "OK") {
-                if (isset($soapResult->RequestContainer->InternalReferenceID) && $soapResult->RequestContainer->InternalReferenceID == $internalReferenceID) {
-                    if (isset($soapResult->RequestContainer->ShippingOptions->ShippingOption)) {
-                        if (is_array($soapResult->RequestContainer->ShippingOptions->ShippingOption)) {
-                            $result = $soapResult->RequestContainer->ShippingOptions->ShippingOption;
-                        }
-                        else {
-                            $result = array($soapResult->RequestContainer->ShippingOptions->ShippingOption);
-                        }
-                    }
-                }
-            }
+			if ( isset( $soapResult->RequestContainer->Status ) && $soapResult->RequestContainer->Status == "OK" ) {
+				if ( isset( $soapResult->RequestContainer->InternalReferenceID ) && $soapResult->RequestContainer->InternalReferenceID == $internalReferenceID ) {
+					if ( isset( $soapResult->RequestContainer->ShippingOptions->ShippingOption ) ) {
+						if ( is_array( $soapResult->RequestContainer->ShippingOptions->ShippingOption ) ) {
+							$result = $soapResult->RequestContainer->ShippingOptions->ShippingOption;
+						} else {
+							$result = array( $soapResult->RequestContainer->ShippingOptions->ShippingOption );
+						}
+					}
+				}
+			}
 
-        }
-        catch (Exception $e) {
-            $this->log($messageTitle . ' EXCEPTION');
-            $this->log($e->getMessage());
-        }
-        $this->logVar($result, $messageTitle . ' RESULT');
-        return $result;
-    }
+		} catch ( Exception $e ) {
+			$this->log( $messageTitle . ' EXCEPTION' );
+			$this->log( $e->getMessage() );
+		}
+		$this->logVar( $result, $messageTitle . ' RESULT' );
+
+		return $result;
+	}
 
 	/**
 	 * @throws \MbeExceptions\ApiRequestException
@@ -242,122 +253,118 @@ class MbeWs {
 		$state, $country, $postCode, $email, $items, $products, $shipperType = 'MBE',
 		$goodsValue = 0.0, $reference = "", $isCod = false, $codValue = 0.0,
 		$insurance = false, $insuranceValue = 0.0, $insuranceCode = null
-    )
-    {
-	    $messageTitle  = 'CREATE SHIPPING';
+	) {
+		$messageTitle = 'CREATE SHIPPING';
 //        $this->log($messageTitle);
 //        $this->logVar(func_get_args(), $messageTitle);
 
-        $result = false;
+		$result = false;
 
 
-        try {
-            $soapClient = new MbeSoapClient($ws, array('encoding' => 'utf-8', 'trace' => 1), $username, $password);
-            $internalReferenceID = $this->generateRandomString();
+		try {
+			$soapClient          = new MbeSoapClient( $ws, array(
+				'encoding' => 'utf-8',
+				'trace'    => 1
+			), $username, $password );
+			$internalReferenceID = $this->generateRandomString();
 
-            //WS ARGS
-	        $args = $this->setShipmentContainer( $system, $username, $password, $internalReferenceID, $firstName, $lastName, $companyName, $address, $phone, $postCode, $city, $state, $country, $email, $subZone, $shipperType, $isCod, $codValue, $insurance, $insuranceValue, $service, $shipmentType, $reference, $items, $products, $goodsValue, $notes, $insuranceCode );
+			//WS ARGS
+			$args = $this->setShipmentContainer( $system, $username, $password, $internalReferenceID, $firstName, $lastName, $companyName, $address, $phone, $postCode, $city, $state, $country, $email, $subZone, $shipperType, $isCod, $codValue, $insurance, $insuranceValue, $service, $shipmentType, $reference, $items, $products, $goodsValue, $notes, $insuranceCode );
 
-			$logArgs = json_decode(json_encode($args), true);
-	        $logArgs['RequestContainer']['Credentials'] = null;
+			$this->logVarNoCredentials( $args, $messageTitle . ' ARGS' );
 
+			$soapResult = $soapClient->__soapCall( "ShipmentRequest", array( $args ) );
 
-	        $this->logVar($logArgs, $messageTitle . ' ARGS');
+			$lastResponse = $soapClient->__getLastResponse();
+			$this->logVar( $lastResponse, $messageTitle . ' RESPONSE' );
 
+			if ( isset( $soapResult->RequestContainer->Errors ) ) {
+				$this->logVar( $soapResult->RequestContainer->Errors, $messageTitle . ' ERRORS' );
+			}
+			if ( isset( $soapResult->RequestContainer->Status ) && $soapResult->RequestContainer->Status == "OK" ) {
+				if ( isset( $soapResult->RequestContainer->InternalReferenceID ) && $soapResult->RequestContainer->InternalReferenceID == $internalReferenceID ) {
+					$result = $soapResult->RequestContainer;
+				}
+			}
 
-            $soapResult = $soapClient->__soapCall("ShipmentRequest", array($args));
+		} catch ( Exception $e ) {
+			$this->log( $messageTitle . ' EXCEPTION' );
+			$this->log( $e->getMessage() );
+		}
+		$this->logVar( $result, $messageTitle . ' RESULT' );
 
+		return $result;
+	}
 
-            $lastResponse = $soapClient->__getLastResponse();
-            $this->logVar($lastResponse, $messageTitle . ' RESPONSE');
-
-            if (isset($soapResult->RequestContainer->Errors)) {
-                $this->logVar($soapResult->RequestContainer->Errors, $messageTitle . ' ERRORS');
-            }
-            if (isset($soapResult->RequestContainer->Status) && $soapResult->RequestContainer->Status == "OK") {
-                if (isset($soapResult->RequestContainer->InternalReferenceID) && $soapResult->RequestContainer->InternalReferenceID == $internalReferenceID) {
-                    $result = $soapResult->RequestContainer;
-                }
-            }
-
-        }
-        catch (Exception $e) {
-            $this->log($messageTitle . ' EXCEPTION');
-            $this->log($e->getMessage());
-        }
-        $this->logVar($result, $messageTitle . ' RESULT');
-        return $result;
-    }
-
-    public function closeShipping($ws, $username, $password, $system, $trackings)
-    {
-        $this->log('CLOSE SHIPPING');
+	public function closeShipping( $ws, $username, $password, $system, $trackings ) {
+		$this->log( 'CLOSE SHIPPING' );
 
 
-        $result = false;
+		$result = false;
 
 
-        try {
-            $soapClient = new MbeSoapClient($ws, array('encoding' => 'utf-8', 'trace' => 1), $username, $password);
-            $internalReferenceID = $this->generateRandomString();
+		try {
+			$soapClient          = new MbeSoapClient( $ws, array(
+				'encoding' => 'utf-8',
+				'trace'    => 1
+			), $username, $password );
+			$internalReferenceID = $this->generateRandomString();
 
-            //WS ARGS
-            $args = new stdClass;
-            $args->RequestContainer = new stdClass;
-            $args->RequestContainer->SystemType = $system;
+			//WS ARGS
+			$args                               = new stdClass;
+			$args->RequestContainer             = new stdClass;
+			$args->RequestContainer->SystemType = $system;
 
-            $args->RequestContainer->Credentials = new stdClass;
-            $args->RequestContainer->Credentials->Username = $username;
-            $args->RequestContainer->Credentials->Passphrase = $password;
+			$args->RequestContainer->Credentials             = new stdClass;
+			$args->RequestContainer->Credentials->Username   = $username;
+			$args->RequestContainer->Credentials->Passphrase = $password;
 
-            $args->RequestContainer->InternalReferenceID = $internalReferenceID;
+			$args->RequestContainer->InternalReferenceID = $internalReferenceID;
 
-            $masterTrackingsMBE = array();
-            foreach ($trackings as $track) {
-                array_push($masterTrackingsMBE, $track);
-            }
-
-
-            $args->RequestContainer->MasterTrackingsMBE = $masterTrackingsMBE;
-
-	        $logArgs = json_decode(json_encode($args), true);
-	        $logArgs['RequestContainer']['Credentials'] = null;
-
-            $this->logVar($logArgs, 'CLOSE SHIPPING ARGS');
+			$masterTrackingsMBE = array();
+			foreach ( $trackings as $track ) {
+				array_push( $masterTrackingsMBE, $track );
+			}
 
 
-            $soapResult = $soapClient->__soapCall("CloseShipmentsRequest", array($args));
+			$args->RequestContainer->MasterTrackingsMBE = $masterTrackingsMBE;
 
-            $lastResponse = $soapClient->__getLastResponse();
+			$this->logVarNoCredentials( $args, 'CLOSE SHIPPING ARGS' );
 
-            $this->logVar($lastResponse, 'CLOSE SHIPPING RESPONSE');
+			$soapResult = $soapClient->__soapCall( "CloseShipmentsRequest", array( $args ) );
 
-            if (isset($soapResult->RequestContainer->Errors)) {
-                $this->logVar($soapResult->RequestContainer->Errors, 'CLOSE SHIPPING ERRORS');
-            }
+			$lastResponse = $soapClient->__getLastResponse();
 
-            if (isset($soapResult->RequestContainer->Status) && $soapResult->RequestContainer->Status == "OK") {
-                $result = $soapResult->RequestContainer;
-            }
+			$this->logVar( $lastResponse, 'CLOSE SHIPPING RESPONSE' );
 
-        }
-        catch (Exception $e) {
-            $this->log('CLOSE SHIPPING EXCEPTION');
-            $this->log($e->getMessage());
-        }
-        $this->logVar($result, 'CLOSE SHIPPING RESULT');
-        return $result;
-    }
+			if ( isset( $soapResult->RequestContainer->Errors ) ) {
+				$this->logVar( $soapResult->RequestContainer->Errors, 'CLOSE SHIPPING ERRORS' );
+			}
 
-	public function returnShipping($ws, $username, $password, $system, $tracking)
-	{
-		$this->log('RETURN SHIPPING - ' . $tracking);
+			if ( isset( $soapResult->RequestContainer->Status ) && $soapResult->RequestContainer->Status == "OK" ) {
+				$result = $soapResult->RequestContainer;
+			}
+
+		} catch ( Exception $e ) {
+			$this->log( 'CLOSE SHIPPING EXCEPTION' );
+			$this->log( $e->getMessage() );
+		}
+		$this->logVar( $result, 'CLOSE SHIPPING RESULT' );
+
+		return $result;
+	}
+
+	public function returnShipping( $ws, $username, $password, $system, $tracking ) {
+		$this->log( 'RETURN SHIPPING - ' . $tracking );
 
 		$result = false;
 
 		try {
-			$soapClient = new MbeSoapClient($ws, array('encoding' => 'utf-8', 'trace' => 1), $username, $password, false);
-			$internalReferenceID = 'RETURN-SHIPPING-'.$tracking;
+			$soapClient          = new MbeSoapClient( $ws, array(
+				'encoding' => 'utf-8',
+				'trace'    => 1
+			), $username, $password, false );
+			$internalReferenceID = 'RETURN-SHIPPING-' . $tracking;
 
 			//WS ARGS
 			$args = $this->setBaseClass( $system, $username, $password );
@@ -367,32 +374,177 @@ class MbeWs {
 			$args->RequestContainer->MbeTracking = $tracking;
 //			$args->RequestContainer->CustomerAsReceiver = true;
 			$args->RequestContainer->ShipmentOrigin = MBE_ESHIP_PLUGIN_NAME . " WooCommerce " . MBE_ESHIP_PLUGIN_VERSION;
-			$args->RequestContainer->Referring = '';
+			$args->RequestContainer->Referring      = '';
 
-			$logArgs = json_decode(json_encode($args), true);
-			$logArgs['RequestContainer']['Credentials'] = null;
+			$this->logVarNoCredentials( $args, 'RETURN SHIPPING ARGS' );
 
-			$this->logVar($logArgs, 'RETURN SHIPPING ARGS');
-
-			$soapResult = $soapClient->__soapCall("ShipmentReturnRequest", array($args));
+			$soapResult = $soapClient->__soapCall( "ShipmentReturnRequest", array( $args ) );
 
 			$lastResponse = $soapClient->__getLastResponse();
 
-			$this->logVar($lastResponse, 'RETURN SHIPPING RESPONSE');
+			$this->logVar( $lastResponse, 'RETURN SHIPPING RESPONSE' );
 
-			if (isset($soapResult->RequestContainer->Errors)) {
-				$this->logVar($soapResult->RequestContainer->Errors, 'RETURN SHIPPING ERRORS');
+			if ( isset( $soapResult->RequestContainer->Errors ) ) {
+				$this->logVar( $soapResult->RequestContainer->Errors, 'RETURN SHIPPING ERRORS' );
 			}
 
-			if (isset($soapResult->RequestContainer->Status) && $soapResult->RequestContainer->Status == "OK") {
+			if ( isset( $soapResult->RequestContainer->Status ) && $soapResult->RequestContainer->Status == "OK" ) {
 				$result = $soapResult->RequestContainer;
 			}
+		} catch ( Exception $e ) {
+			$this->log( 'RETURN SHIPPING EXCEPTION' );
+			$this->log( $e->getMessage() );
 		}
-		catch (Exception $e) {
-			$this->log('RETURN SHIPPING EXCEPTION');
-			$this->log($e->getMessage());
+		$this->logVar( $result, 'RETURN SHIPPING RESULT' );
+
+		return $result;
+	}
+
+	/**
+	 * @throws SoapFault
+	 * @throws \MbeExceptions\ValidationException
+	 * @throws \MbeExceptions\ApiRequestException
+	 */
+	public function advancedReturnShipping( $orderId, $wsUrl, $wsUsername, $wsPassword, $system, $shipperType, $returnData ) {
+		$tracking = $this->helper->getTrackings( $orderId )[0];
+		$order    = wc_get_order( $orderId );
+
+		if ( $order ) {
+			$this->log( 'ADVANCED RETURN SHIPPING - ' . $tracking );
+
+			$result = false;
+			try {
+				if ( $this->helper->canAdvancedReturn() ) {
+					$shipmentInfo = $this->getShipmentItems( $wsUrl, $wsUsername, $wsPassword, $system, $tracking );
+					$shipmentInfo = $shipmentInfo->ShipmentsFullInfo->ShipmentFullInfo->ShipmentInfo;
+
+					$service        = 'SSE';
+					$subzone        = '';
+					$system         = $this->helper->getCountry();
+					$notes          = '';
+					$firstName      = $returnData['receiver_reference'];
+					$lastName       = '';
+					$companyName    = empty( $returnData['receiver_trade_name'] ) ? $returnData['receiver_reference'] : $returnData['receiver_trade_name'];
+					$address        = $returnData['receiver_address_1'] . ', ' . $returnData['receiver_address_2'] . ', ' . $returnData['receiver_address_3'];
+					$phone          = $returnData['receiver_telephone_1'] ?? $returnData['receiver_telephone_2'];
+					$city           = $returnData['receiver_city'];
+					$region         = $returnData['receiver_province'];
+					$country        = $returnData['receiver_country'];
+					$postCode       = $returnData['receiver_postcode'];
+					$email          = $returnData['receiver_email_1'] ?? $returnData['receiver_email_2'];
+					$items          = $shipmentInfo->Items;
+					$products       = $shipmentInfo->Products;
+					$goodsValue     = 0.0;
+					$shipmentType   = $this->helper->getDefaultShipmentType();
+					$reference      = $orderId;
+					$isCod          = null;
+					$codValue       = null;
+					$insurance      = null;
+					$insuranceValue = null;
+					$insuranceCode  = null;
+					$senderInfo     = [
+						'company-name' => empty( $returnData['sender_trade_name'] ) ? $returnData['sender_reference'] : $returnData['sender_trade_name'],
+						'address'      => $returnData['sender_address_1'],
+						'address2'      => $returnData['sender_address_2'],
+						'address3'      => $returnData['sender_address_3'],
+						'zipcode'      => $returnData['sender_postcode'],
+						'city'         => $returnData['sender_city'],
+						'state'        => $returnData['sender_province'],
+						'country'      => $returnData['sender_country'],
+						'name'         => $returnData['sender_reference'],
+						'phone'        => $returnData['sender_telephone_1'],
+						'email'        => $returnData['sender_email_1'],
+					];
+					$pickupData     = [
+						'pickup_batch_id'   => '',
+						'pickup_address_id' => '',
+						'date'              => $returnData['pickup_date'],
+						'preferred_from'    => $returnData['pickup_time_preferred_from'],
+						'preferred_to'      => $returnData['pickup_time_preferred_to'],
+						'alternative_from'  => $returnData['pickup_time_alternative_from'],
+						'alternative_to'    => $returnData['pickup_time_alternative_to'],
+						'notes'             => $returnData['pickup_notes'],
+					];
+
+					//Send $tracking data to be used as IsEcommerceReturnOriginalTracking to identify the Pickup as an advanced return
+					$result = $this->createReturnPickupShipping(
+						$wsUrl, $wsUsername, $wsPassword, $shipmentType, $service, $subzone, $system, $notes, $firstName, $lastName, $companyName,
+						$address, $phone, $city, $region, $country, $postCode, $email, $items, $products, $shipperType, $goodsValue, $reference,
+						$isCod, $codValue, $insurance, $insuranceValue, $senderInfo, $pickupData, $insuranceCode, $tracking
+					);
+
+					$this->logVar( $result, 'RETURN SHIPPING RESPONSE' );
+
+					if ( isset( $result->Errors ) ) {
+						$this->logVar( $result->Errors, 'RETURN SHIPPING ERRORS' );
+					}
+
+				} else {
+					$message = 'User is not enabled for advanced return';
+					$this->log( $message );
+					throw new \MbeExceptions\ValidationException( __( $message, 'mail-boxes-etc' ) );
+				}
+			} catch ( Exception $e ) {
+				$this->log( 'RETURN SHIPPING EXCEPTION' );
+				$this->log( $e->getMessage() );
+				throw $e;
+			}
+
+			$this->logVar( $result, 'RETURN SHIPPING RESULT' );
+
+			return $result;
+		} else {
+			$message = 'ADVANCED RETURN SHIPPING - '. __('Order not selected or not found');
+			$this->log( $message );
+			throw new \MbeExceptions\ValidationException( __( $message, 'mail-boxes-etc' ) );
 		}
-		$this->logVar($result, 'RETURN SHIPPING RESULT');
+	}
+
+	public function getShipmentItems( $ws, $username, $password, $system, $tracking ) {
+		$message = 'GET SHIPPING ITEMS - ';
+
+		$this->log( $message . $tracking );
+
+		$result = false;
+
+		try {
+			$soapClient          = new MbeSoapClient( $ws, array(
+				'encoding' => 'utf-8',
+				'trace'    => 1
+			), $username, $password, false );
+			$internalReferenceID = 'GET-SHIPPING-ITEMS-' . $tracking;
+
+			//WS ARGS
+			$args = $this->setBaseClass( $system, $username, $password );
+
+			$args->RequestContainer->InternalReferenceID = $internalReferenceID;
+			$args->RequestContainer->MBEMasterTrackings  = $tracking;
+
+			$this->logVarNoCredentials( $args, 'GET SHIPPING ITEMS' );
+
+			$soapResult = $soapClient->__soapCall( "ShipmentsListV3Request", array( $args ) );
+
+			$lastResponse = $soapClient->__getLastResponse();
+
+			$this->logVar( $lastResponse, $message . 'RESPONSE' );
+
+			$this->checkResponseErrors( $soapResult, $message );
+
+			if ( $this->isResponseValid( $soapResult, $internalReferenceID ) ) {
+				$result = $soapResult->RequestContainer;
+			}
+
+		} catch ( \MbeExceptions\ApiRequestException $e ) {
+			$this->log( $message . ' EXCEPTION' );
+			$this->log( $e->getMessage() );
+			throw $e;
+		} catch ( Exception $e ) {
+			$this->log( $message . ' EXCEPTION' );
+			$this->log( $e->getMessage() );
+			throw $e;
+		}
+		$this->logVar( $result, $message . ' RESULT' );
+
 		return $result;
 	}
 
@@ -400,51 +552,48 @@ class MbeWs {
 	/**
 	 * @throws Exception | ShippingDocumentException
 	 */
-	public function getShippingDocument($ws, $username, $password, $system, $tracking) {
+	public function getShippingDocument( $ws, $username, $password, $system, $tracking ) {
 		$messageTitle = 'GET SHIPPING DOCUMENT';
-		$result = false;
+		$result       = false;
 
 		try {
-			$soapClient = new MbeSoapClient( $ws, array(
+			$soapClient          = new MbeSoapClient( $ws, array(
 				'encoding' => 'utf-8',
 				'trace'    => 1
 			), $username, $password );
 			$internalReferenceID = $this->generateRandomString();
 
 			//WS ARGS
-			$args = $this->setBaseClass( $system, $username, $password );
+			$args                                        = $this->setBaseClass( $system, $username, $password );
 			$args->RequestContainer->InternalReferenceID = $internalReferenceID;
 
-			$args->RequestContainer->TrackingMBE = $tracking;
+			$args->RequestContainer->TrackingMBE    = $tracking;
 			$args->RequestContainer->CourierWaybill = true;
 
-			$logArgs = json_decode(json_encode($args), true);
-			$logArgs['RequestContainer']['Credentials'] = null;
+			$this->logVarNoCredentials( $args, $messageTitle . ' ARGS' );
 
-			$this->logVar($logArgs, $messageTitle. ' ARGS');
-
-			$soapResult = $soapClient->__soapCall("shipmentDocumentsRequest", array($args));
+			$soapResult = $soapClient->__soapCall( "shipmentDocumentsRequest", array( $args ) );
 
 			$lastResponse = $soapClient->__getLastResponse();
-			$this->logVar($lastResponse, $messageTitle.' RESPONSE');
+			$this->logVar( $lastResponse, $messageTitle . ' RESPONSE' );
 
 			$this->checkResponseErrors( $soapResult, $messageTitle );
 
-			if ($this->isResponseValid($soapResult, $internalReferenceID)
-			    && !empty($soapResult->RequestContainer->ShipmentDocuments->ShipmentDocument->CourierWaybill??null)
+			if ( $this->isResponseValid( $soapResult, $internalReferenceID )
+			     && ! empty( $soapResult->RequestContainer->ShipmentDocuments->ShipmentDocument->CourierWaybill ?? null )
 			) {
-				$this->logVar($result, $messageTitle. ' RESULTS');
+				$this->logVar( $result, $messageTitle . ' RESULTS' );
 			} else {
-				$this->logVar( $soapResult->RequestContainer, $messageTitle. ' ERROR');
+				$this->logVar( $soapResult->RequestContainer, $messageTitle . ' ERROR' );
 //				throw new ShippingDocumentException($soapResult->RequestContainer->ShipmentDocuments->ShipmentDocument->Errors->Error->Description);
 			}
 			$result = $soapResult->RequestContainer->ShipmentDocuments->ShipmentDocument;
 
-		} catch (Exception $e) {
-			$this->log($messageTitle . 'EXCEPTION');
-			$this->log($e->getMessage());
-			if ( ShippingDocumentException::class === get_class($e)) {
-				throw new ShippingDocumentException(esc_html($e->getMessage()));
+		} catch ( Exception $e ) {
+			$this->log( $messageTitle . 'EXCEPTION' );
+			$this->log( $e->getMessage() );
+			if ( ShippingDocumentException::class === get_class( $e ) ) {
+				throw new ShippingDocumentException( esc_html( $e->getMessage() ) );
 			} else {
 				throw $e;
 			}
@@ -466,22 +615,22 @@ class MbeWs {
 		$insurance = false, $insuranceValue = 0.0,
 		$senderInfo = [],
 		$pickupData = [],
-		$insuranceCode = null
+		$insuranceCode = null,
 	) {
 		$messageTitle = 'CREATE PICKUP SHIPPING';
-//		$this->log($messageTitle);
-//
-//		$this->logVar(func_get_args(), $messageTitle);
 
 		$result = false;
 
 
 		try {
-			$soapClient          = new MbeSoapClient($ws, array('encoding' => 'utf-8', 'trace' => 1), $username, $password);
+			$soapClient          = new MbeSoapClient( $ws, array(
+				'encoding' => 'utf-8',
+				'trace'    => 1
+			), $username, $password );
 			$internalReferenceID = $this->generateRandomString();
 			$args                = $this->setShipmentContainer( $system, $username, $password, $internalReferenceID, $firstName, $lastName, $companyName, $address, $phone, $postCode, $city, $state, $country, $email, $subZone, $shipperType, $isCod, $codValue, $insurance, $insuranceValue, $service, $shipmentType, $reference, $items, $products, $goodsValue, $notes, $insuranceCode );
 
-			if($this->helper->getPickupRequestEnabled() ) {
+			if ( $this->helper->getPickupRequestEnabled() ) {
 				switch ( $this->helper->getPickupRequestMode() ) {
 					case Mbe_Shipping_Helper_Data::MBE_PICKUP_REQUEST_AUTOMATIC:
 						$args->RequestContainer->Pickup                       = new stdClass();
@@ -498,11 +647,11 @@ class MbeWs {
 						} else { // If it's a single pickup
 							if ( empty( $senderInfo ) ) {
 								$message = 'Pickup request cannot be sent, sender information are missing';
-								throw new Exception( __( $message ) );
+								throw new Exception( __( $message, 'mail-boxes-etc' ) );
 							}
 							if ( empty( $pickupData ) ) {
 								$message = 'Pickup request cannot be sent, pickup data are missing';
-								throw new Exception( __( $message ) );
+								throw new Exception( __( $message, 'mail-boxes-etc' ) );
 							}
 							$args->RequestContainer->Sender              = new stdClass();
 							$args->RequestContainer->Sender->Name        = $senderInfo['company-name'];
@@ -532,37 +681,127 @@ class MbeWs {
 
 			} else {
 				$message = 'User is not enabled for third party pickup';
-				$this->log($message);
-				throw new Exception(__($message));
+				$this->log( $message );
+				throw new Exception( __( $message, 'mail-boxes-etc' ) );
 			}
 
-			$logArgs = json_decode(json_encode($args), true);
-			$logArgs['RequestContainer']['Credentials'] = null;
+			$this->logVarNoCredentials( $args, $messageTitle . ' ARGS' );
 
-			$this->logVar($logArgs, $messageTitle . ' ARGS');
-
-			$soapResult = $soapClient->__soapCall("ShipmentRequest", array($args));
+			$soapResult = $soapClient->__soapCall( "ShipmentRequest", array( $args ) );
 
 			$lastResponse = $soapClient->__getLastResponse();
-			$this->logVar($lastResponse, $messageTitle.' RESPONSE');
+			$this->logVar( $lastResponse, $messageTitle . ' RESPONSE' );
 
 			$this->checkResponseErrors( $soapResult, $messageTitle );
 
-			if ($this->isResponseValid($soapResult, $internalReferenceID)) {
-			        $result = $soapResult->RequestContainer;
+			if ( $this->isResponseValid( $soapResult, $internalReferenceID ) ) {
+				$result = $soapResult->RequestContainer;
 			}
 
-		} catch (\MbeExceptions\ApiRequestException $e) {
+		} catch ( \MbeExceptions\ApiRequestException $e ) {
 			$this->log( $messageTitle . ' EXCEPTION' );
 			$this->log( $e->getMessage() );
 			throw $e;
-		} catch (Exception $e) {
-			$this->log($messageTitle . ' EXCEPTION');
-			$this->log($e->getMessage());
+		} catch ( Exception $e ) {
+			$this->log( $messageTitle . ' EXCEPTION' );
+			$this->log( $e->getMessage() );
 		}
-		$this->logVar($result, $messageTitle.' RESULT');
+		$this->logVar( $result, $messageTitle . ' RESULT' );
+
 		return $result;
 	}
+
+//	PICKUP REQUEST
+
+	/**
+	 * @throws \MbeExceptions\ApiRequestException
+	 */
+	public function createReturnPickupShipping(
+		$ws, $username, $password, $shipmentType, $service, $subZone, $system,
+		$notes, $firstName, $lastName, $companyName, $address, $phone, $city,
+		$state, $country, $postCode, $email, $items, $products, $shipperType = 'MBE',
+		$goodsValue = 0.0, $reference = "", $isCod = false, $codValue = 0.0,
+		$insurance = false, $insuranceValue = 0.0,
+		$senderInfo = [],
+		$pickupData = [],
+		$insuranceCode = null,
+		$advancedReturnTracking = '',
+	) {
+		$messageTitle = 'CREATE ADVANCE RETURN PICKUP SHIPPING';
+
+		$result = false;
+
+
+		try {
+			$soapClient          = new MbeSoapClient( $ws, array(
+				'encoding' => 'utf-8',
+				'trace'    => 1
+			), $username, $password );
+			$internalReferenceID = 'ADVANCED-RETURN-SHIPPING-' . $advancedReturnTracking;
+			$args                = $this->setShipmentContainer( $system, $username, $password, $internalReferenceID, $firstName, $lastName, $companyName, $address, $phone, $postCode, $city, $state, $country, $email, $subZone, $shipperType, $isCod, $codValue, $insurance, $insuranceValue, $service, $shipmentType, $reference, $items, $products, $goodsValue, $notes, $insuranceCode );
+
+			// Add information for advance return
+			$args->RequestContainer->Shipment->IsEcommerceReturn                 = true;
+			$args->RequestContainer->Shipment->IsEcommerceReturnOriginalTracking = $advancedReturnTracking;
+			$args->RequestContainer->Shipment->Referring                         = 'Return: ' . $reference . ' - ' . $advancedReturnTracking;
+
+			if ( empty( $senderInfo ) ) {
+				$message = 'Pickup request cannot be sent, sender information are missing';
+				throw new Exception( __( $message, 'mail-boxes-etc' ) );
+			}
+			if ( empty( $pickupData ) ) {
+				$message = 'Pickup request cannot be sent, pickup data are missing';
+				throw new Exception( __( $message, 'mail-boxes-etc' ) );
+			}
+
+			$args->RequestContainer->Sender              = new stdClass();
+			$args->RequestContainer->Sender->Name        = mb_substr($senderInfo['company-name']?? '',0,100,'UTF-8');
+			$args->RequestContainer->Sender->CompanyName = mb_substr($senderInfo['company-name']?? '',0,100,'UTF-8');
+			$args->RequestContainer->Sender->Address     = mb_substr($senderInfo['address']?? '',0,200,'UTF-8');
+			$args->RequestContainer->Sender->Address2    = mb_substr($senderInfo['address2']?? '',0,100,'UTF-8');
+			$args->RequestContainer->Sender->Address3    = mb_substr($senderInfo['address3']?? '',0,100,'UTF-8');
+			$args->RequestContainer->Sender->Phone       = mb_substr($senderInfo['phone']?? '',0,50,'UTF-8');
+			$args->RequestContainer->Sender->ZipCode     = mb_substr($senderInfo['zipcode']?? '',0,12,'UTF-8');
+			$args->RequestContainer->Sender->City        = mb_substr($senderInfo['city']?? '',0,100,'UTF-8');
+			$args->RequestContainer->Sender->State       = mb_substr($senderInfo['state']?? '',0,2,'UTF-8');
+			$args->RequestContainer->Sender->Country     = mb_substr($senderInfo['country']?? '',0,2,'UTF-8');
+			$args->RequestContainer->Sender->Email       = mb_substr($senderInfo['email']?? '',0,75,'UTF-8');
+
+			$args->RequestContainer->Pickup                              = new stdClass();
+			$args->RequestContainer->Pickup->PickupData                  = new stdClass();
+			$args->RequestContainer->Pickup->PickupData->Notes           = $pickupData['notes'] ?? '';
+			$args->RequestContainer->Pickup->PickupData->Date            = $pickupData['date'];
+			$args->RequestContainer->Pickup->PickupData->PreferredFrom   = $pickupData['preferred_from'];
+			$args->RequestContainer->Pickup->PickupData->PreferredTo     = $pickupData['preferred_to'];
+			$args->RequestContainer->Pickup->PickupData->AlternativeFrom = $pickupData['alternative_from'] ?? '';
+			$args->RequestContainer->Pickup->PickupData->AlternativeTo   = $pickupData['alternative_to'] ?? '';
+
+			$this->logVarNoCredentials( $args, $messageTitle . ' ARGS' );
+
+			$soapResult = $soapClient->__soapCall( "ShipmentRequest", array( $args ) );
+
+			$lastResponse = $soapClient->__getLastResponse();
+			$this->logVar( $lastResponse, $messageTitle . ' RESPONSE' );
+
+			$this->checkResponseErrors( $soapResult, $messageTitle );
+
+			if ( $this->isResponseValid( $soapResult, $internalReferenceID ) ) {
+				$result = $soapResult->RequestContainer;
+			}
+
+		} catch ( \MbeExceptions\ApiRequestException $e ) {
+			$this->log( $messageTitle . ' EXCEPTION' );
+			$this->log( $e->getMessage() );
+			throw $e;
+		} catch ( Exception $e ) {
+			$this->log( $messageTitle . ' EXCEPTION' );
+			$this->log( $e->getMessage() );
+		}
+		$this->logVar( $result, $messageTitle . ' RESULT' );
+
+		return $result;
+	}
+
 
 	/**
 	 * @throws \MbeExceptions\ApiRequestException
@@ -571,7 +810,7 @@ class MbeWs {
 		$ws, $username, $password, $system, $pickupBatchID, $pickupData
 	) {
 		$messageTitle = 'CLOSE PICKUP SHIPPING ';
-		$this->log($messageTitle);
+		$this->log( $messageTitle );
 		$internalReferenceID = $this->generateRandomString();
 
 		$result = false;
@@ -582,21 +821,21 @@ class MbeWs {
 				'trace'    => 1
 			), $username, $password, false );
 
-			$args = new stdClass;
-			$args->RequestContainer = new stdClass;
-			$args->RequestContainer->System = $system;
-			$args->RequestContainer->Credentials = new stdClass();
-			$args->RequestContainer->Credentials->Username = $username;
-			$args->RequestContainer->Credentials->Passphrase = $password;
-			$args->RequestContainer->InternalReferenceID = $internalReferenceID;
-			$args->RequestContainer->PickupBatchId = $pickupBatchID;
-			$args->RequestContainer->PickupData = new stdClass();
-			$args->RequestContainer->PickupData->Notes = $pickupData['notes']??'';
-			$args->RequestContainer->PickupData->Date = $pickupData['date'];
-			$args->RequestContainer->PickupData->PreferredFrom = $pickupData['preferred_from'];
-			$args->RequestContainer->PickupData->PreferredTo = $pickupData['preferred_to'];
-			$args->RequestContainer->PickupData->AlternativeFrom = $pickupData['alternative_from']??'';
-			$args->RequestContainer->PickupData->AlternativeTo = $pickupData['alternative_to']??'';
+			$args                                                = new stdClass;
+			$args->RequestContainer                              = new stdClass;
+			$args->RequestContainer->System                      = $system;
+			$args->RequestContainer->Credentials                 = new stdClass();
+			$args->RequestContainer->Credentials->Username       = $username;
+			$args->RequestContainer->Credentials->Passphrase     = $password;
+			$args->RequestContainer->InternalReferenceID         = $internalReferenceID;
+			$args->RequestContainer->PickupBatchId               = $pickupBatchID;
+			$args->RequestContainer->PickupData                  = new stdClass();
+			$args->RequestContainer->PickupData->Notes           = $pickupData['notes'] ?? '';
+			$args->RequestContainer->PickupData->Date            = $pickupData['date'];
+			$args->RequestContainer->PickupData->PreferredFrom   = $pickupData['preferred_from'];
+			$args->RequestContainer->PickupData->PreferredTo     = $pickupData['preferred_to'];
+			$args->RequestContainer->PickupData->AlternativeFrom = $pickupData['alternative_from'] ?? '';
+			$args->RequestContainer->PickupData->AlternativeTo   = $pickupData['alternative_to'] ?? '';
 
 			$response = $this->sendRequest( $args, "CourierPickupClosureRequest", $messageTitle, $soapClient );
 
@@ -606,22 +845,23 @@ class MbeWs {
 
 			$this->checkResponseErrors( $soapResult, $messageTitle );
 
-		} catch (\MbeExceptions\ApiRequestException $e) {
+		} catch ( \MbeExceptions\ApiRequestException $e ) {
 			$this->log( $messageTitle . ' EXCEPTION' );
 			$this->log( $e->getMessage() );
 			throw $e;
-		} catch (Exception $e) {
-			$this->log($messageTitle . ' EXCEPTION');
-			$this->log($e->getMessage());
+		} catch ( Exception $e ) {
+			$this->log( $messageTitle . ' EXCEPTION' );
+			$this->log( $e->getMessage() );
 		}
 
-		$this->logVar($result, $messageTitle . ' RESULT');
+		$this->logVar( $result, $messageTitle . ' RESULT' );
+
 		return $result;
 	}
 
-	public function getCustomerPickupAddresses($ws, $username, $password, $system) {
+	public function getCustomerPickupAddresses( $ws, $username, $password, $system ) {
 		$messageTitle = 'GET CUSTOMER PICKUP ADDRESSES ';
-		$this->log($messageTitle);
+		$this->log( $messageTitle );
 		$internalReferenceID = $this->generateRandomString();
 
 		$result = false;
@@ -632,40 +872,41 @@ class MbeWs {
 				'trace'    => 1
 			), $username, $password, false );
 
-			$args = new stdClass;
-			$args->RequestContainer = new stdClass;
-			$args->RequestContainer->System = $system;
-			$args->RequestContainer->Credentials = new stdClass();
-			$args->RequestContainer->Credentials->Username = $username;
+			$args                                            = new stdClass;
+			$args->RequestContainer                          = new stdClass;
+			$args->RequestContainer->System                  = $system;
+			$args->RequestContainer->Credentials             = new stdClass();
+			$args->RequestContainer->Credentials->Username   = $username;
 			$args->RequestContainer->Credentials->Passphrase = $password;
 
 			$args->RequestContainer->InternalReferenceID = $internalReferenceID;
-			$response = $this->sendRequest( $args, "GetPickupAddressesRequest", $messageTitle, $soapClient );
+			$response                                    = $this->sendRequest( $args, "GetPickupAddressesRequest", $messageTitle, $soapClient );
 
 			$result = [];
-			if (is_array($response->PickupAddress)) {
-				$result = array_map(function ($address) {
-					return get_object_vars($address->PickupContainer);
-				}, $response->PickupAddress);
+			if ( is_array( $response->PickupAddress ) ) {
+				$result = array_map( function ( $address ) {
+					return get_object_vars( $address->PickupContainer );
+				}, $response->PickupAddress );
 			} else {
-				$result[] = get_object_vars($response->PickupAddress->PickupContainer);
+				$result[] = get_object_vars( $response->PickupAddress->PickupContainer );
 			}
 
-		} catch (Exception $e) {
-			$this->log($messageTitle . ' EXCEPTION');
-			$this->log($e->getMessage());
+		} catch ( Exception $e ) {
+			$this->log( $messageTitle . ' EXCEPTION' );
+			$this->log( $e->getMessage() );
 		}
 
-		$this->logVar($result, $messageTitle . ' RESULT');
+		$this->logVar( $result, $messageTitle . ' RESULT' );
+
 		return $result;
 	}
 
 	/**
 	 * @throws \MbeExceptions\ApiRequestException
 	 */
-	public function createPickupAddress($ws, $username, $password, $system, $addressData, $update = false) {
-		$messageTitle = ($update?'UPDATE':'CREATE') . ' PICKUP ADDRESS';
-		$this->log($messageTitle);
+	public function createPickupAddress( $ws, $username, $password, $system, $addressData, $update = false ) {
+		$messageTitle = ( $update ? 'UPDATE' : 'CREATE' ) . ' PICKUP ADDRESS';
+		$this->log( $messageTitle );
 		$internalReferenceID = $this->generateRandomString();
 
 		$result = false;
@@ -686,11 +927,11 @@ class MbeWs {
 			$args->RequestContainer->InternalReferenceID = $internalReferenceID;
 
 			$args->RequestContainer->PickupContainer = new stdClass();
-			if ( $update && !array_key_exists( 'pickup_address_id', $addressData ) ) {
+			if ( $update && ! array_key_exists( 'pickup_address_id', $addressData ) ) {
 				throw new \MbeExceptions\ApiRequestException( __( 'ID field is missing. Cannot update the address in MBE Online' ) );
 			}
 
-			if ($update) {
+			if ( $update ) {
 				$args->RequestContainer->PickupContainer->PickupAddressId = $addressData['pickup_address_id'];
 			}
 
@@ -701,7 +942,7 @@ class MbeWs {
 			$args->RequestContainer->PickupContainer->ZipCode   = $addressData['zip_code'];
 			$args->RequestContainer->PickupContainer->City      = $addressData['city'];;
 			$args->RequestContainer->PickupContainer->Province  = $addressData['province'];
-			$args->RequestContainer->PickupContainer->Country   = strtoupper($addressData['country']);
+			$args->RequestContainer->PickupContainer->Country   = strtoupper( $addressData['country'] );
 			$args->RequestContainer->PickupContainer->Reference = $addressData['reference'];
 			$args->RequestContainer->PickupContainer->Phone1    = $addressData['phone_1'];
 			$args->RequestContainer->PickupContainer->Phone2    = $addressData['phone_2'];
@@ -715,29 +956,30 @@ class MbeWs {
 
 			$result = $this->sendRequest( $args, "CreatePickupAddressRequest", $messageTitle, $soapClient );
 
-		} catch (\MbeExceptions\ApiRequestException $e) {
-			$this->log($messageTitle . ' EXCEPTION');
-			$this->log($e->getMessage());
+		} catch ( \MbeExceptions\ApiRequestException $e ) {
+			$this->log( $messageTitle . ' EXCEPTION' );
+			$this->log( $e->getMessage() );
 			throw $e;
-		} catch (Exception $e) {
-			$this->log($messageTitle . ' EXCEPTION');
-			$this->log($e->getMessage());
+		} catch ( Exception $e ) {
+			$this->log( $messageTitle . ' EXCEPTION' );
+			$this->log( $e->getMessage() );
 		}
 
-		$this->logVar($result, $messageTitle . ' RESULT');
+		$this->logVar( $result, $messageTitle . ' RESULT' );
+
 		return $result;
 	}
 
 	/**
 	 * @throws \MbeExceptions\ApiRequestException
 	 */
-	public function updatePickupAddress($ws, $username, $password, $system, $addressData) {
-		return $this->createPickupAddress($ws, $username, $password, $system, $addressData, true);
+	public function updatePickupAddress( $ws, $username, $password, $system, $addressData ) {
+		return $this->createPickupAddress( $ws, $username, $password, $system, $addressData, true );
 	}
 
-	public function deletePickupAddress($ws, $username, $password, $system, $addressId) {
+	public function deletePickupAddress( $ws, $username, $password, $system, $addressId ) {
 		$messageTitle = 'DELETE PICKUP ADDRESS';
-		$this->log($messageTitle);
+		$this->log( $messageTitle );
 		$internalReferenceID = $this->generateRandomString();
 
 		$result = false;
@@ -756,19 +998,20 @@ class MbeWs {
 
 			$result = $this->sendRequest( $args, 'DeletePickupAddressRequest', $messageTitle, $soapClient );
 
-		} catch (Exception $e) {
-			$this->log($messageTitle . ' EXCEPTION');
-			$this->log($e->getMessage());
+		} catch ( Exception $e ) {
+			$this->log( $messageTitle . ' EXCEPTION' );
+			$this->log( $e->getMessage() );
 		}
 
-		$this->logVar($result, $messageTitle . ' RESULT');
+		$this->logVar( $result, $messageTitle . ' RESULT' );
+
 		return $result;
 	}
 
-	public function setPickupDefaultData($ws, $username, $password, $system, $data) {
+	public function setPickupDefaultData( $ws, $username, $password, $system, $data ) {
 
 		$messageTitle = 'SET PICKUP DEFAULT DATA';
-		$this->log($messageTitle);
+		$this->log( $messageTitle );
 		$internalReferenceID = $this->generateRandomString();
 
 		$result = false;
@@ -792,21 +1035,22 @@ class MbeWs {
 
 			$result = $this->sendRequest( $args, 'SetPickupDefaultDataRequest', $messageTitle, $soapClient );
 
-		} catch (Exception $e) {
-			$this->log($messageTitle . ' EXCEPTION');
-			$this->log($e->getMessage());
+		} catch ( Exception $e ) {
+			$this->log( $messageTitle . ' EXCEPTION' );
+			$this->log( $e->getMessage() );
 		}
 
-		$this->logVar($result, $messageTitle . ' RESULT');
+		$this->logVar( $result, $messageTitle . ' RESULT' );
+
 		return $result;
 
 
 	}
 
-	public function getPickupDefaultData($ws, $username, $password, $system) {
+	public function getPickupDefaultData( $ws, $username, $password, $system ) {
 
 		$messageTitle = 'GET PICKUP DEFAULT DATA';
-		$this->log($messageTitle);
+		$this->log( $messageTitle );
 		$internalReferenceID = $this->generateRandomString();
 
 		$result = false;
@@ -823,20 +1067,21 @@ class MbeWs {
 
 			$result = $this->sendRequest( $args, 'GetPickupDefaultDataRequest', $messageTitle, $soapClient );
 
-		} catch (Exception $e) {
-			$this->log($messageTitle . ' EXCEPTION');
-			$this->log($e->getMessage());
+		} catch ( Exception $e ) {
+			$this->log( $messageTitle . ' EXCEPTION' );
+			$this->log( $e->getMessage() );
 		}
 
-		$this->logVar($result, $messageTitle . ' RESULT');
+		$this->logVar( $result, $messageTitle . ' RESULT' );
+
 		return $result;
 
 
 	}
 
-	public function getPickupManifest($ws, $username, $password, $system, $masterTrackingId) {
+	public function getPickupManifest( $ws, $username, $password, $system, $masterTrackingId ) {
 		$messageTitle = 'GET PICKUP MANIFEST DATA';
-		$this->log($messageTitle);
+		$this->log( $messageTitle );
 		$internalReferenceID = $this->generateRandomString();
 
 		$result = false;
@@ -852,18 +1097,19 @@ class MbeWs {
 //				$masterTrackingMBE[] = $masterTrackingId;
 //			}
 
-			$args = $this->setBaseClass( $system, $username, $password );
+			$args                                        = $this->setBaseClass( $system, $username, $password );
 			$args->RequestContainer->InternalReferenceID = $internalReferenceID;
-			$args->RequestContainer->MasterTrackingMBE = $masterTrackingId;
-			$result = $this->sendRequest( $args, 'PickupManifestListRequest', $messageTitle, $soapClient );
+			$args->RequestContainer->MasterTrackingMBE   = $masterTrackingId;
+			$result                                      = $this->sendRequest( $args, 'PickupManifestListRequest', $messageTitle, $soapClient );
 
-		} catch (Exception $e) {
-			$this->log($messageTitle . ' EXCEPTION');
-			$this->log($e->getMessage());
+		} catch ( Exception $e ) {
+			$this->log( $messageTitle . ' EXCEPTION' );
+			$this->log( $e->getMessage() );
 			throw $e;
 		}
 
-		$this->logVar($result, $messageTitle . ' RESULT');
+		$this->logVar( $result, $messageTitle . ' RESULT' );
+
 		return $result;
 	}
 
@@ -871,9 +1117,9 @@ class MbeWs {
 	 * @throws SoapFault
 	 * @throws \MbeExceptions\ApiRequestException
 	 */
-	public function sendRestApiCredentials($ws, $username, $password, $system, $apiKey, $trackingEndpoint) {
+	public function sendRestApiCredentials( $ws, $username, $password, $system, $apiKey, $trackingEndpoint ) {
 		$messageTitle = 'SEND REST API CREDENTIALS AND ENDPOINT';
-		$this->log($messageTitle);
+		$this->log( $messageTitle );
 		$internalReferenceID = $this->generateRandomString();
 
 		$result = false;
@@ -893,17 +1139,18 @@ class MbeWs {
 
 			$result = $this->sendRequest( $args, 'PushServiceConfigRequest', $messageTitle, $soapClient );
 
-		} catch (\MbeExceptions\ApiRequestException $e) {
+		} catch ( \MbeExceptions\ApiRequestException $e ) {
 			$this->log( $messageTitle . ' API EXCEPTION' );
 			$this->log( $e->getMessage() );
 			throw $e;
-		} catch (Exception $e) {
-			$this->log($messageTitle . ' EXCEPTION');
-			$this->log($e->getMessage());
+		} catch ( Exception $e ) {
+			$this->log( $messageTitle . ' EXCEPTION' );
+			$this->log( $e->getMessage() );
 			throw $e;
 		}
 
-		$this->logVar($result, $messageTitle . ' RESULT');
+		$this->logVar( $result, $messageTitle . ' RESULT' );
+
 		return $result;
 	}
 
@@ -914,25 +1161,27 @@ class MbeWs {
 	 *
 	 * @return array
 	 */
-	protected function generateProforma($products) {
+	protected function generateProforma( $products ) {
 		$proForma = [];
 		foreach ( $products as $product ) {
-			$item = new stdClass();
-			$item->Amount = $product->Quantity;
-			$item->Currency = mb_substr($product->Currency,0,10, 'UTF-8');
-			$item->Value = $product->Price;
-			$item->Unit = 'PCS';
-			$item->Description = mb_substr($product->Description,0,35,'UTF-8');
-			$proForma[] = $item;
+			$item              = new stdClass();
+			$item->Amount      = $product->Quantity ?? 0;
+			$item->Currency    = mb_substr( $product->Currency ?? '', 0, 10, 'UTF-8' );
+			$item->Value       = $product->Price ?? 0;
+			$item->Unit        = 'PCS';
+			$item->Description = mb_substr( $product->Description ?? '', 0, 35, 'UTF-8' );
+			$proForma[]        = $item;
 		}
+
 		return $proForma;
 	}
 
-	protected function generateProducts($products) {
+	protected function generateProducts( $products ) {
 		foreach ( $products as $product ) {
 			unset( $product->Price );
 			unset( $product->Currency );
 		}
+
 		return $products; // this is not really needed, as $products in the calling environment is updated when elements are unset, but we want to use the function return value directly
 	}
 
@@ -949,7 +1198,7 @@ class MbeWs {
 			]
 		);
 //		$this->logVar( $response, 'API BEARER' );
-		$this->log('API BEARER' );
+		$this->log( 'API BEARER' );
 
 		return $response;
 	}
@@ -989,7 +1238,7 @@ class MbeWs {
 				);
 
 //				$this->logVar( $response, 'API TOKEN' );
-				$this->log('API TOKEN');
+				$this->log( 'API TOKEN' );
 
 				return $response;
 			}
@@ -1011,7 +1260,8 @@ class MbeWs {
 				]
 			);
 //			$this->logVar( $response, 'GET API KEY' );
-			$this->log('GET API KEY');
+			$this->log( 'GET API KEY' );
+
 			return $response;
 		}
 
@@ -1033,7 +1283,7 @@ class MbeWs {
 					]
 				);
 //				$this->logVar( $response, 'DELETE API KEY' );
-				$this->log('DELETE API KEY');
+				$this->log( 'DELETE API KEY' );
 			}
 
 			return true;
@@ -1061,7 +1311,7 @@ class MbeWs {
 					]
 				);
 //				$this->logVar( $response, 'GENERATE API KEY' );
-				$this->log('GENERATE API KEY');
+				$this->log( 'GENERATE API KEY' );
 
 				return $response;
 			}
@@ -1075,7 +1325,8 @@ class MbeWs {
 	 */
 	public function httpGetRequest( $url, $options ) {
 		$response = wp_remote_get( $url, $options );
-		return $this->checkHttpResponse($response, $url);
+
+		return $this->checkHttpResponse( $response, $url );
 	}
 
 	/**
@@ -1083,7 +1334,8 @@ class MbeWs {
 	 */
 	public function httpPostRequest( $url, $options ) {
 		$response = wp_remote_post( $url, $options );
-		return $this->checkHttpResponse($response, $url, 'POST');
+
+		return $this->checkHttpResponse( $response, $url, 'POST' );
 	}
 
 	/**
@@ -1092,7 +1344,8 @@ class MbeWs {
 	public function httpDeleteRequest( $url, $options ) {
 		$options['method'] = 'DELETE';
 		$response          = wp_remote_request( $url, $options );
-		return $this->checkHttpResponse($response, $url, 'DELETE');
+
+		return $this->checkHttpResponse( $response, $url, 'DELETE' );
 	}
 
 	/**
@@ -1104,23 +1357,23 @@ class MbeWs {
 			if ( empty( $response['body'] ) || json_last_error() === JSON_ERROR_NONE ) {
 				return $responseBody;
 			}
-			throw new HttpRequestException( esc_html('JSON Error: ' . json_last_error_msg()) );
+			throw new HttpRequestException( esc_html( 'JSON Error: ' . json_last_error_msg() ) );
 		}
 		$message = wp_remote_retrieve_response_code( $response ) . ' - ' . wp_remote_retrieve_response_message( $response ) . ' - ' . wp_remote_retrieve_body( $response );
 		$this->log( $method . ' Http Request: ' . $url . ' - ' . $message );
-		throw new HttpRequestException( esc_html($message) );
+		throw new HttpRequestException( esc_html( $message ) );
 	}
 
 	/**
 	 * @throws \MbeExceptions\ApiRequestException
 	 */
-	private function sendRequest($args, $functionName, $messageTitle, $soapClient, $checkInternalId = true) {
+	private function sendRequest( $args, $functionName, $messageTitle, $soapClient, $checkInternalId = true ) {
 		$result = false;
 
-		$logArgs = json_decode(json_encode($args), true);
+		$logArgs                                    = json_decode( json_encode( $args ), true );
 		$logArgs['RequestContainer']['Credentials'] = null;
 
-		if(isset($logArgs['RequestContainer']['Apikey'])) {
+		if ( isset( $logArgs['RequestContainer']['Apikey'] ) ) {
 			$logArgs['RequestContainer']['Apikey'] = null;
 		}
 
@@ -1132,15 +1385,15 @@ class MbeWs {
 
 		$this->logVar( $lastResponse, $messageTitle . ' RESPONSE' );
 
-		$this->checkResponseErrors($soapResult, $lastResponse);
+		$this->checkResponseErrors( $soapResult, $lastResponse );
 
-		$internalReferenceIDMatches = $args->RequestContainer->InternalReferenceID === ($soapResult->RequestContainer->InternalReferenceID??null);
+		$internalReferenceIDMatches = $args->RequestContainer->InternalReferenceID === ( $soapResult->RequestContainer->InternalReferenceID ?? null );
 
-		if ($this->isResponseValid($soapResult, $args->RequestContainer->InternalReferenceID, $checkInternalId)) {
+		if ( $this->isResponseValid( $soapResult, $args->RequestContainer->InternalReferenceID, $checkInternalId ) ) {
 			$result = $soapResult->RequestContainer;
-		} elseif (!$internalReferenceIDMatches && $checkInternalId) {
+		} elseif ( ! $internalReferenceIDMatches && $checkInternalId ) {
 			$message = 'InternalReferenceID doesn\'t match';
-			throw new \MbeExceptions\ApiRequestEmptyResponse(esc_html($message));
+			throw new \MbeExceptions\ApiRequestEmptyResponse( esc_html( $message ) );
 		}
 
 		return $result;
@@ -1161,7 +1414,36 @@ class MbeWs {
 	/**
 	 * @throws \MbeExceptions\ApiRequestException
 	 */
-	private function setShipmentContainer( $system, $username, $password, string $internalReferenceID, $firstName, $lastName, $companyName, $address, $phone, $postCode, $city, $state, $country, $email, $subZone, $shipperType, $isCod, $codValue, $insurance, $insuranceValue, $service, $shipmentType, $reference, $items, $products, $goodsValue, $notes, $insuranceCode = null ): stdClass {
+	private function setShipmentContainer(
+		$system,
+		$username,
+		$password,
+		string $internalReferenceID,
+		$firstName,
+		$lastName,
+		$companyName,
+		$address,
+		$phone,
+		$postCode,
+		$city,
+		$state,
+		$country,
+		$email,
+		$subZone,
+		$shipperType,
+		$isCod,
+		$codValue,
+		$insurance,
+		$insuranceValue,
+		$service,
+		$shipmentType,
+		$reference,
+		$items,
+		$products,
+		$goodsValue,
+		$notes,
+		$insuranceCode = null
+	): stdClass {
 //WS ARGS
 		$args = $this->setBaseClass( $system, $username, $password );
 
@@ -1182,10 +1464,10 @@ class MbeWs {
 		$args->RequestContainer->Recipient->CompanyName = $RecipientCompanyName;
 		$args->RequestContainer->Recipient->Address     = $address;
 		//$args->RequestContainer->Recipient->Phone = $phone;
-		$args->RequestContainer->Recipient->Phone   = mb_substr( $phone, 0, 50, 'UTF-8' );
+		$args->RequestContainer->Recipient->Phone   = mb_substr( $phone ?? '', 0, 50, 'UTF-8' );
 		$args->RequestContainer->Recipient->ZipCode = $postCode;
 		$args->RequestContainer->Recipient->City    = $city;
-		$args->RequestContainer->Recipient->State   = $state;
+		$args->RequestContainer->Recipient->State   = mb_substr( $state ?? '', 0, 2, 'UTF-8' );
 		$args->RequestContainer->Recipient->Country = $country;
 		$args->RequestContainer->Recipient->Email   = $email;
 		if ( $subZone ) {
@@ -1194,11 +1476,11 @@ class MbeWs {
 
 		//Department ID if any
 
-		if($this->helper->getCustomerAddressAsSender()){
-			$departmentAddressId = $this->helper->getOrderDepartmentAddressId($reference);
+		if ( $this->helper->getCustomerAddressAsSender() ) {
+			$departmentAddressId = $this->helper->getOrderDepartmentAddressId( $reference );
 			// If address is missing, but it's mandatory, it will throw an error
-			if ($this->helper->getMandatoryDepartment() && empty($departmentAddressId) && !$this->helper->hasDepartmentDefault()) {
-				throw new \MbeExceptions\ApiRequestException(__('Order', 'mail-boxes-etc') . ':' . $reference . ' - ' . __('Department address not set or not valid, shipment not created', 'mail-boxes-etc'));
+			if ( $this->helper->getMandatoryDepartment() && empty( $departmentAddressId ) && ! $this->helper->hasDepartmentDefault() ) {
+				throw new \MbeExceptions\ApiRequestException( __( 'Order', 'mail-boxes-etc' ) . ':' . $reference . ' - ' . __( 'Department address not set or not valid, shipment not created', 'mail-boxes-etc' ) );
 			}
 			$args->RequestContainer->DepartmentID = $departmentAddressId ?? '';
 		}
@@ -1237,24 +1519,24 @@ class MbeWs {
 		$shipmentNode->Notes = mb_substr( $notes, 0, 50, 'UTF-8' );
 
 		// Add information for the delivery point, if used
-		$order_delivery_point_shipment = $this->helper->getOrderDeliveryPointShipment($reference);
+		$order_delivery_point_shipment = $this->helper->getOrderDeliveryPointShipment( $reference );
 
 		if ( $order_delivery_point_shipment === 'Yes' ) {
 			// Remove new line, if any, in case of delivery point address
 			$args->RequestContainer->Recipient->Address = str_replace( "\n", ' ', $address );
-			$deliveryPointData = json_decode($this->helper->getOrderDeliveryPointCustomData($reference));
-			$shipmentNode->Service = $this->getDeliveryPointMolServiceByNetworkCode($deliveryPointData->networkCode, $reference);
-			$shipmentNode->Courier = strtolower($deliveryPointData->serviceType) === 'labeling' ? $deliveryPointData->networkName : 'GEL';
-			$shipmentNode->CourierService = $deliveryPointData->networkCode;
+			$deliveryPointData                          = json_decode( $this->helper->getOrderDeliveryPointCustomData( $reference ) );
+			$shipmentNode->Service                      = $this->getDeliveryPointMolServiceByNetworkCode( $deliveryPointData->networkCode, $reference );
+			$shipmentNode->Courier                      = strtolower( $deliveryPointData->serviceType ) === 'labeling' ? $deliveryPointData->networkName : 'GEL';
+			$shipmentNode->CourierService               = $deliveryPointData->networkCode;
 //			$args->RequestContainer->Shipment->CourierServiceId = $deliveryPointData->networkCode;
 
 			// Set new delivery point object for API
 			$args->RequestContainer->RecipientDeliveryPoint                  = clone $args->RequestContainer->Recipient;
-			$args->RequestContainer->RecipientDeliveryPoint->DeliveryPointId = sanitize_text_field($deliveryPointData->code);
+			$args->RequestContainer->RecipientDeliveryPoint->DeliveryPointId = sanitize_text_field( $deliveryPointData->code );
 		}
 
-		if($this->helper->isEnabledTaxAndDuties()) {
-			$shipmentNode->LanguageCode = $this->helper->getCountry();
+		if ( $this->helper->isEnabledTaxAndDuties() ) {
+			$shipmentNode->LanguageCode        = $this->helper->getCountry();
 			$shipmentNode->TaxAndDutyPluginAct = true;
 		}
 
@@ -1265,24 +1547,26 @@ class MbeWs {
 
 	public function getDefaultPickupAddress( $ws, $username, $password, $system ): array {
 		$pickupAddresses = $this->getCustomerPickupAddresses( $ws, $username, $password, $system );
-		$address = [];
-		if(!empty($pickupAddresses)) {
-			$address = array_values( array_filter($pickupAddresses , function ( $var ) {
+		$address         = [];
+		if ( ! empty( $pickupAddresses ) ) {
+			$address = array_values( array_filter( $pickupAddresses, function ( $var ) {
 				return ( $var['IsDefault'] == true );
 			} ) );
 		}
-		return empty($address)?[]:$address;
+
+		return empty( $address ) ? [] : $address;
 	}
 
 	public function getPickupAddressById( $ws, $username, $password, $system, $id ): array {
 		$pickupAddresses = $this->getCustomerPickupAddresses( $ws, $username, $password, $system );
-		$address = [];
-		if(!empty($pickupAddresses)) {
+		$address         = [];
+		if ( ! empty( $pickupAddresses ) ) {
 			$address = array_values( array_filter( $this->getCustomerPickupAddresses( $ws, $username, $password, $system ), function ( $var ) use ( $id ) {
 				return ( $var['PickupAddressId'] == $id );
 			} ) );
 		}
-		return empty($address)?[]:$address[0];
+
+		return empty( $address ) ? [] : $address[0];
 	}
 
 	/**
@@ -1299,16 +1583,16 @@ class MbeWs {
 			} else {
 				$message = $soapResult->RequestContainer->Errors->Error->Description;
 			}
-			throw new \MbeExceptions\ApiRequestException( esc_html($message) );
+			throw new \MbeExceptions\ApiRequestException( esc_html( $message ) );
 		}
 	}
 
-	private function isResponseValid(object $soapResult, string $internalReferenceID, bool $checkInternalId = true): bool {
-		$isValid = isset($soapResult->RequestContainer->Status)
+	private function isResponseValid( object $soapResult, string $internalReferenceID, bool $checkInternalId = true ): bool {
+		$isValid = isset( $soapResult->RequestContainer->Status )
 		           && $soapResult->RequestContainer->Status == self::EXPECTED_STATUS;
 
-		if ($checkInternalId) {
-			$isValid = $isValid && isset($soapResult->RequestContainer->InternalReferenceID)
+		if ( $checkInternalId ) {
+			$isValid = $isValid && isset( $soapResult->RequestContainer->InternalReferenceID )
 			           && $soapResult->RequestContainer->InternalReferenceID == $internalReferenceID;
 		}
 
@@ -1317,8 +1601,9 @@ class MbeWs {
 
 
 	protected function getDeliveryPointMolServiceByNetworkCode( $networkCode, $orderId ) {
-		$combined = array_combine( $this->helper->getOrderDeliveryPointServices($orderId)['courier'],  $this->helper->getOrderDeliveryPointServices($orderId)['mol']);
-		return $combined[$networkCode]??null;
+		$combined = array_combine( $this->helper->getOrderDeliveryPointServices( $orderId )['courier'], $this->helper->getOrderDeliveryPointServices( $orderId )['mol'] );
+
+		return $combined[ $networkCode ] ?? null;
 	}
 
 	/**
@@ -1353,17 +1638,17 @@ class MbeWs {
 				break;
 		}
 
-		$node->Insurance                  = $mbeInsurance;
-		$node->InsuranceValue             = $mbeInsurance ? $insuranceValue : '';
-		$node->MBESafeValue               = $mbeSafeValue;
-		$node->MBESafeValueValue          = $mbeSafeValue ? $insuranceValue : '';;
+		$node->Insurance         = $mbeInsurance;
+		$node->InsuranceValue    = $mbeInsurance ? $insuranceValue : '';
+		$node->MBESafeValue      = $mbeSafeValue;
+		$node->MBESafeValueValue = $mbeSafeValue ? $insuranceValue : '';;
 		$node->MBESafeValue4Business      = $mbeSafeValue4Business;
 		$node->MBESafeValue4BusinessValue = $mbeSafeValue4Business ? $insuranceValue : '';
 	}
 
 	public function getDepartmentsAddress( $ws, $username, $password ) {
 		$messageTitle = 'GET CUSTOMER DEPARTMENTS ADDRESS ';
-		$this->log($messageTitle);
+		$this->log( $messageTitle );
 		$internalReferenceID = $this->generateRandomString();
 
 		$result = false;
@@ -1374,14 +1659,14 @@ class MbeWs {
 				'trace'    => 1
 			), $username, $password, false );
 
-			$args = new stdClass;
+			$args                   = new stdClass;
 			$args->RequestContainer = new stdClass;
 //			$args->RequestContainer->System = $system;
-			$args->RequestContainer->Credentials = new stdClass();
-			$args->RequestContainer->Credentials->Username = $username;
+			$args->RequestContainer->Credentials             = new stdClass();
+			$args->RequestContainer->Credentials->Username   = $username;
 			$args->RequestContainer->Credentials->Passphrase = $password;
-			$args->RequestContainer->CustomerID = $this->helper->getCustomerID();
-			$args->RequestContainer->OnlyWithEmptyAddress = false;
+			$args->RequestContainer->CustomerID              = $this->helper->getCustomerID();
+			$args->RequestContainer->OnlyWithEmptyAddress    = false;
 
 			$args->RequestContainer->InternalReferenceID = $internalReferenceID;
 
@@ -1391,30 +1676,31 @@ class MbeWs {
 
 			$this->logVar( $lastResponse, $messageTitle . ' RESPONSE' );
 
-			$this->checkResponseErrors($soapResult, $lastResponse);
+			$this->checkResponseErrors( $soapResult, $lastResponse );
 
-			$this->logVar($args, $messageTitle . ' REQUEST ');
+			$this->logVar( $args, $messageTitle . ' REQUEST ' );
 
 			$result = [];
 
-			if(!property_exists($soapResult->RequestContainer, 'Department')) {
+			if ( ! property_exists( $soapResult->RequestContainer, 'Department' ) ) {
 				return $result;
 			}
-			
-			if (is_array($soapResult->RequestContainer->Department)) {
-				$result = array_map(function ($address) {
-					return get_object_vars($address);
-				}, $soapResult->RequestContainer->Department);
+
+			if ( is_array( $soapResult->RequestContainer->Department ) ) {
+				$result = array_map( function ( $address ) {
+					return get_object_vars( $address );
+				}, $soapResult->RequestContainer->Department );
 			} else {
-				$result[] = get_object_vars($soapResult->RequestContainer->Department);
+				$result[] = get_object_vars( $soapResult->RequestContainer->Department );
 			}
 
-		} catch (Exception $e) {
-			$this->log($messageTitle . ' EXCEPTION');
-			$this->log($e->getMessage());
+		} catch ( Exception $e ) {
+			$this->log( $messageTitle . ' EXCEPTION' );
+			$this->log( $e->getMessage() );
 		}
 
-		$this->logVar($result, $messageTitle . ' RESULT');
+		$this->logVar( $result, $messageTitle . ' RESULT' );
+
 		return $result;
 	}
 

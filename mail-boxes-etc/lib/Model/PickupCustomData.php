@@ -66,7 +66,7 @@ class Mbe_Shipping_Model_Pickup_Custom_Data implements Mbe_Shipping_Entity_Model
 				    'message' => urlencode( $wpdb->last_error ),
 				    'status'  => urlencode( 'error' )
 			    ] );
-			    \WC_Admin_Settings::add_error(__('Error while adding data to the table ') . $this->getTableName() . ' :' . $wpdb->last_error);
+			    \WC_Admin_Settings::add_error(__('Error while adding data to the table ', 'mail-boxes-etc') . $this->getTableName() . ' :' . $wpdb->last_error);
 			    return false;
 		    }
 	    } catch (\Exception $e) {
@@ -74,7 +74,7 @@ class Mbe_Shipping_Model_Pickup_Custom_Data implements Mbe_Shipping_Entity_Model
 			    'message' => urlencode( $e->getMessage() ),
 			    'status'  => urlencode( 'error' )
 		    ] );
-		    \WC_Admin_Settings::add_error(__('Unexpected error') . ': ' . $e->getMessage());
+		    \WC_Admin_Settings::add_error(__('Unexpected error', 'mail-boxes-etc') . ': ' . $e->getMessage());
 	    }
 	    return $wpdb->insert_id;
     }
@@ -282,7 +282,7 @@ class Mbe_Shipping_Model_Pickup_Custom_Data implements Mbe_Shipping_Entity_Model
                         <legend class="screen-reader-text"><span><?php __('Pickup Time - Preferred to', 'mail-boxes-etc') ?></span></legend>
                         <input class="input-text regular-input"
                                type="time" name="preferred_to"
-                               id="preferred-"
+                               id="preferred_to"
                                value="<?php echo esc_attr($item['preferred_to']) ?>"
 			            />
                         <p class="description">

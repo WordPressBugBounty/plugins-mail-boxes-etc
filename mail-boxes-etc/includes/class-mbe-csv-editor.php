@@ -168,7 +168,7 @@ class Mbe_Shipping_Csv_Editor extends WP_List_Table
 		echo '<div class="alignright actions">';
 
 		if ( 'top' === $which ) {
-			echo sprintf( '<a class="add-new-h2" href="?page=' . esc_attr(MBE_ESHIP_ID) . '_csv_edit_form&action=new&csv=' . esc_attr($this->csvType) . '&id=%s&nonce=%s">%s</a>', null, wp_create_nonce('csv_form_page_handler'), esc_html__('Add') . ' ' . esc_html($this->get_title()));
+			echo sprintf( '<a class="add-new-h2" href="?page=' . esc_attr(MBE_ESHIP_ID) . '_csv_edit_form&action=new&csv=' . esc_attr($this->csvType) . '&id=%s&nonce=%s">%s</a>', null, wp_create_nonce('csv_form_page_handler'), esc_html__('Add', 'mail-boxes-etc') . ' ' . esc_html($this->get_title()));
 		}
 
 		echo '</div>';

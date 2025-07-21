@@ -2,7 +2,7 @@
 /*
 	Plugin Name: MBE eShip
 	Description: Mail Boxes Etc. Online MBE Plugin integration for main Ecommerce platforms.
-	Version: 2.5.1
+	Version: 2.6.0
 	Author: MBE Worldwide S.p.A.
 	Author URI: https://www.mbeglobal.com/
 	Text Domain: mail-boxes-etc
@@ -60,26 +60,26 @@ if ( ! defined( 'MBE_E_LINK_DEBUG_LOG' ) ) {
 
 /** MBE GEL Proximity **/
 if ( ! defined( 'MBE_ESTIMATE_DELIVERY_POINT_LABELING_SERVICES' ) ) {
-	define( 'MBE_ESTIMATE_DELIVERY_POINT_LABELING_SERVICES', ['NMDP'] );
+	define( 'MBE_ESTIMATE_DELIVERY_POINT_LABELING_SERVICES', [ 'NMDP' ] );
 }
 
 if ( ! defined( 'MBE_ESTIMATE_DELIVERY_POINT_PRENEGOTIATED_SERVICES' ) ) {
-	define( 'MBE_ESTIMATE_DELIVERY_POINT_PRENEGOTIATED_SERVICES', ['GPP'] );
+	define( 'MBE_ESTIMATE_DELIVERY_POINT_PRENEGOTIATED_SERVICES', [ 'GPP' ] );
 }
 
 if ( ! defined( 'MBE_ESTIMATE_DELIVERY_POINT_SERVICES' ) ) {
-	define( 'MBE_ESTIMATE_DELIVERY_POINT_SERVICES', array_merge(MBE_ESTIMATE_DELIVERY_POINT_LABELING_SERVICES,MBE_ESTIMATE_DELIVERY_POINT_PRENEGOTIATED_SERVICES));
+	define( 'MBE_ESTIMATE_DELIVERY_POINT_SERVICES', array_merge( MBE_ESTIMATE_DELIVERY_POINT_LABELING_SERVICES, MBE_ESTIMATE_DELIVERY_POINT_PRENEGOTIATED_SERVICES ) );
 }
 
 if ( ! defined( 'MBE_ESTIMATE_DELIVERY_POINT_SERVICES_REGEXP' ) ) {
-	define( 'MBE_ESTIMATE_DELIVERY_POINT_SERVICES_REGEXP', '/' . (implode('|', MBE_ESTIMATE_DELIVERY_POINT_SERVICES)) . '/');
+	define( 'MBE_ESTIMATE_DELIVERY_POINT_SERVICES_REGEXP', '/' . ( implode( '|', MBE_ESTIMATE_DELIVERY_POINT_SERVICES ) ) . '/' );
 }
 
 if ( ! defined( 'MBE_DELIVERY_POINT_SERVICE' ) ) {
 	define( 'MBE_DELIVERY_POINT_SERVICE', 'MDPS' );
 }
 if ( ! defined( 'MBE_DELIVERY_POINT_SERVICE_METHOD' ) ) {
-	define( 'MBE_DELIVERY_POINT_SERVICE_METHOD', MBE_ESHIP_ID.':' . MBE_DELIVERY_POINT_SERVICE );
+	define( 'MBE_DELIVERY_POINT_SERVICE_METHOD', MBE_ESHIP_ID . ':' . MBE_DELIVERY_POINT_SERVICE );
 }
 if ( ! defined( 'MBE_DELIVERY_POINT_DESCRIPTION' ) ) {
 	define( 'MBE_DELIVERY_POINT_DESCRIPTION', 'Delivery Point' );
@@ -89,74 +89,74 @@ if ( ! defined( 'MBE_DELIVERY_POINT_WEIGHT_LIMIT' ) ) {
 }
 
 if ( ! defined( 'MBE_SCHEMA_FLAG_OPTION' ) ) {
-    define('MBE_SCHEMA_FLAG_OPTION', MBE_ESHIP_ID . '_' . 'need_default_values');
+	define( 'MBE_SCHEMA_FLAG_OPTION', MBE_ESHIP_ID . '_' . 'need_default_values' );
 }
 
 if ( ! defined( 'WOOCOMMERCE_MBE_TABS_PAGE' ) ) {
-	define('WOOCOMMERCE_MBE_TABS_PAGE', 'woocommerce_mbe_tabs');
+	define( 'WOOCOMMERCE_MBE_TABS_PAGE', 'woocommerce_mbe_tabs' );
 }
 
 if ( ! defined( 'WOOCOMMERCE_MBE_TABS_PICKUP_PAGE' ) ) {
-	define('WOOCOMMERCE_MBE_TABS_PICKUP_PAGE', 'pickup_batches_tabs');
+	define( 'WOOCOMMERCE_MBE_TABS_PICKUP_PAGE', 'pickup_batches_tabs' );
 }
 
 if ( ! defined( 'WOOCOMMERCE_MBE_TABS_PICKUP_PAGE' ) ) {
-	define('WOOCOMMERCE_MBE_TABS_PICKUP_PAGE', 'pickup_batches_tabs');
+	define( 'WOOCOMMERCE_MBE_TABS_PICKUP_PAGE', 'pickup_batches_tabs' );
 }
 
 // REST API ENDPOINT CONSTANT
-if( ! defined('MBE_WC_REST_API_NAMESPACE')) {
-    define('MBE_WC_REST_API_NAMESPACE', 'wc/v3');
+if ( ! defined( 'MBE_WC_REST_API_NAMESPACE' ) ) {
+	define( 'MBE_WC_REST_API_NAMESPACE', 'wc/v3' );
 }
-if( ! defined('MBE_REST_API_ENDPOINT_SET_SHIPPING_STATUS')) {
-	define('MBE_REST_API_ENDPOINT_SET_SHIPPING_STATUS', '/mbe/order/set-shipping-status');
+if ( ! defined( 'MBE_REST_API_ENDPOINT_SET_SHIPPING_STATUS' ) ) {
+	define( 'MBE_REST_API_ENDPOINT_SET_SHIPPING_STATUS', '/mbe/order/set-shipping-status' );
 }
-if( ! defined('MBE_WC_REST_API_USERNAME')) {
-	define('MBE_WC_REST_API_USERNAME', MBE_ESHIP_ID . '_api_user');
+if ( ! defined( 'MBE_WC_REST_API_USERNAME' ) ) {
+	define( 'MBE_WC_REST_API_USERNAME', MBE_ESHIP_ID . '_api_user' );
 }
-if( ! defined('MBE_WC_REST_API_USER_EMAIL')) {
-	define('MBE_WC_REST_API_USER_EMAIL', 'mbeapiuser@mbeglobal.com');
+if ( ! defined( 'MBE_WC_REST_API_USER_EMAIL' ) ) {
+	define( 'MBE_WC_REST_API_USER_EMAIL', 'mbeapiuser@mbeglobal.com' );
 }
-if( ! defined('MBE_WC_REST_API_USER_ROLE')) {
-	define('MBE_WC_REST_API_USER_ROLE', MBE_ESHIP_ID . '_rest_api_user' );
+if ( ! defined( 'MBE_WC_REST_API_USER_ROLE' ) ) {
+	define( 'MBE_WC_REST_API_USER_ROLE', MBE_ESHIP_ID . '_rest_api_user' );
 }
-if( ! defined('MBE_WC_REST_API_ORDER_STATUS_DELIVERED')) {
-	define('MBE_WC_REST_API_ORDER_STATUS_DELIVERED', 'wc-mbe-api-delivered' );
+if ( ! defined( 'MBE_WC_REST_API_ORDER_STATUS_DELIVERED' ) ) {
+	define( 'MBE_WC_REST_API_ORDER_STATUS_DELIVERED', 'wc-mbe-api-delivered' );
 }
-if( ! defined('MBE_WC_REST_API_ORDER_STATUS_DELIVERED_DESCRIPTION')) {
-	define('MBE_WC_REST_API_ORDER_STATUS_DELIVERED_DESCRIPTION', 'Delivered MBE' );
+if ( ! defined( 'MBE_WC_REST_API_ORDER_STATUS_DELIVERED_DESCRIPTION' ) ) {
+	define( 'MBE_WC_REST_API_ORDER_STATUS_DELIVERED_DESCRIPTION', 'Delivered MBE' );
 }
 
-require_once( MBE_ESHIP_PLUGIN_DIR . '/lib/Helper/Data.php' );
-require_once( MBE_ESHIP_PLUGIN_DIR . '/lib/Helper/Logger.php' );
+require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/Helper/Data.php' );
+require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/Helper/Logger.php' );
 //require_once(MBE_E_LINK_PLUGIN_DIR . '/lib/Helper/Tracking.php');
-require_once( MBE_ESHIP_PLUGIN_DIR . '/lib/Helper/Csv.php' );
-require_once( MBE_ESHIP_PLUGIN_DIR . '/lib/Helper/Rates.php' );
-require_once( MBE_ESHIP_PLUGIN_DIR . '/lib/Traits/Mbe_Entity_Model_Trait.php' );
-require_once( MBE_ESHIP_PLUGIN_DIR . '/lib/Traits/ShipmentActions.php' );
-require_once( MBE_ESHIP_PLUGIN_DIR . '/lib/Interfaces/EntityModelInterface.php' );
-require_once( MBE_ESHIP_PLUGIN_DIR . '/lib/Factories/CsvEntityFactory.php' );
-require_once( MBE_ESHIP_PLUGIN_DIR . '/lib/Factories/CsvEditorEntityFactory.php' );
-require_once( MBE_ESHIP_PLUGIN_DIR . '/lib/Model/CsvShipping.php' );
-require_once( MBE_ESHIP_PLUGIN_DIR . '/lib/Model/CsvPackage.php' );
-require_once( MBE_ESHIP_PLUGIN_DIR . '/lib/Model/CsvPackageProduct.php' );
-require_once( MBE_ESHIP_PLUGIN_DIR . '/lib/Model/CsvPickupAddress.php' );
-require_once( MBE_ESHIP_PLUGIN_DIR . '/lib/Model/PickupCustomData.php' );
+require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/Helper/Csv.php' );
+require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/Helper/Rates.php' );
+require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/Traits/Mbe_Entity_Model_Trait.php' );
+require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/Traits/ShipmentActions.php' );
+require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/Interfaces/EntityModelInterface.php' );
+require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/Factories/CsvEntityFactory.php' );
+require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/Factories/CsvEditorEntityFactory.php' );
+require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/Model/CsvShipping.php' );
+require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/Model/CsvPackage.php' );
+require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/Model/CsvPackageProduct.php' );
+require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/Model/CsvPickupAddress.php' );
+require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/Model/PickupCustomData.php' );
 
-require_once (MBE_ESHIP_PLUGIN_DIR . '/lib/Metaboxes/DepartmentAddressData.php' );
-
-require_once( MBE_ESHIP_PLUGIN_DIR . '/lib/Mbe/MbeWs.php' );
-require_once( MBE_ESHIP_PLUGIN_DIR . '/lib/Mbe/MbeSoapClient.php' );
-require_once( MBE_ESHIP_PLUGIN_DIR . '/lib/Model/Ws.php' );
-require_once( MBE_ESHIP_PLUGIN_DIR . '/lib/Model/Carrier.php' );
-require_once( MBE_ESHIP_PLUGIN_DIR . '/lib/Exceptions/MbeExceptions.php' );
-require_once( MBE_ESHIP_PLUGIN_DIR . '/backward_compatibility/array_column.php' );
+require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/Metaboxes/DepartmentAddressData.php' );
+require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/Metaboxes/AdvancedReturnAddressData.php' );
+require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/Mbe/MbeWs.php' );
+require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/Mbe/MbeSoapClient.php' );
+require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/Model/Ws.php' );
+require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/Model/Carrier.php' );
+require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/Exceptions/MbeExceptions.php' );
+require_once( MBE_ESHIP_PLUGIN_DIR . 'backward_compatibility/array_column.php' );
 
 //if ( ! class_exists( '\Dompdf\Dompdf' ) ) {
-//	require_once( MBE_ESHIP_PLUGIN_DIR . '/lib/dompdf/autoload.inc.php' );
+//	require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/dompdf/autoload.inc.php' );
 //}
 
-require_once( MBE_ESHIP_PLUGIN_DIR . '/lib/vendor/autoload.php' );
+require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/vendor/autoload.php' );
 
 function mbe_eship_is_old_elink_plugin_active() {
 	$activePlugins = array_keys( get_plugins() );
@@ -185,16 +185,16 @@ function mbe_eship_update_new_settings_check() {
 	global $wpdb;
 	$logger = new Mbe_Shipping_Helper_Logger();
 
-	$schemaFlagOption          = MBE_ESHIP_ID . '_' . 'need_new_settings';
-	$oldOption                 = get_option( Mbe_Shipping_Helper_Data::MBE_ELINK_SETTINGS );
-	$mbeNeedUpdate             = ! ( get_option( $schemaFlagOption ) === 'no' ) && ! empty( $oldOption );
+	$schemaFlagOption = MBE_ESHIP_ID . '_' . 'need_new_settings';
+	$oldOption        = get_option( Mbe_Shipping_Helper_Data::MBE_ELINK_SETTINGS );
+	$mbeNeedUpdate    = ! ( get_option( $schemaFlagOption ) === 'no' ) && ! empty( $oldOption );
 	// To check if plugin was already configured but options weren't migrated yet
-	$notConfigured             = empty(get_option(MBE_ESHIP_ID . '_' .Mbe_Shipping_Helper_Data::XML_PATH_ALLOWED_SHIPMENT_SERVICES));
+	$notConfigured             = empty( get_option( MBE_ESHIP_ID . '_' . Mbe_Shipping_Helper_Data::XML_PATH_ALLOWED_SHIPMENT_SERVICES ) );
 	$csv_rates_model           = new Mbe_Shipping_Model_Csv_Shipping();
 	$csv_package_model         = new Mbe_Shipping_Model_Csv_Package();
 	$csv_package_product_model = new Mbe_Shipping_Model_Csv_Package_Product();
 
-    // TODO: Check if the impact can be mitigated moving this line inside the if
+	// TODO: Check if the impact can be mitigated moving this line inside the if
 	$tableExist = $csv_rates_model->tableExists() && $csv_package_model->tableExists() && $csv_package_product_model->tableExists();
 
 	if ( $mbeNeedUpdate && $tableExist && $notConfigured ) {
@@ -229,7 +229,7 @@ function mbe_eship_update_new_settings_check() {
 
 		// Migrate CSV tables
 		$logger->log( 'Migrating from MBE e-Link --- Csv Tables', true );
-        // TODO: move tablexists here ?
+		// TODO: move tablexists here ?
 		$csvTables = [
 			$csv_rates_model->getTableName()           => 'mbeshippingrate',
 			$csv_package_model->getTableName()         => 'mbe_shipping_standard_packages',
@@ -237,10 +237,10 @@ function mbe_eship_update_new_settings_check() {
 		];
 
 		foreach ( $csvTables as $key => $value ) {
-            // Check if old table exists
+			// Check if old table exists
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange
-			if ( $wpdb->get_var( $wpdb->prepare("SHOW TABLES LIKE %s", $wpdb->prefix . $value  )) == $wpdb->prefix . $value  ) {
-				$wpdb->query( $wpdb->prepare("INSERT INTO %i SELECT * FROM %i", $key, $wpdb->prefix . $value )); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange
+			if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $wpdb->prefix . $value ) ) == $wpdb->prefix . $value ) {
+				$wpdb->query( $wpdb->prepare( "INSERT INTO %i SELECT * FROM %i", $key, $wpdb->prefix . $value ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange
 			}
 		}
 
@@ -250,10 +250,10 @@ function mbe_eship_update_new_settings_check() {
 //		} catch ( Exception $e ) {
 		//
 //		}
-	} else if (! ( get_option( $schemaFlagOption ) === 'no' ) && empty($oldOption)) {
-		$logger->log('Migrating from MBE e-Link --- Old options are missing ');
-	} else if ($mbeNeedUpdate && !$notConfigured) {
-		$logger->log('Migrating from MBE e-Link --- No migration, Plugin already configured ');
+	} else if ( ! ( get_option( $schemaFlagOption ) === 'no' ) && empty( $oldOption ) ) {
+		$logger->log( 'Migrating from MBE e-Link --- Old options are missing ' );
+	} else if ( $mbeNeedUpdate && ! $notConfigured ) {
+		$logger->log( 'Migrating from MBE e-Link --- No migration, Plugin already configured ' );
 	}
 }
 
@@ -261,30 +261,30 @@ function mbe_eship_check_log_folder_htaccess() {
 	$helper   = new Mbe_Shipping_Helper_Data();
 	$dirPath  = trailingslashit( $helper->getMbeLogDir() );
 	$filePath = $dirPath . '.htaccess';
-	if(!file_exists($filePath)) {
-		$helper->createHtaccessDenyAll($dirPath);
+	if ( ! file_exists( $filePath ) ) {
+		$helper->createHtaccessDenyAll( $dirPath );
 	}
 }
 
 function mbe_eship_rest_api_key_check() {
-    if (is_admin()) {
-	    $logger = new Mbe_Shipping_Helper_Logger();
-	    $user_id = username_exists( MBE_WC_REST_API_USERNAME );
+	if ( is_admin() ) {
+		$logger  = new Mbe_Shipping_Helper_Logger();
+		$user_id = username_exists( MBE_WC_REST_API_USERNAME );
 
-	    if ( $user_id && email_exists( MBE_WC_REST_API_USER_EMAIL ) ) {
-		    $helper = new Mbe_Shipping_Helper_Data();
+		if ( $user_id && email_exists( MBE_WC_REST_API_USER_EMAIL ) ) {
+			$helper = new Mbe_Shipping_Helper_Data();
 
-		    if ( ! $helper->hasApiKey( $user_id ) ) {
-			    try {
-				    mbe_eship_generate_and_send_api_key( $user_id );
-			    } catch ( DbException $e ) {
-				    $logger->log( 'REST API Check - Generate and Send Api Key EXCEPTION: ' . $e->getMessage() );
-			    }
-		    }
-	    } else {
-		    $logger->log( 'REST API Check - Generate and Send Api Key - User/Email missing'  );
-        }
-    }
+			if ( ! $helper->hasApiKey( $user_id ) ) {
+				try {
+					mbe_eship_generate_and_send_api_key( $user_id );
+				} catch ( DbException $e ) {
+					$logger->log( 'REST API Check - Generate and Send Api Key EXCEPTION: ' . $e->getMessage() );
+				}
+			}
+		} else {
+			$logger->log( 'REST API Check - Generate and Send Api Key - User/Email missing' );
+		}
+	}
 }
 
 function mbe_eship_uninstall_db_options() {
@@ -292,14 +292,14 @@ function mbe_eship_uninstall_db_options() {
 	$csv_rates_model           = new Mbe_Shipping_Model_Csv_Shipping();
 	$csv_package_model         = new Mbe_Shipping_Model_Csv_Package();
 	$csv_package_product_model = new Mbe_Shipping_Model_Csv_Package_Product();
-    $pickup_custom_data_model  = new Mbe_Shipping_Model_Pickup_Custom_Data();
+	$pickup_custom_data_model  = new Mbe_Shipping_Model_Pickup_Custom_Data();
 
 	// Delete all the tables
 	$tables = [
 		$csv_rates_model->getTableName(),
 		$csv_package_model->getTableName(),
 		$csv_package_product_model->getTableName(),
-        $pickup_custom_data_model->getTableName(),
+		$pickup_custom_data_model->getTableName(),
 	];
 
 	// Remove "old plugin" tables too if any
@@ -309,23 +309,23 @@ function mbe_eship_uninstall_db_options() {
 		$wpdb->prefix . 'mbeshippingrate' );
 
 	foreach ( $tables as $table ) {
-		$wpdb->query( $wpdb->prepare("DROP TABLE IF EXISTS %i", $table) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange
+		$wpdb->query( $wpdb->prepare( "DROP TABLE IF EXISTS %i", $table ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange
 	}
 
-    // Delete the REST API User, Role and Keys if any
-	$userLogin = MBE_WC_REST_API_USERNAME;
+	// Delete the REST API User, Role and Keys if any
+	$userLogin  = MBE_WC_REST_API_USERNAME;
 	$mbeApiRole = MBE_WC_REST_API_USER_ROLE;
 
-	if (username_exists($userLogin)) {
-		$user = get_user_by('login', $userLogin);
-		if (!wp_delete_user($user->ID)) {
-			error_log(MBE_ESHIP_PLUGIN_NAME . ': REST API User Deletion - User not deleted');
+	if ( username_exists( $userLogin ) ) {
+		$user = get_user_by( 'login', $userLogin );
+		if ( ! wp_delete_user( $user->ID ) ) {
+			error_log( MBE_ESHIP_PLUGIN_NAME . ': REST API User Deletion - User not deleted' );
 		}
-		remove_role($mbeApiRole);
+		remove_role( $mbeApiRole );
 	} else {
-		error_log(MBE_ESHIP_PLUGIN_NAME . ': REST API User Deletion - User not found');
+		error_log( MBE_ESHIP_PLUGIN_NAME . ': REST API User Deletion - User not found' );
 	}
-	error_log(MBE_ESHIP_PLUGIN_NAME . ': REST API User Deletion - User, Role and Keys deleted successfully');
+	error_log( MBE_ESHIP_PLUGIN_NAME . ': REST API User Deletion - User, Role and Keys deleted successfully' );
 
 	// Delete all the options
 	$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE '" . MBE_ESHIP_ID . "\_%'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange
@@ -333,8 +333,8 @@ function mbe_eship_uninstall_db_options() {
 	// Delete the "old plugin" db version option, since we are removing the tables
 	delete_option( 'mbe_elink_db_version' );
 
-    // Remove all pickup meta items from the orders
-    $queryMeta = $wpdb->prepare("DELETE FROM $wpdb->order_itemmeta where meta_key in (%s, %s, %s)",Mbe_Shipping_Helper_Data::META_FIELD_IS_PICKUP_SHIPPING ,Mbe_Shipping_Helper_Data::META_FIELD_PICKUP_BATCH_ID, Mbe_Shipping_Helper_Data::META_FIELD_PICKUP_CUSTOM_DATA_ID );
+	// Remove all pickup meta items from the orders
+	$queryMeta = $wpdb->prepare( "DELETE FROM $wpdb->order_itemmeta where meta_key in (%s, %s, %s)", Mbe_Shipping_Helper_Data::META_FIELD_IS_PICKUP_SHIPPING, Mbe_Shipping_Helper_Data::META_FIELD_PICKUP_BATCH_ID, Mbe_Shipping_Helper_Data::META_FIELD_PICKUP_CUSTOM_DATA_ID );
 	$wpdb->query( $queryMeta ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange
 
 }
@@ -367,7 +367,7 @@ function mbe_elink_db_tables_exist() {
 	return $csv_rates_model->tableExists()
 	       && $csv_package_model->tableExists()
 	       && $csv_package_product_model->tableExists()
-           && $pickup_custom_data_model->tableExists();
+	       && $pickup_custom_data_model->tableExists();
 }
 
 function get_mbe_elink_db_schema() {
@@ -377,13 +377,13 @@ function get_mbe_elink_db_schema() {
 	$pickup_custom_data_model  = new Mbe_Shipping_Model_Pickup_Custom_Data();
 
 	return $csv_rates_model->getSqlCreate()
-           . $csv_package_model->getSqlCreate()
-           . $csv_package_product_model->getSqlCreate()
-           . $pickup_custom_data_model->getSqlCreate();
+	       . $csv_package_model->getSqlCreate()
+	       . $csv_package_product_model->getSqlCreate()
+	       . $pickup_custom_data_model->getSqlCreate();
 }
 
 function mbe_eship_update_db_check() {
-	$action = sanitize_text_field($_REQUEST['action'] ?? '');
+	$action = sanitize_text_field( $_REQUEST['action'] ?? '' );
 	if ( ! empty( $action ) && $action !== 'deactivate' ) {
 		mbe_eship_install_db();
 	}
@@ -407,27 +407,28 @@ function declare_compatibility() {
 function mbe_rest_api_user_creation_and_sync_to_mol() {
 	$logger = new Mbe_Shipping_Helper_Logger();
 
-	if (!class_exists('woocommerce')) {
-		$logger->log('REST API User Creation - Woocommerce is not active');
+	if ( ! class_exists( 'woocommerce' ) ) {
+		$logger->log( 'REST API User Creation - Woocommerce is not active' );
+
 		return false;
 	}
 
 	// Create the MBE REST API user role if not exists
-	add_role( MBE_WC_REST_API_USER_ROLE, strtoupper(str_replace('_', ' ', MBE_ESHIP_ID)) . ' REST API User'
+	add_role( MBE_WC_REST_API_USER_ROLE, strtoupper( str_replace( '_', ' ', MBE_ESHIP_ID ) ) . ' REST API User'
 //        ,array(
 //		'read' => true,
 //							'edit_posts' => false,
 //							'delete_posts' => false,
-		// add capabilities
+	// add capabilities
 //	)
-    );
+	);
 
 	// Create the MBE REST API user with a random password (no backend login is required for api access)
 	$password = wc_rand_hash();
 
-	if (!username_exists(MBE_WC_REST_API_USERNAME) && !email_exists(MBE_WC_REST_API_USER_EMAIL)) {
-		$user_id = wp_create_user(MBE_WC_REST_API_USERNAME, $password, MBE_WC_REST_API_USER_EMAIL);
-		if (!is_wp_error($user_id)) {
+	if ( ! username_exists( MBE_WC_REST_API_USERNAME ) && ! email_exists( MBE_WC_REST_API_USER_EMAIL ) ) {
+		$user_id = wp_create_user( MBE_WC_REST_API_USERNAME, $password, MBE_WC_REST_API_USER_EMAIL );
+		if ( ! is_wp_error( $user_id ) ) {
 			// Assign the custom role to the user
 			$user = new WP_User( $user_id );
 			$user->set_role( MBE_WC_REST_API_USER_ROLE );
@@ -439,9 +440,9 @@ function mbe_rest_api_user_creation_and_sync_to_mol() {
 		} else {
 			/** @var WP_Error $user_id */
 			$logger->log( 'REST API User Creation - EXCEPTION: ' . $user_id->get_error_message() );
-        }
+		}
 	} else {
-		$logger->log('REST API User Creation - User already exists');
+		$logger->log( 'REST API User Creation - User already exists' );
 	}
 }
 
@@ -456,21 +457,24 @@ function mbe_rest_api_user_creation_and_sync_to_mol() {
  */
 function mbe_eship_generate_and_send_api_key( $user_id ): void {
 	$helper = new Mbe_Shipping_Helper_Data();
-	$ws = new Mbe_Shipping_Model_Ws();
+	$ws     = new Mbe_Shipping_Model_Ws();
 	$logger = new Mbe_Shipping_Helper_Logger();
 
 	try {
-		$apiKeys = $helper->generateMbeRestApiKey( $user_id );
+		$stepMessage = 'generateMbeRestApiKey';
+		$apiKeys     = $helper->generateMbeRestApiKey( $user_id );
+
 		$logger->log( 'REST API Creation - New WooCommerce API Key created' );
 
-        $result = $ws->sendRestApiCredentials( base64_encode( $apiKeys['key'] . ':' . $apiKeys['secret'] ) );
+		$stepMessage = 'sendRestApiCredentials';
+		$result      = $ws->sendRestApiCredentials( base64_encode( $apiKeys['key'] . ':' . $apiKeys['secret'] ) );
 
 	} catch ( ApiRequestException $e ) {
-		$logger->log( 'REST API Creation - Send Api Key EXCEPTION: ' . $e->getMessage() );
+		$logger->log( 'REST API Creation - Send Api Key EXCEPTION:  ' . $stepMessage . ' - ' . $e->getMessage() );
 		// delete the api key so it will be regenerated by the control hooked on plugin save
 		$helper->removeMbeRestApiKey( $user_id );
 	} catch ( \Exception $e ) {
-		$logger->log( 'REST API Creation - EXCEPTION: ' . $e->getMessage() );
+		$logger->log( 'REST API Creation - EXCEPTION: ' . $stepMessage . ' - ' . $e->getMessage() );
 		$helper->removeMbeRestApiKey( $user_id );
 	}
 }
@@ -479,10 +483,11 @@ register_uninstall_hook( __FILE__, 'mbe_eship_uninstall_db_options' ); // ONLY O
 register_activation_hook( __FILE__, 'mbe_eship_activation_check' );
 register_activation_hook( __FILE__, 'mbe_eship_install_db' );
 
+
 // **          REST API Management             ** //
 // ** User, role, apikey creation and deletion ** //
 register_initial_settings();
-register_activation_hook(__FILE__, 'mbe_rest_api_user_creation_and_sync_to_mol' );
+register_activation_hook( __FILE__, 'mbe_rest_api_user_creation_and_sync_to_mol' );
 // ** //
 
 //register_activation_hook( __FILE__, 'mbe_eship_create_options_default' );
@@ -492,7 +497,7 @@ register_activation_hook(__FILE__, 'mbe_rest_api_user_creation_and_sync_to_mol' 
 add_action( 'plugins_loaded', 'mbe_eship_update_db_check', 9 );
 add_action( 'plugins_loaded', 'mbe_eship_update_new_settings_check', 10 );
 add_action( 'plugins_loaded', 'mbe_eship_check_log_folder_htaccess', 10 );
-add_action( 'before_woocommerce_init', 'declare_compatibility');
+add_action( 'before_woocommerce_init', 'declare_compatibility' );
 
 
 /**
@@ -518,23 +523,32 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 	if ( ! class_exists( 'mbe_e_link_wooCommerce_shipping_setup' ) ) {
 		class mbe_e_link_wooCommerce_shipping_setup {
-            use \Traits\ShipmentActions;
+			use \Traits\ShipmentActions;
 
 			protected $helper;
 
 			public function __construct() {
 				add_filter( 'woocommerce_get_settings_pages', array( $this, 'load_custom_settings_tab' ) );
 
-                // Check if Pickup request activation flag is set and in case force the default value setter to run
-				add_action('mbe_eship_custom_settings_loaded', array( $this, 'mbe_eship_check_pickup_default_options'));
+				// Check if Pickup request activation flag is set and in case force the default value setter to run
+				add_action( 'mbe_eship_custom_settings_loaded', array(
+					$this,
+					'mbe_eship_check_pickup_default_options'
+				) );
 
 				// Check if Tax and Duties request activation flag is set and in case force the default value setter to run
-				add_action('mbe_eship_custom_settings_loaded', array( $this, 'mbe_eship_check_tax_and_duties_default_options'));
+				add_action( 'mbe_eship_custom_settings_loaded', array(
+					$this,
+					'mbe_eship_check_tax_and_duties_default_options'
+				) );
 
-                // Check default values for settings
-                add_action('mbe_eship_custom_settings_loaded', array( $this, 'mbe_eship_create_options_default'),20);
+				// Check default values for settings
+				add_action( 'mbe_eship_custom_settings_loaded', array(
+					$this,
+					'mbe_eship_create_options_default'
+				), 20 );
 
-                // Add settings link in the plugin list
+				// Add settings link in the plugin list
 				add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array(
 					$this,
 					'plugin_action_links'
@@ -566,14 +580,20 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				add_action( 'admin_post_mbe_goto_advanced_login', array( $this, 'mbe_goto_advanced_login' ) );
 				add_action( 'admin_post_mbe_reset_login', array( $this, 'mbe_reset_login' ) );
 
-                // Action to download single order pickup manifest
-                add_action('admin_post_mbe_download_pickup_manifest', array($this, 'mbe_download_pickup_manifest'));
+				// Action to download single order pickup manifest
+				add_action( 'admin_post_mbe_download_pickup_manifest', array( $this, 'mbe_download_pickup_manifest' ) );
 
-                // Action to download multiple waybill showing partial errors (called by add_order_list via JS when "reload-download" parameter is set)
-                add_action('admin_post_mbe_download_multiple_waybill', array($this, 'mbe_download_multiple_waybill' ));
+				// Action to download multiple waybill showing partial errors (called by add_order_list via JS when "reload-download" parameter is set)
+				add_action( 'admin_post_mbe_download_multiple_waybill', array(
+					$this,
+					'mbe_download_multiple_waybill'
+				) );
 
 				// Action to download delivery point single order waybill
-				add_action('admin_post_mbe_download_delivery_point_waybill', array($this, 'mbe_download_delivery_point_waybill'));
+				add_action( 'admin_post_mbe_download_delivery_point_waybill', array(
+					$this,
+					'mbe_download_delivery_point_waybill'
+				) );
 
 				// Add menu
 				add_action( 'admin_menu', array( $this, 'add_mbe_tab' ) );
@@ -592,39 +612,58 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 				// Get default data for pickup from MOL when loading pickup settings page or before creating a new pickup shipment
 //				add_action('woocommerce_before_settings_'. MBE_ESHIP_ID , array($this, 'mbe_woocommerce_get_pickup_default_data'));
-				add_action(MBE_ESHIP_ID . '_before_output_section_mbe_pickup', array($this, 'mbe_woocommerce_get_pickup_default_data'),5);
-				add_action(MBE_ESHIP_ID.'_before_create_pickup', array($this, 'mbe_woocommerce_get_pickup_default_data'),5);
+				add_action( MBE_ESHIP_ID . '_before_output_section_mbe_pickup', array(
+					$this,
+					'mbe_woocommerce_get_pickup_default_data'
+				), 5 );
+				add_action( MBE_ESHIP_ID . '_before_create_pickup', array(
+					$this,
+					'mbe_woocommerce_get_pickup_default_data'
+				), 5 );
 
 				// Send default data for pickup to MOL
-				add_action('woocommerce_update_options_'. MBE_ESHIP_ID .'_mbe_pickup', array($this, 'mbe_woocommerce_set_pickup_default_data'));
+				add_action( 'woocommerce_update_options_' . MBE_ESHIP_ID . '_mbe_pickup', array(
+					$this,
+					'mbe_woocommerce_set_pickup_default_data'
+				) );
 
-                // Action to create a return shipment
-                add_action('admin_post_mbe_create_return_shipment', array($this, 'mbe_create_return_shipment'));
+				// Action to create a return shipment
+				add_action( 'admin_post_mbe_create_return_shipment', array( $this, 'mbe_create_return_shipment' ) );
+				add_action( MBE_ESHIP_ID . '_before_create_advanced_return', array(
+					$this,
+					'mbe_woocommerce_get_advanced_return_address_data'
+				), 5 );
 
 //                //Action to edit a pickup batch
 //                add_action('admin_post_mbe_edit_pickup', array($this, 'pickup_data_form_page_handler'));
 
 				// Action to ship a pickup batch
-				add_action('admin_post_mbe_send_pickup', array($this, 'mbe_send_pickup'));
+				add_action( 'admin_post_mbe_send_pickup', array( $this, 'mbe_send_pickup' ) );
 
-                // Action to delete a pickup batch
-                add_action('admin_post_mbe_delete_pickup_custom_data', array($this, 'mbe_delete_pickup_custom_data'));
+				// Action to delete a pickup batch
+				add_action( 'admin_post_mbe_delete_pickup_custom_data', array(
+					$this,
+					'mbe_delete_pickup_custom_data'
+				) );
 
-                // Action to detach an order from a pickup batch
-                add_action('admin_post_mbe_detach_order_from_batch', array($this, 'mbe_detach_order_from_batch'));
+				// Action to detach an order from a pickup batch
+				add_action( 'admin_post_mbe_detach_order_from_batch', array( $this, 'mbe_detach_order_from_batch' ) );
 
 				// Action to check batch items after detach
-                add_action(MBE_ESHIP_ID . '_after_detach', array($this, 'mbe_after_detach_check_pickup_items'));
+				add_action( MBE_ESHIP_ID . '_after_detach', array( $this, 'mbe_after_detach_check_pickup_items' ) );
 
-                // Action to check pickup status after deleting the pickup addresses
-                add_action(MBE_ESHIP_ID . '_csv_editor_deleted', array($this, 'mbe_after_delete_pickup_address_disable_pickup_if_no_default_address'),10,2);
+				// Action to check pickup status after deleting the pickup addresses
+				add_action( MBE_ESHIP_ID . '_csv_editor_deleted', array(
+					$this,
+					'mbe_after_delete_pickup_address_disable_pickup_if_no_default_address'
+				), 10, 2 );
 
-                // Script to manage custom mbebuttons actions
-				add_action('admin_enqueue_scripts', array($this, 'mbe_helper_scripts'));
+				// Script to manage custom mbebuttons actions
+				add_action( 'admin_enqueue_scripts', array( $this, 'mbe_helper_scripts' ) );
 
 				$this->helper = new Mbe_Shipping_Helper_Data();
 				if ( $this->helper->isEnabled() ) {
-					add_action( 'wp_enqueue_scripts', array($this, 'mbe_gel_proximity_scripts'));
+					add_action( 'wp_enqueue_scripts', array( $this, 'mbe_gel_proximity_scripts' ) );
 
 					add_action( 'closure_event', array( $this, 'automatic_closure' ) );
 					add_action( 'woocommerce_settings_saved', array( $this, 'add_cron_job' ) );
@@ -643,7 +682,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 					add_action( 'woocommerce_order_status_processing', array( $this, 'mbe_update_tracking' ), 10, 2 );
 
 					// Create shipping manually
-					add_filter( 'woocommerce_order_actions', array( $this, 'add_order_meta_box_actions' ), 10 ,2 );
+					add_filter( 'woocommerce_order_actions', array( $this, 'add_order_meta_box_actions' ), 10, 2 );
 					add_action( 'woocommerce_order_action_mbe_shipping_creation', array(
 						$this,
 						'process_order_meta_box_actions'
@@ -659,13 +698,13 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 					add_action( 'woocommerce_after_shipping_rate', array(
 						$this,
 						'wf_mbe_wooCommerce_shipping_gel_delivery_point_map'
-					),10,2 );
+					), 10, 2 );
 
-                    // Add filter to hide custom order item metakeys
-                    add_filter('woocommerce_order_item_get_formatted_meta_data', array(
-                        $this,
-	                    'wf_mbe_wooCommerce_shipping_hide_custom_order_meta_keys'
-                    ), 10, 2);
+					// Add filter to hide custom order item metakeys
+					add_filter( 'woocommerce_order_item_get_formatted_meta_data', array(
+						$this,
+						'wf_mbe_wooCommerce_shipping_hide_custom_order_meta_keys'
+					), 10, 2 );
 
 					// Add Delivery point dataset to the checkout fields list
 //					add_filter( 'woocommerce_checkout_fields', array(
@@ -677,7 +716,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 					add_action( 'woocommerce_after_checkout_validation', array(
 						$this,
 						'wf_mbe_delivery_point_validation'
-					),10,2 );
+					), 10, 2 );
 
 					// Set Delivery Point address as order's shipping address
 					add_filter( 'woocommerce_checkout_posted_data', array(
@@ -689,32 +728,42 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 					add_action( 'woocommerce_checkout_update_order_meta', array(
 						$this,
 						'wf_mbe_delivery_point_set_meta_field'
-					), 10,2 );
+					), 10, 2 );
 
 
 					add_action( 'woocommerce_checkout_update_order_review', array(
 						$this,
 						'wf_mbe_delivery_point_set_meta_field_review'
-					));
+					) );
 
-                    // Update package payload for dynamic shipping cost base on selected delivery point
-					add_filter('woocommerce_cart_shipping_packages', array($this,
+					// Update package payload for dynamic shipping cost base on selected delivery point
+					add_filter( 'woocommerce_cart_shipping_packages', array(
+						$this,
 						'wf_mbe_delivery_point_update_package_for_cost_recalculation'
-					));
+					) );
 
-		            // Remove the delivery point session variable
-					add_action( 'woocommerce_checkout_order_created', array($this,'wf_mbe_remove_delivery_point_session_variable') );
-					add_action( 'woocommerce_cart_emptied', array($this,'wf_mbe_remove_delivery_point_session_variable') );
-					add_action( 'woocommerce_cart_is_empty', array($this,'wf_mbe_remove_delivery_point_session_variable') );
+					// Remove the delivery point session variable
+					add_action( 'woocommerce_checkout_order_created', array(
+						$this,
+						'wf_mbe_remove_delivery_point_session_variable'
+					) );
+					add_action( 'woocommerce_cart_emptied', array(
+						$this,
+						'wf_mbe_remove_delivery_point_session_variable'
+					) );
+					add_action( 'woocommerce_cart_is_empty', array(
+						$this,
+						'wf_mbe_remove_delivery_point_session_variable'
+					) );
 
 					// Set Custom Mapping metafield value for the "old" shortcode checkout
-					add_action('woocommerce_checkout_update_order_meta', array(
+					add_action( 'woocommerce_checkout_update_order_meta', array(
 						$this,
 						'wf_mbe_wooCommerce_shipping_custom_mapping_meta_field'
 					) );
 
 					// Set Custom Mapping metafield value for the "new" blocks checkout
-					add_action('woocommerce_store_api_checkout_update_order_meta', array(
+					add_action( 'woocommerce_store_api_checkout_update_order_meta', array(
 						$this,
 						'wf_mbe_wooCommerce_shipping_custom_mapping_meta_field_checkout_block'
 					) );
@@ -725,78 +774,105 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 						'mbe_woocommerce_email_track_id'
 					), 20, 4 );
 
-                    // Check the pickup request mode <=> shipping mode
-					add_action('woocommerce_settings_page_init', array( $this, 'mbe_eship_check_pickup_request_mode'));
+					// Check the pickup request mode <=> shipping mode
+					add_action( 'woocommerce_settings_page_init', array(
+						$this,
+						'mbe_eship_check_pickup_request_mode'
+					) );
 
 					// Check if the tax and duties must be disabled
-					add_action('woocommerce_settings_page_init', array( $this, 'mbe_eship_check_tax_and_duties'));
+					add_action( 'woocommerce_settings_page_init', array( $this, 'mbe_eship_check_tax_and_duties' ) );
 
-                    // Set or update pickup data on shipment creation
-					add_action(MBE_ESHIP_ID.'_before_create_pickup', array($this, 'mbe_edit_pickup_data' ));
+					// Set or update pickup data on shipment creation
+					add_action( MBE_ESHIP_ID . '_before_create_pickup', array( $this, 'mbe_edit_pickup_data' ) );
 
 					// Set or update department address data in shipment list
-					add_action(MBE_ESHIP_ID.'_add_department_data', array($this, 'mbe_edit_department_address_data' ));
+					add_action( MBE_ESHIP_ID . '_add_department_data', array(
+						$this,
+						'mbe_edit_department_address_data'
+					) );
 
 					// Action to select a department address for the pickup order
-					add_action('admin_post_mbe_select_department_address_pickup', array($this, 'mbe_select_department_address_pickup'));
+					add_action( 'admin_post_mbe_select_department_address_pickup', array(
+						$this,
+						'mbe_select_department_address_pickup'
+					) );
 
-                    // Show Tax and Duties in Checkout shortcodes
-                    add_action('woocommerce_review_order_before_submit', array($this, 'mbe_show_tax_and_duties_checkout_message' ));
+					// Show Tax and Duties in Checkout shortcodes
+					add_action( 'woocommerce_review_order_before_submit', array(
+						$this,
+						'mbe_show_tax_and_duties_checkout_message'
+					) );
 
-                    add_action( 'woocommerce_cart_calculate_fees', array($this, 'mbe_eship_add_tax_and_duties_fee' ) );
+                    if($this->helper->isEnabledTaxAndDuties()) {
+	                    add_action( 'woocommerce_cart_calculate_fees', array(
+		                    $this,
+		                    'mbe_eship_add_tax_and_duties_fee'
+	                    ) );
+                    }
 
-                    // Check insurance services selected when saving settings
-					add_action('woocommerce_settings_save_'. MBE_ESHIP_ID, array($this, 'mbe_check_insurance_mode_selected'));
+					// Check insurance services selected when saving settings
+					add_action( 'woocommerce_settings_save_' . MBE_ESHIP_ID, array(
+						$this,
+						'mbe_check_insurance_mode_selected'
+					) );
 
-                    // Add REST API endpoint for Tracking
-					add_action('rest_api_init', array($this, 'register_woocommerce_mbe_order_shipping_status_route' ));
-                    // Add REST API Status for Orders
-                    add_filter('wc_order_statuses', array($this, 'mbe_eship_add_order_delivered_status'));
+					// Add REST API endpoint for Tracking
+					add_action( 'rest_api_init', array(
+						$this,
+						'register_woocommerce_mbe_order_shipping_status_route'
+					) );
+					// Add REST API Status for Orders
+					add_filter( 'wc_order_statuses', array( $this, 'mbe_eship_add_order_delivered_status' ) );
 
 					add_action( 'init', array( $this, 'mbe_eship_register_post_status' ), 9 );
-                    add_action('admin_head', array( $this,'mbe_eship_style_delivered_status') );
+					add_action( 'admin_head', array( $this, 'mbe_eship_style_delivered_status' ) );
 
 
 					// Check REST API User/Key is enabled. Run only after MBE settings are saved, doesn't run for other WC settings
-					add_action( 'woocommerce_settings_save_'. MBE_ESHIP_ID, function (){
-                        if(!has_action('woocommerce_settings_saved', 'mbe_eship_rest_api_key_check')) {
-	                        add_action( 'woocommerce_settings_saved', 'mbe_eship_rest_api_key_check', 5);
-                        }
-                    });
-                    // Remove the Check REST API once executed (using priority)
-                    add_action('woocommerce_settings_saved', function () {
-	                    if(has_action('woocommerce_settings_saved', 'mbe_eship_rest_api_key_check')) {
-		                    remove_action( 'woocommerce_settings_saved', 'mbe_eship_rest_api_key_check' );
-	                    }
-                    },10);
+					add_action( 'woocommerce_settings_save_' . MBE_ESHIP_ID, function () {
+						if ( ! has_action( 'woocommerce_settings_saved', 'mbe_eship_rest_api_key_check' ) ) {
+							add_action( 'woocommerce_settings_saved', 'mbe_eship_rest_api_key_check', 5 );
+						}
+					} );
+					// Remove the Check REST API once executed (using priority)
+					add_action( 'woocommerce_settings_saved', function () {
+						if ( has_action( 'woocommerce_settings_saved', 'mbe_eship_rest_api_key_check' ) ) {
+							remove_action( 'woocommerce_settings_saved', 'mbe_eship_rest_api_key_check' );
+						}
+					}, 10 );
 
 				}
 			}
 
-            function mbe_eship_style_delivered_status() {
-	            if(!(is_admin() &&
-	                 ( get_current_screen()->id === 'woocommerce_page_wc-orders' || get_current_screen()->id === 'edit-shop_order' )
-                ) ) return; // Exit
+			function mbe_eship_style_delivered_status() {
+				if ( ! ( is_admin() &&
+				         ( get_current_screen()->id === 'woocommerce_page_wc-orders' || get_current_screen()->id === 'edit-shop_order' )
+				) ) {
+					return;
+				} // Exit
 
-	            $deliveredStatus = substr(MBE_WC_REST_API_ORDER_STATUS_DELIVERED, 3);
+				$deliveredStatus = substr( MBE_WC_REST_API_ORDER_STATUS_DELIVERED, 3 );
 
-	            ?>
+				?>
                 <style>
                     .order-status.status-<?php echo sanitize_title( $deliveredStatus ); ?> {
                         background: #c6e1c6;
                         color: #5b841b;
                     }
                 </style>
-	            <?php
-            }
+				<?php
+			}
 
 			public function mbe_eship_add_order_delivered_status( array $statuses ) {
 				$statuses[ MBE_WC_REST_API_ORDER_STATUS_DELIVERED ] = __( MBE_WC_REST_API_ORDER_STATUS_DELIVERED_DESCRIPTION, 'mail-boxes-etc' );
+
 				return $statuses;
 			}
 
 			public function mbe_eship_register_draft_order_post_status( array $statuses ) {
 				$statuses[ MBE_WC_REST_API_ORDER_STATUS_DELIVERED ] = $this->mbe_eship_get_post_status_properties();
+
 				return $statuses;
 			}
 
@@ -818,134 +894,170 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 					'show_in_admin_all_list'    => true,
 					'show_in_admin_status_list' => true,
 					/* %s: number of orders */
-					'label_count'               => _n_noop( __(MBE_WC_REST_API_ORDER_STATUS_DELIVERED_DESCRIPTION).' <span class="count">(%s)</span>', __(MBE_WC_REST_API_ORDER_STATUS_DELIVERED_DESCRIPTION).' <span class="count">(%s)</span>', 'mail-boxes-etc' ),
+					'label_count'               => _n_noop( __( MBE_WC_REST_API_ORDER_STATUS_DELIVERED_DESCRIPTION ) . ' <span class="count">(%s)</span>', __( MBE_WC_REST_API_ORDER_STATUS_DELIVERED_DESCRIPTION ) . ' <span class="count">(%s)</span>', 'mail-boxes-etc' ),
 				];
 			}
 
 			function register_woocommerce_mbe_order_shipping_status_route() {
-				register_rest_route(MBE_WC_REST_API_NAMESPACE, MBE_REST_API_ENDPOINT_SET_SHIPPING_STATUS, array(
+				register_rest_route( MBE_WC_REST_API_NAMESPACE, MBE_REST_API_ENDPOINT_SET_SHIPPING_STATUS, array(
 
-					'methods' => WP_REST_Server::EDITABLE,
-					'callback' => array($this, 'rest_api_handle_mbe_order_shipping_status_endpoint' ),
-					'permission_callback' => array($this, 'rest_api_mbe_api_key_permission_check' )
-				));
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => array( $this, 'rest_api_handle_mbe_order_shipping_status_endpoint' ),
+					'permission_callback' => array( $this, 'rest_api_mbe_api_key_permission_check' )
+				) );
 			}
 
 			// Authentication callback function
-			function rest_api_mbe_api_key_permission_check($request) {
-                $logger = new Mbe_Shipping_Helper_Logger();
-				$logger->log('REST API Endpoint - Permission check');
+			function rest_api_mbe_api_key_permission_check( $request ) {
+				$logger = new Mbe_Shipping_Helper_Logger();
+				$logger->log( 'REST API Endpoint - Permission check' );
 
 				// Get the custom MOL request header
-                $MolApiKeyHeader = $request->get_header('authorization-api-key')??'';
+				$MolApiKeyHeader = $request->get_header( 'authorization-api-key' ) ?? '';
 
-				if(empty($MolApiKeyHeader)) {
-					return new WP_Error('rest_forbidden', 'You do not have permission to access this endpoint.', array('status' => 403));
+				if ( empty( $MolApiKeyHeader ) ) {
+					return new WP_Error( 'rest_forbidden', 'You do not have permission to access this endpoint.', array( 'status' => 403 ) );
 				}
 
-                $apiKey = explode(':', base64_decode($MolApiKeyHeader));
+				$apiKey = explode( ':', base64_decode( $MolApiKeyHeader ) );
 
 //                Set the keys to be used in WC_REST_Authentication
-                $_GET['consumer_key'] =  $apiKey[0]??'';
-                $_GET['consumer_secret'] =  $apiKey[1]??'';
+				$_GET['consumer_key']    = $apiKey[0] ?? '';
+				$_GET['consumer_secret'] = $apiKey[1] ?? '';
 
-				$auth = new WC_REST_Authentication();
-				$userId = $auth->authenticate(false);
+				$auth   = new WC_REST_Authentication();
+				$userId = $auth->authenticate( false );
 
-				if (!empty($userId)) {
-					$logger->log('REST API Endpoint - Permission check - OK');
+				if ( ! empty( $userId ) ) {
+					$logger->log( 'REST API Endpoint - Permission check - OK' );
+
 					return true;
 				}
-				$logger->logVar($request, 'REST API Endpoint - Permission check - Failed');
-				return new WP_Error('rest_forbidden', 'You do not have permission to access this endpoint.', array('status' => 403));
+				$logger->logVar( $request, 'REST API Endpoint - Permission check - Failed' );
+
+				return new WP_Error( 'rest_forbidden', 'You do not have permission to access this endpoint.', array( 'status' => 403 ) );
 			}
 
-			function rest_api_handle_mbe_order_shipping_status_endpoint($request) {
+			function rest_api_handle_mbe_order_shipping_status_endpoint( $request ) {
 				// Handle the request and return a response
-                $logger = new Mbe_Shipping_Helper_Logger();
-                $requestParameters = $request->get_params();
-                $logger->log('REST API Endpoint - Incoming request');
+				$logger            = new Mbe_Shipping_Helper_Logger();
+				$requestParameters = $request->get_params();
+				$logger->log( 'REST API Endpoint - Incoming request' );
 
-                if(!empty($requestParameters)) {
-	                $trackingNumber = trim(sanitize_text_field( $requestParameters[0]['mbeTrackingNumber'] ?? '' ));
+				$isAdvancedReturn = false;
 
-                    $trackingNumber = preg_replace('/-\d+$/', '',$trackingNumber);
-	                $logger->log('REST API Endpoint - Tracking Number: '.$trackingNumber);
+				if ( ! empty( $requestParameters ) ) {
+					$trackingNumber = trim( sanitize_text_field( $requestParameters[0]['mbeTrackingNumber'] ?? '' ) );
+					$mbeStatus      = $requestParameters[0]['mbeStatus'];
 
-                    $orders = [];
-                    if(!empty($trackingNumber)) {
-	                    if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
-                            $orders = wc_get_orders( [
-                                'meta_key'   => Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NUMBER,
-                                'meta_value' => $trackingNumber
-                            ] );
-	                    } else {
-		                    $trackingFilter = array(
-			                    'post_type' => 'shop_order',
-			                    'post_status' => 'wc-%',
-			                    'nopaging' => 'true',
-			                    'fields' => 'ids',
-			                    'meta_key' => Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NUMBER,
-			                    'meta_value' => $trackingNumber,
-		                    );
-		                    $query = new WP_Query($trackingFilter);
-                            $orderIds = $query->get_posts();
-                            $orders[]=wc_get_order($orderIds[0]);
-	                    }
-                    }
+					$trackingNumber = preg_replace( '/-\d(1,2)$/', '', $trackingNumber );
+					$logger->log( 'REST API Endpoint - Tracking Number: ' . $trackingNumber . ' - Status code: ' . $mbeStatus );
 
-	                // there should be only one order for each master tracking number, so we get the first one
-	                $order   = $orders[0] ?? null;
-	                if ( !empty($order) ) {
-		                try {
-			                $this->helper->setOrderMbeTrackingStatus( $order, serialize($requestParameters[0]) );
-                            $deliveredStatus = substr(MBE_WC_REST_API_ORDER_STATUS_DELIVERED, 3);
+					$orders = [];
+					if ( ! empty( $trackingNumber ) ) {
+						if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
+							$orders = wc_get_orders( [
+								'meta_key'   => Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NUMBER,
+								'meta_value' => $trackingNumber
+							] );
+							if ( empty( $orders ) ) { // Check if it matches a return shipment
+								$orders           = wc_get_orders( [
+									'meta_key'   => Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_RETURN_TRACKING_NUMBER,
+									'meta_value' => $trackingNumber
+								] );
+								$isAdvancedReturn = true;
+							}
 
-                            // Update order status if the shipment has been delivered and the status wasn't already updated
-                            if (1 == $requestParameters[0]['mbeStatus'] && $order->get_status() !== $deliveredStatus) {
-	                            $order->set_status($deliveredStatus);
-                                $order->save();
-                            }
+						} else {
+							$trackingFilter = array(
+								'post_type'   => 'shop_order',
+								'post_status' => 'wc-%',
+								'nopaging'    => 'true',
+								'fields'      => 'ids',
+								'meta_key'    => Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NUMBER,
+								'meta_value'  => $trackingNumber,
+							);
+							$query          = new WP_Query( $trackingFilter );
+							$orderIds       = $query->get_posts();
+							if ( empty( $orderIds ) ) {
+								$trackingFilter   = array(
+									'post_type'   => 'shop_order',
+									'post_status' => 'wc-%',
+									'nopaging'    => 'true',
+									'fields'      => 'ids',
+									'meta_key'    => Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_RETURN_TRACKING_NUMBER,
+									'meta_value'  => $trackingNumber,
+								);
+								$query            = new WP_Query( $trackingFilter );
+								$orderIds         = $query->get_posts();
+								$isAdvancedReturn = true;
+							}
 
-			                $message = 'Shipment status updated successfully.';
-                            $logger->log($message);
+							$orders[] = wc_get_order( $orderIds[0] );
 
-			                $data = array(
-				                'message'       => $message,
-				                'status'        => 'success',
-				                'request-param' => $request->get_params()
-			                );
+						}
+					}
 
-			                return new WP_REST_Response( $data, 200 );
+					// there should be only one order for each master tracking number, so we get the first one
+					$order = $orders[0] ?? null;
+					if ( ! empty( $order ) ) {
+						try {
 
-		                } catch ( Exception $e ) {
-			                $message  = 'An error occured : ' . $e->getMessage();
-                            $logger->log($message);
+							if ( $isAdvancedReturn ) {
+								$this->helper->setOrderMbeAdvancedReturnTrackingStatus( $order, serialize( $requestParameters[0] ) );
+							}
 
-			                $data = array(
-				                'message'            => $message,
-				                'status'             => 'Error',
-				                'request-parameters' => $requestParameters
-			                );
+							// Update the the order status only for shop shipments and not for return shipments
+							if ( ! $isAdvancedReturn && $this->helper->setOrderMbeTrackingStatus( $order, serialize( $requestParameters[0] ) ) !== false ) {
+								$deliveredStatus = substr( MBE_WC_REST_API_ORDER_STATUS_DELIVERED, 3 );
 
-			                return new WP_REST_Response( $data, 500 );
-		                }
-	                } else {
-		                $message  = 'Order not found';
-                        $logger->log($message);
+								// Update order status if the shipment has been delivered and the status wasn't yet updated
+								if ( 1 == $mbeStatus && $order->get_status() !== $deliveredStatus ) {
+									$order->set_status( $deliveredStatus );
+									$order->save();
+									$logger->log( 'Order delivered status updated successfully' );
+								}
 
-		                $data = array(
-			                'message'            => $message,
-			                'status'             => 'Error',
-			                'request-parameters' => $requestParameters
-		                );
+								$message = 'Shipment status updated successfully.';
+								$logger->log( $message );
 
-		                return new WP_REST_Response( $data, 404 );
-	                }
-                }
+								$data = array(
+									'message'       => $message,
+									'status'        => 'success',
+									'request-param' => $request->get_params()
+								);
+							}
 
-				$message  = 'Empty payload';
-				$logger->log($message);
+							return new WP_REST_Response( $data, 200 );
+
+						} catch ( Exception $e ) {
+							$message = 'An error occured : ' . $e->getMessage();
+							$logger->log( $message );
+
+							$data = array(
+								'message'            => $message,
+								'status'             => 'Error',
+								'request-parameters' => $requestParameters
+							);
+
+							return new WP_REST_Response( $data, 500 );
+						}
+					} else {
+						$message = 'Order not found';
+						$logger->log( $message );
+
+						$data = array(
+							'message'            => $message,
+							'status'             => 'Error',
+							'request-parameters' => $requestParameters
+						);
+
+						return new WP_REST_Response( $data, 404 );
+					}
+				}
+
+				$message = 'Empty payload';
+				$logger->log( $message );
 				$data = array(
 					'message'            => $message,
 					'status'             => 'Error',
@@ -955,27 +1067,27 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				return new WP_REST_Response( $data, 400 );
 			}
 
-            function mbe_gel_proximity_scripts() {
-	            $logger = new Mbe_Shipping_Helper_Logger();
+			function mbe_gel_proximity_scripts() {
+				$logger = new Mbe_Shipping_Helper_Logger();
 
-	            if(!empty($this->helper->getGelProximityMerchantCode())) {
-	                wp_enqueue_script( MBE_ESHIP_ID . '-gel-proxmity-map-js', Mbe_Shipping_Helper_Data::GEL_PROXIMITY_URL . '/sdk/latest.js', '', rand() );
-	                wp_enqueue_script( MBE_ESHIP_ID . '-gel-proxmity-map-initialization', MBE_ESHIP_PLUGIN_URL . '/lib/js/gel-proximity-map-initilization.js', '', rand() );
-	                wp_add_inline_script( MBE_ESHIP_ID . '-gel-proxmity-map-initialization', 'const ' . 'mbe_gel_proxmity_data = ' . json_encode( array(
-			                'urlEndUser'   => $this->helper->getGelProxymityUrlEndUser(),
-			                'merchantCode' => $this->helper->getGelProximityMerchantCode(),
-			                'apiKey'       => $this->helper->getGelProxymityApiKey(),
-			                'locale'       => get_user_locale(),
-			                'debug'        => $this->helper->debug()
-		                ) ), 'before' );
-                } else {
-                    $logger->log('GEL scripts not initialized, missing Merchant Code');
-                }
-            }
+				if ( ! empty( $this->helper->getGelProximityMerchantCode() ) ) {
+					wp_enqueue_script( MBE_ESHIP_ID . '-gel-proxmity-map-js', Mbe_Shipping_Helper_Data::GEL_PROXIMITY_URL . '/sdk/latest.js', '', rand() );
+					wp_enqueue_script( MBE_ESHIP_ID . '-gel-proxmity-map-initialization', MBE_ESHIP_PLUGIN_URL . 'lib/js/gel-proximity-map-initilization.js', '', rand() );
+					wp_add_inline_script( MBE_ESHIP_ID . '-gel-proxmity-map-initialization', 'const ' . 'mbe_gel_proxmity_data = ' . json_encode( array(
+							'urlEndUser'   => $this->helper->getGelProxymityUrlEndUser(),
+							'merchantCode' => $this->helper->getGelProximityMerchantCode(),
+							'apiKey'       => $this->helper->getGelProxymityApiKey(),
+							'locale'       => get_user_locale(),
+							'debug'        => $this->helper->debug()
+						) ), 'before' );
+				} else {
+					$logger->log( 'GEL scripts not initialized, missing Merchant Code' );
+				}
+			}
 
-            function mbe_helper_scripts() {
-                wp_enqueue_script(MBE_ESHIP_ID.'-helper-scripts-js', MBE_ESHIP_PLUGIN_URL . '/lib/js/mbe-helper-scripts.js','',rand());
-            }
+			function mbe_helper_scripts() {
+				wp_enqueue_script( MBE_ESHIP_ID . '-helper-scripts-js', MBE_ESHIP_PLUGIN_URL . 'lib/js/mbe-helper-scripts.js', '', rand() );
+			}
 
 			function load_custom_settings_tab( $settings ) {
 //				if( ! class_exists(Mbe_Settings::class)) {
@@ -984,20 +1096,20 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 //					$settings = Mbe_Settings();
 //				}
 
-                $mbeSettings = include __DIR__ . '/includes/class-mbe-settings-page.php';
-				$settings[] = $mbeSettings;
+				$mbeSettings = include __DIR__ . '/includes/class-mbe-settings-page.php';
+				$settings[]  = $mbeSettings;
 
-                do_action('mbe_eship_custom_settings_loaded', $mbeSettings);
+				do_action( 'mbe_eship_custom_settings_loaded', $mbeSettings );
 
 				return $settings;
 
 			}
 
-			function mbe_eship_create_options_default($mbeSettingsPage) {
+			function mbe_eship_create_options_default( $mbeSettingsPage ) {
 				// Check if it's needed and not already running
-				if(!(get_option( MBE_SCHEMA_FLAG_OPTION ) === 'no') && !get_transient( MBE_ESHIP_ID . '_set_options_default' ) ) {
+				if ( ! ( get_option( MBE_SCHEMA_FLAG_OPTION ) === 'no' ) && ! get_transient( MBE_ESHIP_ID . '_set_options_default' ) ) {
 					$logger = new Mbe_Shipping_Helper_Logger();
-					$logger->log( 'Saving settings default value - Starting', true);
+					$logger->log( 'Saving settings default value - Starting', true );
 					// set transient to flag it's running.
 					set_transient( MBE_ESHIP_ID . '_set_options_default', 'yes', MINUTE_IN_SECONDS * 5 );
 
@@ -1007,23 +1119,23 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 					}
 
 //					$mbeSettingsPage = include_once __DIR__ . '/includes/class-mbe-settings-page.php';
-		            $sections        = $mbeSettingsPage->get_sections();
+					$sections = $mbeSettingsPage->get_sections();
 					// Remove the Welcome page from the list
-					unset($sections['']);
+					unset( $sections[''] );
 
 					$subsections = array_unique( array_keys( $sections ) );
 
 					foreach ( $subsections as $subsection ) {
 						foreach ( $mbeSettingsPage->get_settings_for_section( $subsection ) as $value ) {
 							if ( isset( $value['default'] ) && isset( $value['id'] ) ) {
-								add_option( $value['id'], $value['default']);
+								add_option( $value['id'], $value['default'] );
 							}
 						}
 					}
 
 					update_option( MBE_SCHEMA_FLAG_OPTION, 'no' );
 					delete_transient( MBE_ESHIP_ID . '_set_options_default' );
-					$logger->log( 'Saving settings default value - Done', true);
+					$logger->log( 'Saving settings default value - Done', true );
 				}
 			}
 
@@ -1031,26 +1143,26 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				$helper = new Mbe_Shipping_Helper_Data();
 				$logger = new Mbe_Shipping_Helper_Logger();
 				// Check if Activation flag exists and if not run the default value setter
-				if(!$helper->hasOption(Mbe_Shipping_Helper_Data::XML_PATH_PICKUP_REQUEST_ENABLED) && $helper->isEnabledThirdPartyPickups()) {
-                    update_option( MBE_SCHEMA_FLAG_OPTION, 'yes' );
-					$logger->log('Updating schema flag to run default value setter for Pickup request');
+				if ( ! $helper->hasOption( Mbe_Shipping_Helper_Data::XML_PATH_PICKUP_REQUEST_ENABLED ) && $helper->isEnabledThirdPartyPickups() ) {
+					update_option( MBE_SCHEMA_FLAG_OPTION, 'yes' );
+					$logger->log( 'Updating schema flag to run default value setter for Pickup request' );
 				}
 			}
 
 			function mbe_eship_check_pickup_request_mode() {
 				$logger = new Mbe_Shipping_Helper_Logger();
 
-                // Disable pickup if the user doesn't have the rights set in MOL
-                // Disable pickup if Shipping mode is not coherent
+				// Disable pickup if Shipping mode is not coherent
 //                $disablePickup = !$this->helper->isEnabledThirdPartyPickups() || (
 //                        $this->helper->getShipmentsCreationMode() === Mbe_Shipping_Helper_Data::MBE_CREATION_MODE_AUTOMATICALLY
 //                        && $this->helper->getPickupRequestMode() === Mbe_Shipping_Helper_Data::MBE_PICKUP_REQUEST_MANUAL
 //                );
 
-				$disablePickup = !$this->helper->isEnabledThirdPartyPickups();
+				// Disable pickup if the user doesn't have the rights set in MOL
+				$disablePickup = ! $this->helper->isEnabledThirdPartyPickups();
 
-                if ( $disablePickup && $this->helper->getPickupRequestEnabled() ) {
-                    $this->helper->setOption( Mbe_Shipping_Helper_Data::XML_PATH_PICKUP_REQUEST_ENABLED, 0 );
+				if ( $disablePickup && $this->helper->getPickupRequestEnabled() ) {
+					$this->helper->setOption( Mbe_Shipping_Helper_Data::XML_PATH_PICKUP_REQUEST_ENABLED, 0 );
 //                    WC_Admin_Settings::add_error(
 //                        __( 'Pickup request cannot be enabled, please check the settings', 'mail-boxes-etc' )
 //                        . ':' . __( 'Shipments creation in MBE Online - Mode', 'mail-boxes-etc' )
@@ -1059,47 +1171,48 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 //                        . ' ' . __( 'or the MBE Online options for third party pickup', 'mail-boxes-etc' )
 //                    );
 //                    $logger->log( 'Pickup mode and Shipping mode are not set correctly, disabling pickup' );
-	                WC_Admin_Settings::add_error(
-		                __( 'Pickup request cannot be enabled, please check the settings', 'mail-boxes-etc' )
-		                . ' ' . __( 'for third party pickup in MBE Online', 'mail-boxes-etc' )
-	                );
-	                $logger->log( 'Pickup is disabled in MOL, disabling pickup' );
-                }
+					WC_Admin_Settings::add_error(
+						__( 'Pickup request cannot be enabled, please check the settings', 'mail-boxes-etc' )
+						. ' ' . __( 'for third party pickup in MBE Online', 'mail-boxes-etc' )
+					);
+					$logger->log( 'Pickup is disabled in MOL, disabling pickup' );
+				}
 
-                // Disable pickup if the pickup mode is auto and a default address is not set
-                if($this->helper->getPickupRequestEnabled()
-                   && !$this->helper->hasDefaultPickupAddress()
-                   && $this->helper->getPickupRequestMode() === Mbe_Shipping_Helper_Data::MBE_PICKUP_REQUEST_AUTOMATIC
-                ) {
-	                $this->helper->setOption(Mbe_Shipping_Helper_Data::XML_PATH_PICKUP_REQUEST_ENABLED, 0);
-	                WC_Admin_Settings::add_error( __('Pickup request cannot be enabled, please set a default pickup address', 'mail-boxes-etc'));
-	                $logger->log('Deafult pickup address missing, disabling pickup');
-                }
+				// Disable pickup if the pickup mode is auto and a default address is not set
+				if ( $this->helper->getPickupRequestEnabled()
+				     && ! $this->helper->hasDefaultPickupAddress()
+				     && $this->helper->getPickupRequestMode() === Mbe_Shipping_Helper_Data::MBE_PICKUP_REQUEST_AUTOMATIC
+				) {
+					$this->helper->setOption( Mbe_Shipping_Helper_Data::XML_PATH_PICKUP_REQUEST_ENABLED, 0 );
+					WC_Admin_Settings::add_error( __( 'Pickup request cannot be enabled, please set a default pickup address', 'mail-boxes-etc' ) );
+					$logger->log( 'Default pickup address missing, disabling pickup' );
+				}
 
-                // If Pickup is still enabled and shipping mode is automatic but pickup mode is still manual, set pickup mode to automatic too
-				if( $this->helper->getPickupRequestEnabled()
-                    && $this->helper->getShipmentsCreationMode() === Mbe_Shipping_Helper_Data::MBE_CREATION_MODE_AUTOMATICALLY
-                    && $this->helper->getPickupRequestMode() === Mbe_Shipping_Helper_Data::MBE_PICKUP_REQUEST_MANUAL
-                ) {
-					$this->helper->setOption(Mbe_Shipping_Helper_Data::XML_PATH_PICKUP_REQUEST_MODE, Mbe_Shipping_Helper_Data::MBE_PICKUP_REQUEST_AUTOMATIC);
-                }
+				// If Pickup is still enabled and shipping mode is automatic but pickup mode is still manual, set pickup mode to automatic too
+				if ( $this->helper->getPickupRequestEnabled()
+				     && $this->helper->getShipmentsCreationMode() === Mbe_Shipping_Helper_Data::MBE_CREATION_MODE_AUTOMATICALLY
+				     && $this->helper->getPickupRequestMode() === Mbe_Shipping_Helper_Data::MBE_PICKUP_REQUEST_MANUAL
+				) {
+					$this->helper->setOption( Mbe_Shipping_Helper_Data::XML_PATH_PICKUP_REQUEST_MODE, Mbe_Shipping_Helper_Data::MBE_PICKUP_REQUEST_AUTOMATIC );
+				}
 			}
 
 			function mbe_check_insurance_mode_selected() {
-				$helper = new Mbe_Shipping_Helper_Data();
-				$requestSelectedServices = wc_clean($_REQUEST[MBE_ESHIP_ID . '_' . Mbe_Shipping_Helper_Data::XML_PATH_ALLOWED_SHIPMENT_SERVICES]??[]);
+				$helper                        = new Mbe_Shipping_Helper_Data();
+				$requestSelectedServices       = wc_clean( $_REQUEST[ MBE_ESHIP_ID . '_' . Mbe_Shipping_Helper_Data::XML_PATH_ALLOWED_SHIPMENT_SERVICES ] ?? [] );
 				$lastInsuranceServicesSelected = '';
 
 				foreach ( $requestSelectedServices as $request_selected_service ) {
-					$insuranceService = $helper->isShippingWithInsurance($request_selected_service);
-                    if(!empty($insuranceService) && ($insuranceService !== $lastInsuranceServicesSelected && !empty($lastInsuranceServicesSelected) )) {
-                        $helper->logErrorAndSetWCAdminMessage(__('Only one between MBE SafaValue, MBE SafeValue4Business and Courier Insurance can be activated at the same time'));
-                        $helper->setPostOption(MBE_ESHIP_ID . '_' . Mbe_Shipping_Helper_Data::XML_PATH_ALLOWED_SHIPMENT_SERVICES, $helper->getAllowedShipmentServicesArray());
-                        return false;
-                    } else {
-                        $lastInsuranceServicesSelected = $insuranceService ?: $lastInsuranceServicesSelected;
-                    }
-                }
+					$insuranceService = $helper->isShippingWithInsurance( $request_selected_service );
+					if ( ! empty( $insuranceService ) && ( $insuranceService !== $lastInsuranceServicesSelected && ! empty( $lastInsuranceServicesSelected ) ) ) {
+						$helper->logErrorAndSetWCAdminMessage( __( 'Only one between MBE SafaValue, MBE SafeValue4Business and Courier Insurance can be activated at the same time' ) );
+						$helper->setPostOption( MBE_ESHIP_ID . '_' . Mbe_Shipping_Helper_Data::XML_PATH_ALLOWED_SHIPMENT_SERVICES, $helper->getAllowedShipmentServicesArray() );
+
+						return false;
+					} else {
+						$lastInsuranceServicesSelected = $insuranceService ?: $lastInsuranceServicesSelected;
+					}
+				}
 			}
 
 			function mbe_error_notice() {
@@ -1127,22 +1240,22 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 			public function add_cron_job() {
 				$logger = new Mbe_Shipping_Helper_Logger();
-				$time = $this->helper->getShipmentsClosureTime();
+				$time   = $this->helper->getShipmentsClosureTime();
 				if ( $this->helper->isEnabled() && $this->helper->isClosureAutomatically() ) {
-					$closureTime = strtotime( "today $time ".wp_timezone_string());
-					$cron_jobs = get_option( 'cron' );
-					$array     = array_column( $cron_jobs, 'closure_event' );
+					$closureTime = strtotime( "today $time " . wp_timezone_string() );
+					$cron_jobs   = get_option( 'cron' );
+					$array       = array_column( $cron_jobs, 'closure_event' );
 					if ( ! empty( $array ) ) {
 						$index         = array_search( array( 'closure_event' => $array[0] ), $cron_jobs );
 						$scheduledTime = date( 'H:i:s', $index );
 						if ( $scheduledTime != $time ) {
 							wp_clear_scheduled_hook( 'closure_event' );
-							wp_schedule_event($closureTime, 'daily', 'closure_event' );
-							$logger->log( "Cron automatic closure set at: $time ".wp_timezone_string() );
+							wp_schedule_event( $closureTime, 'daily', 'closure_event' );
+							$logger->log( "Cron automatic closure set at: $time " . wp_timezone_string() );
 						}
 					} else {
-						wp_schedule_event($closureTime, 'daily', 'closure_event' );
-						$logger->log( "Cron automatic closure set at: $time ".wp_timezone_string() );
+						wp_schedule_event( $closureTime, 'daily', 'closure_event' );
+						$logger->log( "Cron automatic closure set at: $time " . wp_timezone_string() );
 					}
 				} else {
 					wp_clear_scheduled_hook( 'closure_event' );
@@ -1203,27 +1316,35 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 					'csv_form_page_handler'
 				) );
 
-                // PICKUP Pages
-                if($this->helper->isEnabledThirdPartyPickups()) {
-	                add_submenu_page( null, __( 'MBE Pickup Batches List', 'mail-boxes-etc' ), __( 'Pickup', 'mail-boxes-etc' ), 'manage_woocommerce', MBE_ESHIP_ID . '_' . WOOCOMMERCE_MBE_TABS_PICKUP_PAGE, array(
-		                $this,
-		                'add_pickup_batches_list'
-	                ) );
+				// PICKUP Pages
+				if ( $this->helper->isEnabledThirdPartyPickups() ) {
+					add_submenu_page( null, __( 'MBE Pickup Batches List', 'mail-boxes-etc' ), __( 'Pickup', 'mail-boxes-etc' ), 'manage_woocommerce', MBE_ESHIP_ID . '_' . WOOCOMMERCE_MBE_TABS_PICKUP_PAGE, array(
+						$this,
+						'add_pickup_batches_list'
+					) );
 
 
-	                add_submenu_page( null, __( 'MBE Pickup Data Editor', 'mail-boxes-etc' ), __( 'MBE Pickup Data Editor', 'mail-boxes-etc' ), 'manage_woocommerce', MBE_ESHIP_ID . '_pickup_data_tabs', array(
-		                $this,
-		                'pickup_data_form_page_handler'
-	                ) );
-                }
+					add_submenu_page( null, __( 'MBE Pickup Data Editor', 'mail-boxes-etc' ), __( 'MBE Pickup Data Editor', 'mail-boxes-etc' ), 'manage_woocommerce', MBE_ESHIP_ID . '_pickup_data_tabs', array(
+						$this,
+						'pickup_data_form_page_handler'
+					) );
+				}
 
 				//DEPARTMENT Address Selection Page
-				if(!$this->helper->isCreationAutomatically()) {
-	                add_submenu_page( null, __( 'MBE Department Data Selection', 'mail-boxes-etc' ), __( 'MBE Department Data Selection', 'mail-boxes-etc' ), 'manage_woocommerce', MBE_ESHIP_ID . '_department_address_data_tabs', array(
-		                $this,
-                        'department_address_data_form_page_handler'
-	                ) );
-                }
+				if ( ! $this->helper->isCreationAutomatically() ) {
+					add_submenu_page( null, __( 'MBE Department Data Selection', 'mail-boxes-etc' ), __( 'MBE Department Data Selection', 'mail-boxes-etc' ), 'manage_woocommerce', MBE_ESHIP_ID . '_department_address_data_tabs', array(
+						$this,
+						'department_address_data_form_page_handler'
+					) );
+				}
+
+				// ADVANCED RETURN Address Data Page
+				if ( $this->helper->canAdvancedReturn() ) {
+					add_submenu_page( null, __( 'MBE Advanced Return Address Data', 'mail-boxes-etc' ), __( 'MBE Advanced Return Address Data', 'mail-boxes-etc' ), 'manage_woocommerce', MBE_ESHIP_ID . '_advanced_return_address_data_tabs', array(
+						$this,
+						'advanced_return_address_data_form_page_handler'
+					) );
+				}
 			}
 
 			/**
@@ -1234,136 +1355,140 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				require_once 'includes/class-mbe-order.php';
 				$orders = new Mbe_E_Link_Order_List_Table();
 				$orders->prepare_items();
-                ?>
+				?>
 
                 <nav class="nav-tab-wrapper woo-nav-tab-wrapper">
                     <a href="#" class="nav-tab nav-tab-active">
                         <h2><?php esc_html_e( 'MBE Shipments List', 'mail-boxes-etc' ) ?></h2>
                     </a>
-                    <?php if($this->helper->isEnabledThirdPartyPickups()) { ?>
-                    <a href="<?php echo esc_url(get_admin_url(get_current_blog_id(), 'admin.php?page=' . MBE_ESHIP_ID . '_' . WOOCOMMERCE_MBE_TABS_PICKUP_PAGE)) ?>" class="nav-tab ">
-                        <h2><?php esc_html_e( 'MBE Manual Pickup', 'mail-boxes-etc' ) ?></h2>
-                    </a>
-                    <?php } ?>
-                </nav>
-				<div class="wrap">
-					<?php $this->mbe_eship_wp_notification() ?>
-
-					<form id="certificates-filter" method="get">
-						<input type="hidden" name="page"
-						       value="<?php echo ( ! empty( $_REQUEST['page'] ) ) ? esc_attr( wp_unslash( $_REQUEST['page'] ) ) : ''; ?>"
-						/>
-
-						<?php
-                        $orders->display();
-                        ?>
-					</form>
-				</div>
-
-				<?php
-				$downloadFile = sanitize_url($_GET['reload-download'] ?? null);
-                if(!empty($downloadFile) && isset($_REQUEST['nonce']) && wp_verify_nonce($_REQUEST['nonce'], WOOCOMMERCE_MBE_TABS_PAGE)) {
-                    $actionUrl = sprintf( "%sadmin-post.php?action=mbe_download_multiple_waybill&downloadFile=%s&nonce=%s", get_admin_url(), urlencode($downloadFile), wp_create_nonce( 'mbe_download_multiple_waybill' ) );
-                    echo "<script>jQuery(document).ready(mbeButtonAction(this, " . json_encode($actionUrl) . ",'_blank', 'false'))</script>";
-                }
-			}
-
-            function mbe_download_multiple_waybill() {
-	            if ( isset( $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], 'mbe_download_multiple_waybill' ) ) {
-			        // Unset the session variable
-		            $downloadFile = sanitize_url($_REQUEST['downloadFile']);
-		            $this->helper->mbe_download_file( $downloadFile, "mbe-labels.pdf", 'application/pdf', true );
-	            }
-            }
-
-            function add_pickup_batches_list() {
-	            require_once 'includes/class-mbe-pickup-batches.php';
-	            $ordersPickupBatches = new Mbe_E_Link_Pickup_Batches_List_Table();
-	            $ordersPickupBatches->prepare_items();
-	            ?>
-
-                <nav class="nav-tab-wrapper woo-nav-tab-wrapper">
-                    <a href="<?php echo esc_url(get_admin_url(get_current_blog_id(), 'admin.php?page=' . WOOCOMMERCE_MBE_TABS_PAGE)) ?>" class="nav-tab ">
-                        <h2><?php esc_html_e( 'MBE Shipments List', 'mail-boxes-etc' ) ?></h2>
-                    </a>
-	                <?php if($this->helper->isEnabledThirdPartyPickups()) { ?>
-                    <a href="#" class="nav-tab nav-tab-active">
-                        <h2><?php esc_html_e( 'MBE Manual Pickup', 'mail-boxes-etc' ) ?></h2>
-                    </a>
-	                <?php } ?>
+					<?php if ( $this->helper->isEnabledThirdPartyPickups() ) { ?>
+                        <a href="<?php echo esc_url( get_admin_url( get_current_blog_id(), 'admin.php?page=' . MBE_ESHIP_ID . '_' . WOOCOMMERCE_MBE_TABS_PICKUP_PAGE ) ) ?>"
+                           class="nav-tab ">
+                            <h2><?php esc_html_e( 'MBE Manual Pickup', 'mail-boxes-etc' ) ?></h2>
+                        </a>
+					<?php } ?>
                 </nav>
                 <div class="wrap">
-                    <?php $this->mbe_eship_wp_notification() ?>
+					<?php $this->mbe_eship_wp_notification() ?>
 
-<!--                    <form id="certificates-filter" method="get">
+                    <form id="certificates-filter" method="get">
                         <input type="hidden" name="page"
-                               value="<?php /*echo ( ! empty( $_REQUEST['page'] ) ) ? esc_attr( wp_unslash( $_REQUEST['page'] ) ) : ''; */?>"
+                               value="<?php echo ( ! empty( $_REQUEST['page'] ) ) ? esc_attr( wp_unslash( $_REQUEST['page'] ) ) : ''; ?>"
                         />
--->
-                    <?php $a = $ordersPickupBatches->display() ?>
-<!--                    </form>-->
+
+						<?php
+						$orders->display();
+						?>
+                    </form>
                 </div>
 
-	            <?php
-            }
+				<?php
+				$downloadFile = sanitize_url( $_GET['reload-download'] ?? null );
+				if ( ! empty( $downloadFile ) && isset( $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], WOOCOMMERCE_MBE_TABS_PAGE ) ) {
+					$actionUrl = sprintf( "%sadmin-post.php?action=mbe_download_multiple_waybill&downloadFile=%s&nonce=%s", get_admin_url(), urlencode( $downloadFile ), wp_create_nonce( 'mbe_download_multiple_waybill' ) );
+					echo "<script>jQuery(document).ready(mbeButtonAction(this, " . json_encode( $actionUrl ) . ",'_blank', 'false'))</script>";
+				}
+			}
+
+			function mbe_download_multiple_waybill() {
+				if ( isset( $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], 'mbe_download_multiple_waybill' ) ) {
+					// Unset the session variable
+					$downloadFile = sanitize_url( $_REQUEST['downloadFile'] );
+					$this->helper->mbe_download_file( $downloadFile, "mbe-labels.pdf", 'application/pdf', true );
+				}
+			}
+
+			function add_pickup_batches_list() {
+				require_once 'includes/class-mbe-pickup-batches.php';
+				$ordersPickupBatches = new Mbe_E_Link_Pickup_Batches_List_Table();
+				$ordersPickupBatches->prepare_items();
+				?>
+
+                <nav class="nav-tab-wrapper woo-nav-tab-wrapper">
+                    <a href="<?php echo esc_url( get_admin_url( get_current_blog_id(), 'admin.php?page=' . WOOCOMMERCE_MBE_TABS_PAGE ) ) ?>"
+                       class="nav-tab ">
+                        <h2><?php esc_html_e( 'MBE Shipments List', 'mail-boxes-etc' ) ?></h2>
+                    </a>
+					<?php if ( $this->helper->isEnabledThirdPartyPickups() ) { ?>
+                        <a href="#" class="nav-tab nav-tab-active">
+                            <h2><?php esc_html_e( 'MBE Manual Pickup', 'mail-boxes-etc' ) ?></h2>
+                        </a>
+					<?php } ?>
+                </nav>
+                <div class="wrap">
+					<?php $this->mbe_eship_wp_notification() ?>
+
+                    <!--                    <form id="certificates-filter" method="get">
+                        <input type="hidden" name="page"
+                               value="<?php /*echo ( ! empty( $_REQUEST['page'] ) ) ? esc_attr( wp_unslash( $_REQUEST['page'] ) ) : ''; */ ?>"
+                        />
+-->
+					<?php $a = $ordersPickupBatches->display() ?>
+                    <!--                    </form>-->
+                </div>
+
+				<?php
+			}
 
 			function add_csv_list() {
-                if(isset($_REQUEST['nonce']) && wp_verify_nonce($_REQUEST['nonce'], 'woocommerce_mbe_csv_tabs')) {
-                    $csvType    = sanitize_text_field($_REQUEST['csv'] ?? '');
-                    $csvFactory = new Mbe_Csv_Editor_Model_Factory();
-                    $csv        = $csvFactory->create( $csvType );
-                    $message    = sanitize_text_field($_REQUEST['message'] ?? '');
-                    if ( ! empty( $csv ) ) {
-                        $title = $csv->get_title( false );
-                        $csv->prepare_items();
-                        if ( 'delete' === $csv->current_action() ) {
-                            $message = sprintf( __( 'Items deleted: %d', 'mail-boxes-etc' ), count( (array) wc_clean($_REQUEST['id']) ) );
-                        }
-                        ?>
+				if ( isset( $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], 'woocommerce_mbe_csv_tabs' ) ) {
+					$csvType    = sanitize_text_field( $_REQUEST['csv'] ?? '' );
+					$csvFactory = new Mbe_Csv_Editor_Model_Factory();
+					$csv        = $csvFactory->create( $csvType );
+					$message    = sanitize_text_field( $_REQUEST['message'] ?? '' );
+					if ( ! empty( $csv ) ) {
+						$title = $csv->get_title( false );
+						$csv->prepare_items();
+						if ( 'delete' === $csv->current_action() ) {
+							$message = sprintf( __( 'Items deleted: %d', 'mail-boxes-etc' ), count( (array) wc_clean( $_REQUEST['id'] ) ) );
+						}
+						?>
 
                         <div class="wrap">
-                            <h2><?php esc_html_e('MBE ' . $title . ' ' . __( 'Editor' )) ?>
+                            <h2><?php esc_html_e( 'MBE ' . $title . ' ' . __( 'Editor' ) ) ?>
                                 <a class="add-new-h2"
-                                   href="<?php echo esc_url(get_admin_url( get_current_blog_id(), 'admin.php?page=' . mbe_e_link_get_settings_url() . '&tab=' . MBE_ESHIP_ID . '&section='. $csv->get_backlink() )); ?>">
-                                    <?php esc_html_e( 'Back to settings', 'mail-boxes-etc' ) ?>
+                                   href="<?php echo esc_url( get_admin_url( get_current_blog_id(), 'admin.php?page=' . mbe_e_link_get_settings_url() . '&tab=' . MBE_ESHIP_ID . '&section=' . $csv->get_backlink() ) ); ?>">
+									<?php esc_html_e( 'Back to settings', 'mail-boxes-etc' ) ?>
                                 </a>
                             </h2>
 
-                            <?php $this->mbe_eship_wp_notification() ?>
-                            <?php if ( ! empty( $notice ) ): ?>
-                                <div id="notice" class="notice notice-error is-dismissible"><p><?php echo wp_kses_post($notice) ?></p></div>
-                            <?php endif; ?>
-                            <?php if ( ! empty( $message ) ): ?>
-                                <div id="message" class="notice notice-success is-dismissible"><p><?php echo wp_kses_post($message) ?></p></div>
-                            <?php endif; ?>
+							<?php $this->mbe_eship_wp_notification() ?>
+							<?php if ( ! empty( $notice ) ): ?>
+                                <div id="notice" class="notice notice-error is-dismissible">
+                                    <p><?php echo wp_kses_post( $notice ) ?></p></div>
+							<?php endif; ?>
+							<?php if ( ! empty( $message ) ): ?>
+                                <div id="message" class="notice notice-success is-dismissible">
+                                    <p><?php echo wp_kses_post( $message ) ?></p></div>
+							<?php endif; ?>
 
                             <form id="certificates-filter" method="get">
-                                <?php //Fields to be sent with request and bulk actions ?>
+								<?php //Fields to be sent with request and bulk actions ?>
                                 <input type="hidden" name="page"
                                        value="<?php echo ( ! empty( $_REQUEST['page'] ) ) ? esc_attr( wp_unslash( $_REQUEST['page'] ) ) : ''; ?>"
                                 />
                                 <input type="hidden" name="csv"
-                                       value="<?php esc_attr_e($csvType) ?>"
+                                       value="<?php esc_attr_e( $csvType ) ?>"
                                 />
-                                <?php $csv->display() ?>
+								<?php $csv->display() ?>
                             </form>
                         </div>
-                        <?php
-                    } else {
-                        ?>
+						<?php
+					} else {
+						?>
                         <div class="wrap">
                             <h2><?php esc_html_e( 'Missing or wrong csv type', 'mail-boxes-etc' ) ?>
                                 <a class="add-new-h2"
-                                   href="<?php echo esc_url(get_admin_url( get_current_blog_id(), 'admin.php?page=' . mbe_e_link_get_settings_url() . '&tab=' . MBE_ESHIP_ID . '&section=mbe_general' )); ?>">
-                                    <?php esc_html_e( 'Back to settings', 'mail-boxes-etc' ) ?>
+                                   href="<?php echo esc_url( get_admin_url( get_current_blog_id(), 'admin.php?page=' . mbe_e_link_get_settings_url() . '&tab=' . MBE_ESHIP_ID . '&section=mbe_general' ) ); ?>">
+									<?php esc_html_e( 'Back to settings', 'mail-boxes-etc' ) ?>
                                 </a>
                             </h2>
                         </div>
-                        <?php
-                    }
-                } else {
-	                wp_redirect( wp_get_referer() );
-                }
+						<?php
+					}
+				} else {
+					wp_redirect( wp_get_referer() );
+				}
 			}
 
 			/**
@@ -1375,7 +1500,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 //                    $this->>helper = new Mbe_Shipping_Helper_Data();
 					if ( $order ) {
 						if ( $this->helper->isMbeShipping( $order ) ) {
-							if ( ! $this->helper->isCreationAutomatically() && ! $this->helper->hasTracking($order->get_id()) ) {
+							if ( ! $this->helper->isCreationAutomatically() && ! $this->helper->hasTracking( $order->get_id() ) ) {
 								$actions['mbe_shipping_creation'] = __( 'Create MBE shipping', 'mail-boxes-etc' );
 							}
 						}
@@ -1399,18 +1524,18 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				if ( $this->helper->isEnabled() && $this->helper->isMbeShipping( $order ) && $this->helper->isCreationAutomatically() && empty( $this->helper->getTrackings( $order_id ) ) ) {
 //					include_once 'includes/class-mbe-tracking-factory.php';
 //					mbe_tracking_factory::create( $order_id );
-                    $pickupInfo = [];
-                    if( $this->helper->getPickupRequestEnabled()
-                        && Mbe_Shipping_Helper_Data::MBE_PICKUP_REQUEST_AUTOMATIC === $this->helper->getPickupRequestMode()
-                    ) {
-	                    $pickupInfo = [
-		                    'is-pickup'      => true,
-		                    'is-batch'       => false,
-		                    'custom-data-id' => null,
-	                    ];
-                    }
-					$post_ids = array_map('absint', (array)$order_id);
-                    $this->processShipmentCreation($post_ids, $pickupInfo);
+					$pickupInfo = [];
+					if ( $this->helper->getPickupRequestEnabled()
+					     && Mbe_Shipping_Helper_Data::MBE_PICKUP_REQUEST_AUTOMATIC === $this->helper->getPickupRequestMode()
+					) {
+						$pickupInfo = [
+							'is-pickup'      => true,
+							'is-batch'       => false,
+							'custom-data-id' => null,
+						];
+					}
+					$post_ids = array_map( 'absint', (array) $order_id );
+					$this->processShipmentCreation( $post_ids, $pickupInfo );
 				}
 			}
 
@@ -1436,14 +1561,14 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 			public function woocommerce_order_details_tracking( $order ) {
 //                $this->>helper = new Mbe_Shipping_Helper_Data();
-				$orderId      = $this->helper->getOrderId( $order );
-				$trackings    = $this->helper->getTrackings( $orderId );
+				$orderId   = $this->helper->getOrderId( $order );
+				$trackings = $this->helper->getTrackings( $orderId );
 				if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
-					$tracking_url = $order->get_meta(Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_URL);
-					$trackingName = $this->tracking_name = $order->get_meta('woocommerce_mbe_tracking_name');
+					$tracking_url = $order === false? '' : $order->get_meta( Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_URL );
+					$trackingName = $order === false? '' : $order->get_meta( 'woocommerce_mbe_tracking_name' );
 				} else {
 					$tracking_url = get_post_meta( $orderId, Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_URL, true );
-					$trackingName = $this->tracking_name = get_post_meta( $orderId, 'woocommerce_mbe_tracking_name', true );
+					$trackingName = get_post_meta( $orderId, 'woocommerce_mbe_tracking_name', true );
 				}
 
 				if ( $this->helper->isMbeShipping( $order ) && ! empty( $trackings ) ) {
@@ -1459,8 +1584,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 						<tbody>';
 					foreach ( $trackings as $track ) {
 						echo '<tr class="order_item">
-								<td class="tracking-name">' . esc_html($trackingName) . '</td>
-								<td class="product-total"><a target="_blank" href="' . esc_attr($tracking_url . $track) . '">' . esc_html($track) . '</a></td>
+								<td class="tracking-name">' . esc_html( $trackingName ) . '</td>
+								<td class="product-total"><a target="_blank" href="' . esc_attr( $tracking_url . $track ) . '">' . esc_html( $track ) . '</a></td>
 							  </tr>';
 					}
 					echo '</tbody></table>';
@@ -1474,7 +1599,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			 */
 			public function wf_mbe_wooCommerce_shipping_gel_delivery_point_map( $method ) {
 				$mbeServiceSelected = (
-				    $this->isDeliveryPointServiceMethod(WC()->session->get( 'chosen_shipping_methods' ))
+					$this->isDeliveryPointServiceMethod( WC()->session->get( 'chosen_shipping_methods' ) )
 					&& $method->id === WC()->session->get( 'chosen_shipping_methods' )[0]
 				);
 
@@ -1485,74 +1610,83 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 //						$gelServices .= "'" . $gel_service ."'" . ',';
 //					}
 
-                    // Generate the prices parameter for GEL map initialization
-                    $prenegotiatedFound = false;
-                    $labelingFound = false;
-                    $deliveryPointPrices = ['currencyCode' => get_woocommerce_currency()];
-					foreach ( array_combine($method->get_meta_data()['delivery_point_services']['mol'], $method->get_meta_data()['delivery_point_services']['prices']) as $key=>$value ) {
-                        if( !$prenegotiatedFound && in_array($key, MBE_ESTIMATE_DELIVERY_POINT_PRENEGOTIATED_SERVICES) ) {
-	                        $deliveryPointPrices ['prenegotiated'] = (float)$value;
-                            $prenegotiatedFound = true;
-                            if ($labelingFound) break;
-                        }
-
-                        if( !$labelingFound && in_array($key, MBE_ESTIMATE_DELIVERY_POINT_LABELING_SERVICES) ) {
-							$deliveryPointPrices ['labeling'] = (float)$value;
-							$labelingFound = true;
-							if ($prenegotiatedFound) break;
+					// Generate the prices parameter for GEL map initialization
+					$prenegotiatedFound  = false;
+					$labelingFound       = false;
+					$deliveryPointPrices = [ 'currencyCode' => get_woocommerce_currency() ];
+					foreach ( array_combine( $method->get_meta_data()['delivery_point_services']['mol'], $method->get_meta_data()['delivery_point_services']['prices'] ) as $key => $value ) {
+						if ( ! $prenegotiatedFound && in_array( $key, MBE_ESTIMATE_DELIVERY_POINT_PRENEGOTIATED_SERVICES ) ) {
+							$deliveryPointPrices ['prenegotiated'] = (float) $value;
+							$prenegotiatedFound                    = true;
+							if ( $labelingFound ) {
+								break;
+							}
 						}
-                    }
 
-					if(wc_tax_enabled() && WC()->cart->display_prices_including_tax()) {
+						if ( ! $labelingFound && in_array( $key, MBE_ESTIMATE_DELIVERY_POINT_LABELING_SERVICES ) ) {
+							$deliveryPointPrices ['labeling'] = (float) $value;
+							$labelingFound                    = true;
+							if ( $prenegotiatedFound ) {
+								break;
+							}
+						}
+					}
+
+					if ( wc_tax_enabled() && WC()->cart->display_prices_including_tax() ) {
 						$taxPercentage = $this->getShippingTaxPercentageFromCart();
 
 						if ( $taxPercentage > 0 ) {
-							foreach ( array_intersect_key($deliveryPointPrices, ['prenegotiated'=>'', 'labeling'=>'']) as $key=>$price ) {
-								$deliveryPointPrices[$key] += $this->helper->round($price * $taxPercentage / 100);
+							foreach (
+								array_intersect_key( $deliveryPointPrices, [
+									'prenegotiated' => '',
+									'labeling'      => ''
+								] ) as $key => $price
+							) {
+								$deliveryPointPrices[ $key ] += $this->helper->round( $price * $taxPercentage / 100 );
 							}
 						}
-                    }
+					}
 
-                    // Add the form field to the section and set value in case of delivery point selection price refresh
+					// Add the form field to the section and set value in case of delivery point selection price refresh
 					echo '<div style="margin-bottom: 0.5em; padding-left: 20px;">';
-					$sessionDeliveryPoint = WC()->session->get('mbe_delivery_point')??null;
+					$sessionDeliveryPoint       = WC()->session->get( 'mbe_delivery_point' ) ?? null;
 					$gelProximitySelectionLabel = null;
-					$gelProximitySelection = null;
+					$gelProximitySelection      = null;
 
-                    if (!empty($sessionDeliveryPoint)) {
-                        $gelProximitySelection = json_encode((array)$sessionDeliveryPoint);
-                        $gelProximitySelectionLabel = $sessionDeliveryPoint->networkName . ', ' . $sessionDeliveryPoint->address . ', ' . $sessionDeliveryPoint->zipCode .', '. $sessionDeliveryPoint->city;
-                    }
+					if ( ! empty( $sessionDeliveryPoint ) ) {
+						$gelProximitySelection      = json_encode( (array) $sessionDeliveryPoint );
+						$gelProximitySelectionLabel = $sessionDeliveryPoint->networkName . ', ' . $sessionDeliveryPoint->address . ', ' . $sessionDeliveryPoint->zipCode . ', ' . $sessionDeliveryPoint->city;
+					}
 
 					woocommerce_form_field( 'gel-proximity-selection-label', array(
-							'id' => 'gel-proximity-selection-label',
-                            'class' => 'woocommerce-validated',
-							'type'        => 'text',
-							'required'    => true,
-							'custom_attributes' => array(
-								    'style' => 'font-size: 0.8em;',
-                                    'readonly'=>'readonly',
-                                    'onclick'=>'openGELProximityModal()'
-                            ),
-                            'placeholder'       => __('Click to select a delivery point', 'mail-boxes-etc'),
-						), $gelProximitySelectionLabel
+						'id'                => 'gel-proximity-selection-label',
+						'class'             => 'woocommerce-validated',
+						'type'              => 'text',
+						'required'          => true,
+						'custom_attributes' => array(
+							'style'    => 'font-size: 0.8em;',
+							'readonly' => 'readonly',
+							'onclick'  => 'openGELProximityModal()'
+						),
+						'placeholder'       => __( 'Click to select a delivery point', 'mail-boxes-etc' ),
+					), $gelProximitySelectionLabel
 					);
 
-                    woocommerce_form_field( 'gel-proximity-selection', array(
-                            'type'        => 'hidden',
-		                    'id' => 'gel-proximity-selection',
-                        ), $gelProximitySelection
-                    );
+					woocommerce_form_field( 'gel-proximity-selection', array(
+						'type' => 'hidden',
+						'id'   => 'gel-proximity-selection',
+					), $gelProximitySelection
+					);
 
 					woocommerce_form_field( 'gel-proximity-selection-update', array(
-						'type'        => 'hidden',
-						'id' => 'gel-proximity-selection-update',
-					    ), false // alway set the field to false, tha value must be true only when posting from gel-proximity-map-initilization.js
+						'type' => 'hidden',
+						'id'   => 'gel-proximity-selection-update',
+					), false // alway set the field to false, tha value must be true only when posting from gel-proximity-map-initilization.js
 					);
 
-					echo  '<script type="text/javascript">
-                                mbeGelSDK.options.networks = '. json_encode($method->get_meta_data()['delivery_point_services']['courier']) .'
-                                mbeGelSDK.options.prices = ' . json_encode($deliveryPointPrices) . '
+					echo '<script type="text/javascript">
+                                mbeGelSDK.options.networks = ' . json_encode( $method->get_meta_data()['delivery_point_services']['courier'] ) . '
+                                mbeGelSDK.options.prices = ' . json_encode( $deliveryPointPrices ) . '
                          </script>';
 
 					echo '</div>';
@@ -1560,107 +1694,108 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 			}
 
-            function wf_mbe_delivery_point_validation($data, $errors) {
-                if ( isset( $_POST['gel-proximity-selection'] ) && empty( $data['mbe_delivery_point_data'] ) ) {
-                    $errors->add('validation',  __( 'Select a delivery point to proceed', 'mail-boxes-etc' ));
-                }
-            }
+			function wf_mbe_delivery_point_validation( $data, $errors ) {
+				if ( isset( $_POST['gel-proximity-selection'] ) && empty( $data['mbe_delivery_point_data'] ) ) {
+					$errors->add( 'validation', __( 'Select a delivery point to proceed', 'mail-boxes-etc' ) );
+				}
+			}
 
-            function wf_mbe_delivery_point_show_meta_field( $order ) {
-                $order_meta_delvery_point = $this->helper->getOrderDeliveryPointShipment($order->get_id());
-                if ( ! empty( $order_meta_delvery_point ) ) {
-                    echo '<p><strong>' . esc_html__( 'Delivery Point' ) . ':</strong> ' . esc_html__( $order_meta_delvery_point, 'mail-boxes-etc' ) . '</p>';
-                }
-            }
+			function wf_mbe_delivery_point_show_meta_field( $order ) {
+				$order_meta_delvery_point = $this->helper->getOrderDeliveryPointShipment( $order->get_id() );
+				if ( ! empty( $order_meta_delvery_point ) ) {
+					echo '<p><strong>' . esc_html__( 'Delivery Point' ) . ':</strong> ' . esc_html__( $order_meta_delvery_point, 'mail-boxes-etc' ) . '</p>';
+				}
+			}
 
-            function wf_mbe_delivery_point_set_meta_field( $order_id, $data ) {
-                $logger = new Mbe_Shipping_Helper_Logger();
-                $order = wc_get_order($order_id);
-                if ( $this->helper->isMbeShipping( $order ) ) {
-                    if ( ! empty( $data['mbe_delivery_point_data'] ) ) {
-                        $this->helper->setOrderDeliveryPointShipment($order_id, 'Yes');
-                        $this->helper->setOrderDeliveryPointCustomData($order_id, $data['mbe_delivery_point_data'] );
-                    } else {
-                        $logger->log(__('Missing Access Point ID in $_POST'));
-                        $this->helper->setOrderDeliveryPointShipment($order_id, 'No');
-                    }
-                    $order->save();
-                }
-            }
+			function wf_mbe_delivery_point_set_meta_field( $order_id, $data ) {
+				$logger = new Mbe_Shipping_Helper_Logger();
+				$order  = wc_get_order( $order_id );
+				if ( $this->helper->isMbeShipping( $order ) ) {
+					if ( ! empty( $data['mbe_delivery_point_data'] ) ) {
+						$this->helper->setOrderDeliveryPointShipment( $order_id, 'Yes' );
+						$this->helper->setOrderDeliveryPointCustomData( $order_id, $data['mbe_delivery_point_data'] );
+					} else {
+						$logger->log( __( 'Missing Access Point ID in $_POST' ) );
+						$this->helper->setOrderDeliveryPointShipment( $order_id, 'No' );
+					}
+					$order->save();
+				}
+			}
 
-			function wf_mbe_delivery_point_update_package_for_cost_recalculation ($packages) {
+			function wf_mbe_delivery_point_update_package_for_cost_recalculation( $packages ) {
 
 				$deliveryPoint = WC()->session->get( 'mbe_delivery_point' ) ?? null;
 				if ( ! empty( $deliveryPoint ) ) {
-                    if(wc_tax_enabled() && WC()->cart->display_prices_including_tax() && !empty(WC()->cart->get_shipping_taxes()) && (WC()->session->get('mbe_delivery_point_update')??false) ) {
-	                    $logger = new Mbe_Shipping_Helper_Logger();
-	                    $logger->logVar($deliveryPoint, 'Delivery Point recalculation - removing taxes from map cost');
-	                    $deliveryPoint->cost = $this->helper->round($this->helper->calculateNetPriceFromGross( $deliveryPoint->cost, $this->getShippingTaxPercentageFromCart() ));
-	                    $logger->logVar($deliveryPoint, 'Delivery Point recalculation - taxes removed from map cost');
-	                    WC()->session->set('mbe_delivery_point', $deliveryPoint );
-	                    WC()->session->set('mbe_delivery_point_update', null);
-	                    WC()->session->set('mbe_delivery_point_markup', $this->helper->getHandlingFee());
-                    }
+					if ( wc_tax_enabled() && WC()->cart->display_prices_including_tax() && ! empty( WC()->cart->get_shipping_taxes() ) && ( WC()->session->get( 'mbe_delivery_point_update' ) ?? false ) ) {
+						$logger = new Mbe_Shipping_Helper_Logger();
+						$logger->logVar( $deliveryPoint, 'Delivery Point recalculation - removing taxes from map cost' );
+						$deliveryPoint->cost = $this->helper->round( $this->helper->calculateNetPriceFromGross( $deliveryPoint->cost, $this->getShippingTaxPercentageFromCart() ) );
+						$logger->logVar( $deliveryPoint, 'Delivery Point recalculation - taxes removed from map cost' );
+						WC()->session->set( 'mbe_delivery_point', $deliveryPoint );
+						WC()->session->set( 'mbe_delivery_point_update', null );
+						WC()->session->set( 'mbe_delivery_point_markup', $this->helper->getHandlingFee() );
+					}
 
-                    // Always check if markup/handling fee has been changed (valid only in the same session) and update the delivery point cost and the session option
-                    if($this->helper->getHandlingFee() !== WC()->session->get('mbe_delivery_point_markup')) {
-	                    $deliveryPoint->cost = $deliveryPoint->cost - WC()->session->get('mbe_delivery_point_markup') + $this->helper->getHandlingFee();
-	                    WC()->session->set('mbe_delivery_point', $deliveryPoint );
-	                    WC()->session->set('mbe_delivery_point_markup', $this->helper->getHandlingFee());
-                    }
+					// Always check if markup/handling fee has been changed (valid only in the same session) and update the delivery point cost and the session option
+					if ( $this->helper->getHandlingFee() !== WC()->session->get( 'mbe_delivery_point_markup' ) ) {
+						$deliveryPoint->cost = $deliveryPoint->cost - WC()->session->get( 'mbe_delivery_point_markup' ) + $this->helper->getHandlingFee();
+						WC()->session->set( 'mbe_delivery_point', $deliveryPoint );
+						WC()->session->set( 'mbe_delivery_point_markup', $this->helper->getHandlingFee() );
+					}
 					foreach ( $packages as $packageKey => $packageValue ) {
 						$packages[ $packageKey ]['delivery_point'] = $deliveryPoint;
 					}
 				}
+
 				return $packages;
 			}
 
 			function wf_mbe_delivery_point_set_meta_field_review( $data ) {
 				$logger = new Mbe_Shipping_Helper_Logger();
-				WC()->session->set('mbe_delivery_point', null);
+				WC()->session->set( 'mbe_delivery_point', null );
 				$postData = array();
-				parse_str($data, $postData);
-				$deliveryPoint = json_decode($postData['gel-proximity-selection']??'');
-				$deliveryPointUpdate = json_decode($postData['gel-proximity-selection-update']??false);
+				parse_str( $data, $postData );
+				$deliveryPoint       = json_decode( $postData['gel-proximity-selection'] ?? '' );
+				$deliveryPointUpdate = json_decode( $postData['gel-proximity-selection-update'] ?? false );
 
-                if(!empty($deliveryPoint) && $this->isDeliveryPointServiceMethod( $postData['shipping_method'] )) {
-                    $logger->logVar($deliveryPoint, 'Delivery point selection, refresh rates');
-	                WC()->session->set('mbe_delivery_point', $deliveryPoint);
-	                WC()->session->set('mbe_delivery_point_update', $deliveryPointUpdate);
-                }
+				if ( ! empty( $deliveryPoint ) && $this->isDeliveryPointServiceMethod( $postData['shipping_method'] ) ) {
+					$logger->logVar( $deliveryPoint, 'Delivery point selection, refresh rates' );
+					WC()->session->set( 'mbe_delivery_point', $deliveryPoint );
+					WC()->session->set( 'mbe_delivery_point_update', $deliveryPointUpdate );
+				}
 
-                // Check if the session variable is empty due to a json_decode() error and log an error
-                if(!empty($postData['gel-proximity-selection']) && empty($deliveryPoint)) {
-                    $message = __('Possible issue with delivery point content/escaping. This delivery point cannot be correctly selected');
-                    $logger->logVar($postData['gel-proximity-selection'], $message);
-	                WC()->session->set('mbe_delivery_point', null); // remove the delivery point to be sure it's not retaining an old value
-                    wc_add_notice($message, 'error');
-                }
+				// Check if the session variable is empty due to a json_decode() error and log an error
+				if ( ! empty( $postData['gel-proximity-selection'] ) && empty( $deliveryPoint ) ) {
+					$message = __( 'Possible issue with delivery point content/escaping. This delivery point cannot be correctly selected' );
+					$logger->logVar( $postData['gel-proximity-selection'], $message );
+					WC()->session->set( 'mbe_delivery_point', null ); // remove the delivery point to be sure it's not retaining an old value
+					wc_add_notice( $message, 'error' );
+				}
 			}
 
-            function wf_mbe_delivery_point_set_shipping_address( $data ) {
-                $logger = new Mbe_Shipping_Helper_Logger();
-                // convert $data['shipping_method'] to array to avoid issues with empty (virtual products) or string values
-                $shippingMethod = is_array( $data['shipping_method'] ) ? $data['shipping_method'] : [ $data['shipping_method'] ];
-	            $serviceOK      = $this->isDeliveryPointServiceMethod( $shippingMethod );
-	            $logger->logVar($shippingMethod, 'wf_mbe_wooCommerce_shipping_uap_address - Shipping Method');
-                if ( ! empty( $_POST['gel-proximity-selection'] ) && $serviceOK ) {
-                    $deliveryPointAddress = json_decode( stripslashes( $_POST['gel-proximity-selection'] ) );
-                    $logger->logVar( $deliveryPointAddress->code, 'wf_mbe_gel_delivery_point_set_shipping_address - GEL PUDO');
-                    // Set the Delivery Point address as shipping address
+			function wf_mbe_delivery_point_set_shipping_address( $data ) {
+				$logger = new Mbe_Shipping_Helper_Logger();
+				// convert $data['shipping_method'] to array to avoid issues with empty (virtual products) or string values
+				$shippingMethod = is_array( $data['shipping_method'] ) ? $data['shipping_method'] : [ $data['shipping_method'] ];
+				$serviceOK      = $this->isDeliveryPointServiceMethod( $shippingMethod );
+				$logger->logVar( $shippingMethod, 'wf_mbe_wooCommerce_shipping_uap_address - Shipping Method' );
+				if ( ! empty( $_POST['gel-proximity-selection'] ) && $serviceOK ) {
+					$deliveryPointAddress = json_decode( stripslashes( $_POST['gel-proximity-selection'] ) );
+					$logger->logVar( $deliveryPointAddress->code, 'wf_mbe_gel_delivery_point_set_shipping_address - GEL PUDO' );
+					// Set the Delivery Point address as shipping address
 //									$_POST['mbe_delivery_point_data'] = sanitize_text_field( $deliveryPointAddress->pickupPointId );
-                    $mbeDeliveryPointData = wp_json_encode( $deliveryPointAddress );
-                    $data['mbe_delivery_point_data'] = $mbeDeliveryPointData !== false ? $mbeDeliveryPointData : ''; // encode to json again to run some sanitization
-                    $data['shipping_company']   = sanitize_text_field( $deliveryPointAddress->description );
-                    $data['shipping_address_1'] = sanitize_text_field( $deliveryPointAddress->address );
-                    $data['shipping_postcode']  = sanitize_text_field( $deliveryPointAddress->zipCode );
-                    $data['shipping_city']      = sanitize_text_field( $deliveryPointAddress->city );
-                    $data['shipping_country']   = sanitize_text_field( $deliveryPointAddress->country );
-                    $data['shipping_state']     = array_search( ucfirst( strtolower( sanitize_text_field( $deliveryPointAddress->city ) ) ), WC()->countries->get_states( sanitize_text_field( $deliveryPointAddress->country ) ) );
-                }
+					$mbeDeliveryPointData            = wp_json_encode( $deliveryPointAddress );
+					$data['mbe_delivery_point_data'] = $mbeDeliveryPointData !== false ? $mbeDeliveryPointData : ''; // encode to json again to run some sanitization
+					$data['shipping_company']        = sanitize_text_field( $deliveryPointAddress->description );
+					$data['shipping_address_1']      = sanitize_text_field( $deliveryPointAddress->address );
+					$data['shipping_postcode']       = sanitize_text_field( $deliveryPointAddress->zipCode );
+					$data['shipping_city']           = sanitize_text_field( $deliveryPointAddress->city );
+					$data['shipping_country']        = sanitize_text_field( $deliveryPointAddress->country );
+					$data['shipping_state']          = array_search( ucfirst( strtolower( sanitize_text_field( $deliveryPointAddress->city ) ) ), WC()->countries->get_states( sanitize_text_field( $deliveryPointAddress->country ) ) );
+				}
 
-                return $data;
-            }
+				return $data;
+			}
 
 			/**
 			 * Remove the delivery point session variable
@@ -1670,18 +1805,18 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			 *
 			 * @return void
 			 */
-            function wf_mbe_remove_delivery_point_session_variable() {
+			function wf_mbe_remove_delivery_point_session_variable() {
 				// Remove the custom WC_Session variable
-				WC()->session->set('mbe_delivery_point', null);
+				WC()->session->set( 'mbe_delivery_point', null );
 			}
 
 			function wf_mbe_wooCommerce_shipping_custom_mapping_meta_field( $order_id ) {
 				if ( $this->helper->isMbeShippingCustomMapping( $this->helper->getShippingMethod( wc_get_order( $order_id ) ) ) ) {
 					if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
-                        $order = wc_get_order($order_id);
-                        $order->update_meta_data( Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_CUSTOM_MAPPING, 'yes');
-                        $order->save();
-                    } else {
+						$order = wc_get_order( $order_id );
+						$order->update_meta_data( Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_CUSTOM_MAPPING, 'yes' );
+						$order->save();
+					} else {
 						update_post_meta( $order_id, Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_CUSTOM_MAPPING, 'yes' );
 					}
 				}
@@ -1690,24 +1825,24 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			function wf_mbe_wooCommerce_shipping_custom_mapping_meta_field_checkout_block( WC_Order $order ) {
 				if ( $this->helper->isMbeShippingCustomMapping( $this->helper->getShippingMethod( $order ) ) ) {
 					if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
-						$order->update_meta_data( Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_CUSTOM_MAPPING, 'yes');
+						$order->update_meta_data( Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_CUSTOM_MAPPING, 'yes' );
 						$order->save();
 					} else {
 						update_post_meta( $order->get_id(), Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_CUSTOM_MAPPING, 'yes' );
 					}
 				}
-            }
+			}
 
 
 			function mbe_woocommerce_email_track_id( $order, $sent_to_admin, $plain_text, $email ) {
-				$mailArray   = [ 'customer_invoice', 'customer_completed_order' ];
+				$mailArray = [ 'customer_invoice', 'customer_completed_order' ];
 				if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
-					$trackingUrl = $order->get_meta( Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_URL );
+					$trackingUrl = $order === false? '' : $order->get_meta( Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_URL );
 				} else {
 					$trackingUrl = get_post_meta( $order->get_id(), Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_URL, true );
 				}
 
-				$trackId     = $this->helper->getTrackingsString( $order->get_id() );
+				$trackId = $this->helper->getTrackingsString( $order->get_id() );
 				if ( ! empty( $trackId ) && in_array( $email->id, $mailArray ) && $this->helper->getTrackingSetting() ) {
 					echo '<table id="track_id" style="width: 100%; vertical-align: top; margin-bottom: 40px; padding: 0px; border:0px; border-spacing: 0; border-collapse: collapse;">
                             <tbody>
@@ -1779,7 +1914,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 			public function mbe_download_log_files() {
 				if ( isset( $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], 'mbe_download_log_files' ) ) {
-					$zipfilepath    = trailingslashit($this->helper->getMbeLogDir()) . 'log.zip';
+					$zipfilepath    = trailingslashit( $this->helper->getMbeLogDir() ) . 'log.zip';
 					$wslogfilepath  = $this->helper->getLogWsPath();
 					$pluginfilepath = $this->helper->getLogPluginPath();
 					$logZip         = new \ZipArchive();
@@ -1826,38 +1961,38 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 			public function mbe_sign_in() {
 				if ( isset( $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], 'mbe_sign_in' ) ) {
-				$mbeUser    = $_GET[ MBE_ESHIP_ID . '_' . Mbe_Shipping_Helper_Data::XML_PATH_MBE_USERNAME ];
-				$mbePwd     = $_GET[ MBE_ESHIP_ID . '_' . Mbe_Shipping_Helper_Data::XML_PATH_MBE_PASSWORD ];
-				$mbeCountry = $_GET[ MBE_ESHIP_ID . '_' . Mbe_Shipping_Helper_Data::XML_PATH_COUNTRY ];
-				$this->helper->setOption( Mbe_Shipping_Helper_Data::XML_PATH_LOGIN_LINK_ADV, false );
+					$mbeUser    = $_GET[ MBE_ESHIP_ID . '_' . Mbe_Shipping_Helper_Data::XML_PATH_MBE_USERNAME ];
+					$mbePwd     = $_GET[ MBE_ESHIP_ID . '_' . Mbe_Shipping_Helper_Data::XML_PATH_MBE_PASSWORD ];
+					$mbeCountry = $_GET[ MBE_ESHIP_ID . '_' . Mbe_Shipping_Helper_Data::XML_PATH_COUNTRY ];
+					$this->helper->setOption( Mbe_Shipping_Helper_Data::XML_PATH_LOGIN_LINK_ADV, false );
 
-				if ( ! empty( $mbePwd ) && ! empty( $mbeUser ) ) {
-					// Set the option in case it wasn't saved before
-					$this->helper->setOption( Mbe_Shipping_Helper_Data::XML_PATH_MBE_USERNAME, $mbeUser );
-					$this->helper->setOption( Mbe_Shipping_Helper_Data::XML_PATH_MBE_PASSWORD, $mbePwd );
-					$this->helper->setOption( Mbe_Shipping_Helper_Data::XML_PATH_COUNTRY, $mbeCountry );
-					$this->helper->setWsUrl( $mbeCountry );
+					if ( ! empty( $mbePwd ) && ! empty( $mbeUser ) ) {
+						// Set the option in case it wasn't saved before
+						$this->helper->setOption( Mbe_Shipping_Helper_Data::XML_PATH_MBE_USERNAME, $mbeUser );
+						$this->helper->setOption( Mbe_Shipping_Helper_Data::XML_PATH_MBE_PASSWORD, $mbePwd );
+						$this->helper->setOption( Mbe_Shipping_Helper_Data::XML_PATH_COUNTRY, $mbeCountry );
+						$this->helper->setWsUrl( $mbeCountry );
 
-					if ( $this->mbe_generate_api_key() ) {
-						// set advanced
-						$this->helper->setLoginMode( false );
-						update_option( 'mbe_shipping_admin_messages', [
-							'message' => urlencode( __( 'Logged in', 'mail-boxes-etc' ) ),
-							'status'  => urlencode( 'success' )
-						] );
+						if ( $this->mbe_generate_api_key() ) {
+							// set advanced
+							$this->helper->setLoginMode( false );
+							update_option( 'mbe_shipping_admin_messages', [
+								'message' => urlencode( __( 'Logged in', 'mail-boxes-etc' ) ),
+								'status'  => urlencode( 'success' )
+							] );
+						} else {
+							update_option( 'mbe_shipping_admin_messages', [
+								'message' => urlencode( __( 'Error Logging in. Please enable debug and check the log files for more details', 'mail-boxes-etc' ) ),
+								'status'  => urlencode( 'error' )
+							] );
+						}
 					} else {
 						update_option( 'mbe_shipping_admin_messages', [
-							'message' => urlencode( __( 'Error Logging in. Please enable debug and check the log files for more details', 'mail-boxes-etc' ) ),
+							'message' => urlencode( __( 'Missing MBE Online Login Information', 'mail-boxes-etc' ) ),
 							'status'  => urlencode( 'error' )
 						] );
 					}
-				} else {
-					update_option( 'mbe_shipping_admin_messages', [
-						'message' => urlencode( __( 'Missing MBE Online Login Information', 'mail-boxes-etc' ) ),
-						'status'  => urlencode( 'error' )
-					] );
 				}
-                }
 
 				wp_redirect( wp_get_referer() );
 			}
@@ -1875,9 +2010,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 					$user_id = username_exists( MBE_WC_REST_API_USERNAME );
 					if ( $user_id && email_exists( MBE_WC_REST_API_USER_EMAIL ) ) {
 						$logger->log( 'Reset login - Delete Api Key' );
-					    $this->helper->removeMbeRestApiKey( $user_id );
-                    }
-                }
+						$this->helper->removeMbeRestApiKey( $user_id );
+					}
+				}
 				wp_redirect( wp_get_referer() );
 			}
 
@@ -1936,17 +2071,17 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			// Set the local pickup default data
 			public function mbe_woocommerce_get_pickup_default_data() {
 				$ws = new Mbe_Shipping_Model_Ws();
-                // get MOL default data
+				// get MOL default data
 				$pickupData = $ws->getPickupDefaultData();
-                // set local default data
-				$this->helper->setLocalPickupDefaultData($pickupData);
+				// set local default data
+				$this->helper->setLocalPickupDefaultData( $pickupData );
 			}
 
 			// Send the local pickup default data to MOL
-            public function mbe_woocommerce_set_pickup_default_data() {
-	            $ws = new Mbe_Shipping_Model_Ws();
-	            $ws->setPickupDefaultData($this->helper->getLocalPickupDefaultData());
-            }
+			public function mbe_woocommerce_set_pickup_default_data() {
+				$ws = new Mbe_Shipping_Model_Ws();
+				$ws->setPickupDefaultData( $this->helper->getLocalPickupDefaultData() );
+			}
 
 			public function mbe_download_pickup_manifest() {
 				if ( isset( $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], 'mbe_download_pickup_manifest' ) ) {
@@ -1964,13 +2099,13 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 						}
 
 						if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
-							$order = wc_get_order($postId);
-							$masterTrackingNumber = $order->get_meta( Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NUMBER );
+							$order                = wc_get_order( $postId );
+							$masterTrackingNumber = $order===false?'':$order->get_meta(Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NUMBER);
 						} else {
-							$masterTrackingNumber = get_post_meta( $postId, Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NUMBER,true );
+							$masterTrackingNumber = get_post_meta( $postId, Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NUMBER, true );
 						}
 
-						$response             = $ws->getPickupManifest( $masterTrackingNumber );
+						$response = $ws->getPickupManifest( $masterTrackingNumber );
 
 						$outputPdf     = $response->Label->Stream;
 						$outputPdfPath = $this->helper->mbeUploadDir() . DIRECTORY_SEPARATOR . current_datetime()->getTimestamp() . rand( 0, 999 ) . '.pdf';
@@ -1979,17 +2114,17 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 							$this->helper->mbe_download_file( $outputPdfPath, "pickup_manifest_$postId.pdf", 'application/pdf', true );
 						} else {
 							$errMess = __( 'MBE Download pickup manifest - no document to download', 'mail-boxes-etc' );
-                            $this->helper->logErrorAndSetWpAdminMessage($errMess, $logger);
+							$this->helper->logErrorAndSetWpAdminMessage( $errMess, $logger );
 						}
 					} catch ( \MbeExceptions\ValidationException $e ) {
 						$errMess = __( 'MBE Download pickup manifest - ' . $e->getMessage(), 'mail-boxes-etc' );
-						$this->helper->logErrorAndSetWpAdminMessage($errMess, $logger);
+						$this->helper->logErrorAndSetWpAdminMessage( $errMess, $logger );
 					} catch ( \Exception $e ) {
 						$errMess = __( 'MBE Download pickup manifest - Unexpected error', 'mail-boxes-etc' ) . ' - ' . $e->getMessage();
-						$this->helper->logErrorAndSetWpAdminMessage($errMess, $logger);
+						$this->helper->logErrorAndSetWpAdminMessage( $errMess, $logger );
 					}
 				}
-				wp_redirect(wp_get_referer());
+				wp_redirect( wp_get_referer() );
 			}
 
 			public function mbe_download_delivery_point_waybill() {
@@ -2008,223 +2143,224 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 						}
 
 						if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
-                            $order = wc_get_order($postId);
-							$masterTrackingNumber = $order->get_meta( Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NUMBER );
+							$order                = wc_get_order( $postId );
+							$masterTrackingNumber = $order===false?'':$order->get_meta(Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NUMBER);
 						} else {
-							$masterTrackingNumber = get_post_meta( $postId, Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NUMBER, true);
+							$masterTrackingNumber = get_post_meta( $postId, Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NUMBER, true );
 						}
 
 						$response = $ws->getDeliveryPointShippingDocument( $masterTrackingNumber );
 
 						if ( $response !== false && empty( $response->Errors ) ) {
-							$outputPdf     = file_get_contents($response->CourierWaybill); // load the remote pdf
+							$outputPdf     = file_get_contents( $response->CourierWaybill ); // load the remote pdf
 							$outputPdfPath = $this->helper->mbeUploadDir() . DIRECTORY_SEPARATOR . current_datetime()->getTimestamp() . rand( 0, 999 ) . '.pdf';
 
-							if ( file_put_contents( $outputPdfPath, $outputPdf ) !== false )
-							{
+							if ( file_put_contents( $outputPdfPath, $outputPdf ) !== false ) {
 								$this->helper->mbe_download_file( $outputPdfPath, "delivery_point_waybill_$postId.pdf", 'application/pdf', true );
-							}
-							else
-							{
+							} else {
 								$errMsg = __( 'Download waybill - no document to download. Please, retry later', 'mail-boxes-etc' );
-								$this->helper->logErrorAndSetWpAdminMessage($errMsg, $logger);
+								$this->helper->logErrorAndSetWpAdminMessage( $errMsg, $logger );
 							}
 						} else {
-							$errMsg = __( "Download waybill", 'mail-boxes-etc' ) . " $postId - " . __($response->Errors->Error->Description??'', 'mail-boxes-etc' );
+							$errMsg = __( "Download waybill", 'mail-boxes-etc' ) . " $postId - " . __( $response->Errors->Error->Description ?? '', 'mail-boxes-etc' );
 							$this->helper->logErrorAndSetWpAdminMessage( $errMsg, $logger );
 						}
 					} catch ( \MbeExceptions\ValidationException $e ) {
 						$errMess = __( 'Download waybill - ' . $e->getMessage(), 'mail-boxes-etc' );
-						$this->helper->logErrorAndSetWpAdminMessage($errMess, $logger);
-					} catch (\MbeExceptions\ShippingDocumentException $e) {
-						$errMsg = sprintf( __( "Download waybill", 'mail-boxes-etc' ) . " - " . __("%s", 'mail-boxes-etc' ), $e->getMessage() );
+						$this->helper->logErrorAndSetWpAdminMessage( $errMess, $logger );
+					} catch ( \MbeExceptions\ShippingDocumentException $e ) {
+						$errMsg = sprintf( __( "Download waybill", 'mail-boxes-etc' ) . " - " . __( "%s", 'mail-boxes-etc' ), $e->getMessage() );
 						$this->helper->logErrorAndSetWpAdminMessage( $errMsg, $logger );
 					} catch ( \Exception $e ) {
 						$errMess = __( 'MBE Download pickup manifest - Unexpected error', 'mail-boxes-etc' ) . ' - ' . $e->getMessage();
-						$this->helper->logErrorAndSetWpAdminMessage($errMess, $logger);
+						$this->helper->logErrorAndSetWpAdminMessage( $errMess, $logger );
 					}
 				}
-				wp_redirect(wp_get_referer());
+				wp_redirect( wp_get_referer() );
 			}
 
-            public function mbe_eship_wp_notification() {
-	            // Manage WP environment notification
-	            $wpAdminMessages = maybe_unserialize( get_option( 'mbe_shipping_wp_admin_messages' ) )?:[];
-	            delete_option( 'mbe_shipping_wp_admin_messages' );
-                $printf = '';
-                foreach ( $wpAdminMessages as $adminMessage ) {
-                    $messageStatus = urldecode( $adminMessage['status'] );
-                    $messageText   = urldecode( $adminMessage['message'] );
-                    switch ( $messageStatus ) {
-                        case 'error':
-                            $printf .= printf( '<div class="notice notice-error is-dismissible"><p>' . esc_html__( 'Error' ) . ': %s</p></div>', esc_html( $messageText ) );
-                            break;
-                        case 'warning':
-                            $printf .= printf( '<div class="notice notice-warning is-dismissible"><p>%s</p></div>', esc_html( $messageText ) );
-                            break;
-                        default:
-                            $printf .= printf( '<div class="notice notice-info is-dismissible"><p>%s</p></div>', esc_html( $messageText ) );
-                            break;
-                    }
-                }
-                return $printf;
-            }
+			public function mbe_eship_wp_notification() {
+				// Manage WP environment notification
+				$wpAdminMessages = maybe_unserialize( get_option( 'mbe_shipping_wp_admin_messages' ) ) ?: [];
+				delete_option( 'mbe_shipping_wp_admin_messages' );
+				$printf = '';
+				foreach ( $wpAdminMessages as $adminMessage ) {
+					$messageStatus = urldecode( $adminMessage['status'] ?? '' );
+					$messageText   = urldecode( $adminMessage['message'] );
+					switch ( $messageStatus ) {
+						case 'error':
+							$printf .= printf( '<div class="notice notice-error is-dismissible"><p>' . esc_html__( 'Error' ) . ': %s</p></div>', esc_html( $messageText ) );
+							break;
+						case 'warning':
+							$printf .= printf( '<div class="notice notice-warning is-dismissible"><p>%s</p></div>', esc_html( $messageText ) );
+							break;
+						default:
+							$printf .= printf( '<div class="notice notice-info is-dismissible"><p>%s</p></div>', esc_html( $messageText ) );
+							break;
+					}
+				}
+
+				return $printf;
+			}
 
 			function csv_form_page_handler() {
-                if(isset($_REQUEST['nonce']) && (wp_verify_nonce( $_REQUEST['nonce'], 'csv_form_page_handler') || wp_verify_nonce( $_REQUEST['nonce'], basename( __FILE__ ) ))) {
+				if ( isset( $_REQUEST['nonce'] ) && ( wp_verify_nonce( $_REQUEST['nonce'], 'csv_form_page_handler' ) || wp_verify_nonce( $_REQUEST['nonce'], basename( __FILE__ ) ) ) ) {
 
-                    global $wpdb;
+					global $wpdb;
 
-                    $csvType    = wc_clean($_REQUEST['csv']) ?: null;
-                    $requestId  = wc_clean( $_REQUEST['id'] ) ?: null;
-                    $csvFactory = new Mbe_Csv_Editor_Model_Factory();
-                    $csv        = $csvFactory->create( $csvType );
-                    if ( ! empty( $csv ) ) {
-                        $message = '';
-                        $notice  = '';
-                        $backPage = 'page=' . (isset( $_REQUEST['backpage'] ) ? sanitize_text_field( $_REQUEST['backpage'] ) : 'woocommerce_mbe_csv_tabs&csv=' . $csvType.'&nonce='.wp_create_nonce('woocommerce_mbe_csv_tabs'));
+					$csvType    = wc_clean( $_REQUEST['csv'] ) ?: null;
+					$requestId  = wc_clean( $_REQUEST['id'] ) ?: null;
+					$csvFactory = new Mbe_Csv_Editor_Model_Factory();
+					$csv        = $csvFactory->create( $csvType );
+					if ( ! empty( $csv ) ) {
+						$message  = '';
+						$notice   = '';
+						$backPage = 'page=' . ( isset( $_REQUEST['backpage'] ) ? sanitize_text_field( $_REQUEST['backpage'] ) : 'woocommerce_mbe_csv_tabs&csv=' . $csvType . '&nonce=' . wp_create_nonce( 'woocommerce_mbe_csv_tabs' ) );
 
-                        // default $item data to be used for new records
-                        $default = $csv->get_defaults();
+						// default $item data to be used for new records
+						$default = $csv->get_defaults();
 
-                        $table_name = $csv->get_tablename();
+						$table_name = $csv->get_tablename();
 
-                        // check post back and correct nonce
-                        if ( isset( $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], basename( __FILE__ ) ) ) {
-                            // combine default and request params
-                            $item = shortcode_atts( $default, $_REQUEST );
-                            // data validation
-                            $item_valid = $csv->validate_row( $item );
-                            try {
-                                if ( $item_valid === true ) {
-                                    $ws = new Mbe_Shipping_Model_Ws();
-	                                $result = true;
-                                    if ( empty($item[$csv->get_ID()]) ) {
-                                        do_action(MBE_ESHIP_ID . '_csv_editor_adding', $item);
-                                        if(!$csv->get_isRemote()) {
-                                            $result     = $wpdb->insert( $table_name, $item ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange
-                                            $item[$csv->get_ID()] = $wpdb->insert_id;
-                                        } else {
-	                                        // Todo : check value online exist and = item - create a validateItem in class that extend Mbe_Shipping_Csv_Editor (eg.Mbe_Shipping_Csv_Editor_Pickup_Addresses)
-                                            // set result = false if it fails
-                                        }
-                                        if ( $result !== false ) {
-                                            $message = __( 'Item successfully saved', 'mail-boxes-etc' );
-                                            do_action(MBE_ESHIP_ID . '_csv_editor_added', $item);
-                                            wp_redirect(esc_url_raw(get_admin_url( get_current_blog_id(),'admin.php?'. $backPage. '&message='.urlencode($message) )) );
-                                            exit;
-                                        } else {
-                                            $notice = __( 'There was an error while saving the item', 'mail-boxes-etc' ) . ': ' . $wpdb->last_error;
-                                        }
-                                    } else {
-                                        do_action(MBE_ESHIP_ID . '_csv_editor_updating', $item);
-                                        if(!$csv->get_isRemote()) {
-                                            $result = $wpdb->update( $table_name, $item, array( 'id' => $item[$csv->get_ID()] ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange
-                                        } else {
-                                            // Todo : check value online = item - create a validateItem in class that extend Mbe_Shipping_Csv_Editor (eg.Mbe_Shipping_Csv_Editor_Pickup_Addresses)
-	                                        // set result = false if it fails
-                                        }
-                                        if ( $result !== false ) {
-                                            $message = __( 'Item successfully updated', 'mail-boxes-etc' );
-                                            do_action(MBE_ESHIP_ID . '_csv_editor_updated', $item);
-                                            wp_redirect(get_admin_url( get_current_blog_id(), 'admin.php?page=woocommerce_mbe_csv_tabs&csv=' . $csvType. '&message='.urlencode($message).'&nonce='.wp_create_nonce('woocommerce_mbe_csv_tabs') ));
-                                        } else {
-                                            $notice = __( 'There was an error while updating the item', 'mail-boxes-etc' ) . ': ' . $wpdb->last_error;
-                                        }
-                                    }
-                                } else {
-                                    $notice = $item_valid;
-                                }
-                            } catch ( Exception $e ) {
-                                $notice = $e->getMessage();
-                            }
-                        } else {
-                            $item = $default;
-                            if ( isset( $requestId ) ) {
-                                if ($csv->get_isRemote()) {
-                                    $item = $csv->get_remoteRow( $requestId );
-                                } else {
-                                    $item = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table_name WHERE id = %d", $requestId ), ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange
-                                }
-                                if ( ! $item ) {
-                                    $item = $default;
-    //								$notice = __( 'Item not found', 'mail-boxes-etc' );
-                                }
-                            }
-                        }
+						// check post back and correct nonce
+						if ( isset( $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], basename( __FILE__ ) ) ) {
+							// combine default and request params
+							$item = shortcode_atts( $default, $_REQUEST );
+							// data validation
+							$item_valid = $csv->validate_row( $item );
+							try {
+								if ( $item_valid === true ) {
+									$ws     = new Mbe_Shipping_Model_Ws();
+									$result = true;
+									if ( empty( $item[ $csv->get_ID() ] ) ) {
+										do_action( MBE_ESHIP_ID . '_csv_editor_adding', $item );
+										if ( ! $csv->get_isRemote() ) {
+											$result                 = $wpdb->insert( $table_name, $item ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange
+											$item[ $csv->get_ID() ] = $wpdb->insert_id;
+										} else {
+											// Todo : check value online exist and = item - create a validateItem in class that extend Mbe_Shipping_Csv_Editor (eg.Mbe_Shipping_Csv_Editor_Pickup_Addresses)
+											// set result = false if it fails
+										}
+										if ( $result !== false ) {
+											$message = __( 'Item successfully saved', 'mail-boxes-etc' );
+											do_action( MBE_ESHIP_ID . '_csv_editor_added', $item );
+											wp_redirect( esc_url_raw( get_admin_url( get_current_blog_id(), 'admin.php?' . $backPage . '&message=' . urlencode( $message ) ) ) );
+											exit;
+										} else {
+											$notice = __( 'There was an error while saving the item', 'mail-boxes-etc' ) . ': ' . $wpdb->last_error;
+										}
+									} else {
+										do_action( MBE_ESHIP_ID . '_csv_editor_updating', $item );
+										if ( ! $csv->get_isRemote() ) {
+											$result = $wpdb->update( $table_name, $item, array( 'id' => $item[ $csv->get_ID() ] ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange
+										} else {
+											// Todo : check value online = item - create a validateItem in class that extend Mbe_Shipping_Csv_Editor (eg.Mbe_Shipping_Csv_Editor_Pickup_Addresses)
+											// set result = false if it fails
+										}
+										if ( $result !== false ) {
+											$message = __( 'Item successfully updated', 'mail-boxes-etc' );
+											do_action( MBE_ESHIP_ID . '_csv_editor_updated', $item );
+											wp_redirect( get_admin_url( get_current_blog_id(), 'admin.php?page=woocommerce_mbe_csv_tabs&csv=' . $csvType . '&message=' . urlencode( $message ) . '&nonce=' . wp_create_nonce( 'woocommerce_mbe_csv_tabs' ) ) );
+										} else {
+											$notice = __( 'There was an error while updating the item', 'mail-boxes-etc' ) . ': ' . $wpdb->last_error;
+										}
+									}
+								} else {
+									$notice = $item_valid;
+								}
+							} catch ( Exception $e ) {
+								$notice = $e->getMessage();
+							}
+						} else {
+							$item = $default;
+							if ( isset( $requestId ) ) {
+								if ( $csv->get_isRemote() ) {
+									$item = $csv->get_remoteRow( $requestId );
+								} else {
+									$item = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table_name WHERE id = %d", $requestId ), ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange
+								}
+								if ( ! $item ) {
+									$item = $default;
+									//								$notice = __( 'Item not found', 'mail-boxes-etc' );
+								}
+							}
+						}
 
-                        // custom meta box is a method of $csv class
-                        add_meta_box( MBE_ESHIP_ID . '_csv_form_meta_box', $csv->get_title(),
-                            array( $csv, 'form_meta_box_handler' ),
-                            'csv-' . $csvType, 'normal', 'default' );
-                        ?>
+						// custom meta box is a method of $csv class
+						add_meta_box( MBE_ESHIP_ID . '_csv_form_meta_box', $csv->get_title(),
+							array( $csv, 'form_meta_box_handler' ),
+							'csv-' . $csvType, 'normal', 'default' );
+						?>
 
                         <div class="wrap">
                             <div class="icon32 icon32-posts-post" id="icon-edit"><br></div>
-                            <h2><?php esc_html_e('Edit' ) . ' ' . $csv->get_title( false ) ?>
+                            <h2><?php esc_html_e( 'Edit' ) . ' ' . $csv->get_title( false ) ?>
                                 <a class="add-new-h2"
-                                   href="<?php echo esc_url(get_admin_url( get_current_blog_id(), 'admin.php?'.$backPage )); ?>">
-                                    <?php esc_html_e( 'Back to list', 'mail-boxes-etc' ) ?>
+                                   href="<?php echo esc_url( get_admin_url( get_current_blog_id(), 'admin.php?' . $backPage ) ); ?>">
+									<?php esc_html_e( 'Back to list', 'mail-boxes-etc' ) ?>
                                 </a>
                             </h2>
 
-                            <?php $this->mbe_eship_wp_notification() ?>
-                            <?php if ( ! empty( $notice ) ): ?>
-                                <div id="notice" class="notice notice-error is-dismissible"><p><?php echo wp_kses_post($notice) ?></p></div>
-                            <?php endif; ?>
-                            <?php if ( ! empty( $message ) ): ?>
-                                <div id="message" class="notice notice-success is-dismissible"><p><?php echo wp_kses_post($message) ?></p></div>
-                            <?php endif; ?>
+							<?php $this->mbe_eship_wp_notification() ?>
+							<?php if ( ! empty( $notice ) ): ?>
+                                <div id="notice" class="notice notice-error is-dismissible">
+                                    <p><?php echo wp_kses_post( $notice ) ?></p></div>
+							<?php endif; ?>
+							<?php if ( ! empty( $message ) ): ?>
+                                <div id="message" class="notice notice-success is-dismissible">
+                                    <p><?php echo wp_kses_post( $message ) ?></p></div>
+							<?php endif; ?>
 
                             <form id="form" method="POST">
                                 <input type="hidden" name="nonce"
-                                       value="<?php esc_attr_e(wp_create_nonce( basename( __FILE__ ) ) )?>"/>
-                                <?php /* storing id to check if we need to add or update the item */ ?>
-                                <input type="hidden" name="id" value="<?php esc_attr_e($item[$csv->get_ID()]) ?>"/>
+                                       value="<?php esc_attr_e( wp_create_nonce( basename( __FILE__ ) ) ) ?>"/>
+								<?php /* storing id to check if we need to add or update the item */ ?>
+                                <input type="hidden" name="id" value="<?php esc_attr_e( $item[ $csv->get_ID() ] ) ?>"/>
 
                                 <div class="metabox-holder" id="poststuff">
                                     <div id="post-body">
                                         <div id="post-body-content">
-                                            <?php /* render meta box */ ?>
-                                            <?php do_meta_boxes( 'csv-' . $csvType, 'normal', $item ); ?>
-                                            <input type="submit" value="<?php esc_attr_e( 'Save', 'mail-boxes-etc' ) ?>" id="submit"
+											<?php /* render meta box */ ?>
+											<?php do_meta_boxes( 'csv-' . $csvType, 'normal', $item ); ?>
+                                            <input type="submit" value="<?php esc_attr_e( 'Save', 'mail-boxes-etc' ) ?>"
+                                                   id="submit"
                                                    class="button-primary" name="submit">
                                         </div>
                                     </div>
                                 </div>
                             </form>
                         </div>
-                        <?php
-                    } else {
-                        ?>
+						<?php
+					} else {
+						?>
                         <div class="wrap">
                             <h2><?php esc_html_e( 'Missing or wrong csv type', 'mail-boxes-etc' ) ?>
                                 <a class="add-new-h2"
-                                   href="<?php echo esc_url(get_admin_url( get_current_blog_id(), 'admin.php?page=' . mbe_e_link_get_settings_url() . '&tab=' . MBE_ESHIP_ID . '&section=mbe_general' )); ?>">
-                                    <?php esc_html_e( 'Back to settings', 'mail-boxes-etc' ) ?>
+                                   href="<?php echo esc_url( get_admin_url( get_current_blog_id(), 'admin.php?page=' . mbe_e_link_get_settings_url() . '&tab=' . MBE_ESHIP_ID . '&section=mbe_general' ) ); ?>">
+									<?php esc_html_e( 'Back to settings', 'mail-boxes-etc' ) ?>
                                 </a>
                             </h2>
                         </div>
-                        <?php
-                    }
-                } else {
-	                wp_redirect( wp_get_referer() );
-                }
+						<?php
+					}
+				} else {
+					wp_redirect( wp_get_referer() );
+				}
 			}
 
 			public function pickup_data_form_page_handler() {
 
-                $pickupModel = new Mbe_Shipping_Model_Pickup_Custom_Data();
-				$orderIds    = isset($_REQUEST['orderids'])?json_decode(wc_clean($_REQUEST['orderids'])) : null;
-				$backPage = 'page=' . (isset( $_REQUEST['backpage'] ) ? sanitize_text_field( $_REQUEST['backpage'] ) :  MBE_ESHIP_ID . '_' . WOOCOMMERCE_MBE_TABS_PICKUP_PAGE);
+				$pickupModel = new Mbe_Shipping_Model_Pickup_Custom_Data();
+				$orderIds    = isset( $_REQUEST['orderids'] ) ? json_decode( wc_clean( $_REQUEST['orderids'] ) ) : null;
+				$backPage    = 'page=' . ( isset( $_REQUEST['backpage'] ) ? sanitize_text_field( $_REQUEST['backpage'] ) : MBE_ESHIP_ID . '_' . WOOCOMMERCE_MBE_TABS_PICKUP_PAGE );
 				if ( ! empty( $orderIds )
-                     && isset($_REQUEST['nonce'])
-                     && (
-                          wp_verify_nonce($_REQUEST['nonce'], 'mbe_edit_pickup')
-                          || wp_verify_nonce($_REQUEST['nonce'], 'mbe_pickup_return_from_address')
-                          || wp_verify_nonce($_REQUEST['nonce'], basename( __FILE__ ))
-                     )
-                ) {
+				     && isset( $_REQUEST['nonce'] )
+				     && (
+					     wp_verify_nonce( $_REQUEST['nonce'], 'mbe_edit_pickup' )
+					     || wp_verify_nonce( $_REQUEST['nonce'], 'mbe_pickup_return_from_address' )
+					     || wp_verify_nonce( $_REQUEST['nonce'], basename( __FILE__ ) )
+				     )
+				) {
 					$message = '';
 					$notice  = '';
 //					$backPage = 'page=' . (isset( $_REQUEST['backpage'] ) ? sanitize_text_field( $_REQUEST['backpage'] ) :  MBE_ESHIP_ID . '_' . WOOCOMMERCE_MBE_TABS_PICKUP_PAGE);
@@ -2237,77 +2373,77 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 					$default['id'] = null;
 
 					// check Post back and correct nonce
-					$requestId = wc_clean($_REQUEST['id']??null);
+					$requestId = wc_clean( $_REQUEST['id'] ?? null );
 					if ( wp_verify_nonce( $_REQUEST['nonce'], basename( __FILE__ ) ) ) {
-						$default['date'] = '';
+						$default['date']              = '';
 						$default['pickup_address_id'] = '';
-						$default['pickup_batch_id'] = null;
+						$default['pickup_batch_id']   = null;
 
 						$item = shortcode_atts( $default, $_REQUEST );
 
 						$item_valid = $pickupModel->validate_row( $item );
 
-                        if($item_valid === true) {
-	                        // Save the custom pickup data
-	                        $batchId = null;
-                            // If not updating
-	                        if ( empty( $requestId ) ) {
-		                        if ( count( $orderIds ) > 1 ) {
-			                        $now                     = current_datetime();
-			                        $batchId                 = $this->helper->getWsUsername() . '_' . $now->getTimestamp();
-			                        $item['pickup_batch_id'] = $batchId;
-		                        }
+						if ( $item_valid === true ) {
+							// Save the custom pickup data
+							$batchId = null;
+							// If not updating
+							if ( empty( $requestId ) ) {
+								if ( count( $orderIds ) > 1 ) {
+									$now                     = current_datetime();
+									$batchId                 = $this->helper->getWsUsername() . '_' . $now->getTimestamp();
+									$item['pickup_batch_id'] = $batchId;
+								}
 
-                                // Additional check to avoid creating a new custom data row if orders are already linked to pickup data
-                                $list=[];
-		                        foreach ($orderIds as $orderId ) {
-			                        if (!empty($this->helper->getOrderPickupBatchId($orderId))) {
-				                        $list[] = $orderId;
-			                        }
-		                        }
-                                if(!empty($list)) {
-	                                $errMess = sprintf(__('The orders %s are already linked to pickup data'), implode(',', $list));
-	                                $this->helper->logErrorAndSetWpAdminMessage($errMess);
-	                                wp_redirect( esc_url_raw(admin_url('admin.php?'.$backPage ) ) );
-	                                exit;
-                                }
+								// Additional check to avoid creating a new custom data row if orders are already linked to pickup data
+								$list = [];
+								foreach ( $orderIds as $orderId ) {
+									if ( ! empty( $this->helper->getOrderPickupBatchId( $orderId ) ) ) {
+										$list[] = $orderId;
+									}
+								}
+								if ( ! empty( $list ) ) {
+									$errMess = sprintf( __( 'The orders %s are already linked to pickup data' ), implode( ',', $list ) );
+									$this->helper->logErrorAndSetWpAdminMessage( $errMess );
+									wp_redirect( esc_url_raw( admin_url( 'admin.php?' . $backPage ) ) );
+									exit;
+								}
 
-                                // Insert pickup custom data row
-		                        $pickupCustomDataId = $pickupModel->insertRow( $item );
+								// Insert pickup custom data row
+								$pickupCustomDataId = $pickupModel->insertRow( $item );
 
-		                        // Set order items meta fields
-		                        foreach ( $orderIds as $orderId ) {
-			                        // Additional check to avoid updating field for already existing shipments
-			                        if ( ! $this->helper->hasTracking( $orderId ) ) {
-                                        $this->helper->setOrderPickupCustomDataId($orderId, $pickupCustomDataId);
-                                        $this->helper->setOrderPickupBatchId($orderId, $batchId);
-			                        }
-		                        }
-		                        $action = 'created';
-	                        } else {
-		                        // Update the custom pickup data
-		                        $pickupModel->updateRow( $item['id'], $item );
-		                        $batchId = $item['pickup_batch_id'];
-                                $action = 'updated';
-	                        }
-                            // Updating the backpage to the pickup batch list to show the newly created batch, but not if we have a single shipment
+								// Set order items meta fields
+								foreach ( $orderIds as $orderId ) {
+									// Additional check to avoid updating field for already existing shipments
+									if ( ! $this->helper->hasTracking( $orderId ) ) {
+										$this->helper->setOrderPickupCustomDataId( $orderId, $pickupCustomDataId );
+										$this->helper->setOrderPickupBatchId( $orderId, $batchId );
+									}
+								}
+								$action = 'created';
+							} else {
+								// Update the custom pickup data
+								$pickupModel->updateRow( $item['id'], $item );
+								$batchId = $item['pickup_batch_id'];
+								$action  = 'updated';
+							}
+							// Updating the backpage to the pickup batch list to show the newly created batch, but not if we have a single shipment
 //                            if(count($orderIds)>1) {
-                                $backPage = 'page=' . MBE_ESHIP_ID . '_' . WOOCOMMERCE_MBE_TABS_PICKUP_PAGE;
+							$backPage = 'page=' . MBE_ESHIP_ID . '_' . WOOCOMMERCE_MBE_TABS_PICKUP_PAGE;
 //                            }
 
-	                        if ( isset( $_REQUEST['submit_save'] ) ) {
-		                        $this->helper->setWpAdminMessages( [
-			                        'message' => urlencode(sprintf(__( 'The pickup %s has been %s', 'mail-boxes-etc' ) , (!empty($batchId)?'batch '.$batchId:''), __($action, 'mail-boxes-etc'))),
-			                        'status'  => urlencode( 'success' )
-		                        ] );
-	                        } elseif ( isset( $_REQUEST['submit_savesend'] ) ) {
-		                        $this->createPickup($orderIds);
-	                        }
-	                        wp_redirect( esc_url_raw(admin_url('admin.php?'.$backPage ) ) );
-	                        exit;
-                        } else {
-	                        $notice = $item_valid;
-                        }
+							if ( isset( $_REQUEST['submit_save'] ) ) {
+								$this->helper->setWpAdminMessages( [
+									'message' => urlencode( sprintf( __( 'The pickup %s has been %s', 'mail-boxes-etc' ), ( ! empty( $batchId ) ? 'batch ' . $batchId : '' ), __( $action, 'mail-boxes-etc' ) ) ),
+									'status'  => urlencode( 'success' )
+								] );
+							} elseif ( isset( $_REQUEST['submit_savesend'] ) ) {
+								$this->createPickup( $orderIds );
+							}
+							wp_redirect( esc_url_raw( admin_url( 'admin.php?' . $backPage ) ) );
+							exit;
+						} else {
+							$notice = $item_valid;
+						}
 					} else {
 						$item = $default;
 
@@ -2320,99 +2456,102 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 						}
 					}
 
-					$item['order_ids'] = is_array($orderIds)?$orderIds:[$orderIds];
+					$item['order_ids'] = is_array( $orderIds ) ? $orderIds : [ $orderIds ];
 
-                    add_meta_box( MBE_ESHIP_ID . '_pickup_data_form_meta_box',
-                        ' ',
-                        array( $pickupModel, 'form_meta_box' ),
-                        'pickup-data-editor','normal','default'
-                    );
-                    ?>
+					add_meta_box( MBE_ESHIP_ID . '_pickup_data_form_meta_box',
+						' ',
+						array( $pickupModel, 'form_meta_box' ),
+						'pickup-data-editor', 'normal', 'default'
+					);
+					?>
                     <div class="wrap">
-                            <div class="icon32 icon32-posts-post" id="icon-edit"><br></div>
-                            <h2><?php esc_html_e('Pickup orders management', 'mail-boxes-etc') ?>
-                                <a class="add-new-h2"
-                                   href="<?php echo esc_url(get_admin_url( get_current_blog_id(), 'admin.php?'.$backPage )); ?>">
-                                    <?php esc_html_e( 'Back to list', 'mail-boxes-etc' ) ?>
-                                </a>
-                            </h2>
+                        <div class="icon32 icon32-posts-post" id="icon-edit"><br></div>
+                        <h2><?php esc_html_e( 'Pickup orders management', 'mail-boxes-etc' ) ?>
+                            <a class="add-new-h2"
+                               href="<?php echo esc_url( get_admin_url( get_current_blog_id(), 'admin.php?' . $backPage ) ); ?>">
+								<?php esc_html_e( 'Back to list', 'mail-boxes-etc' ) ?>
+                            </a>
+                        </h2>
 
-                            <?php $this->mbe_eship_wp_notification() ?>
-                            <?php if ( ! empty( $notice ) ): ?>
-                                <div id="notice" class="notice notice-error is-dismissible"><p><?php echo wp_kses_post($notice) ?></p></div>
-                            <?php endif; ?>
-                            <?php if ( ! empty( $message ) ): ?>
-                                <div id="message" class="notice notice-success is-dismissible"><p><?php echo wp_kses_post($message) ?></p></div>
-                            <?php endif; ?>
-                            <form id="form" method="POST">
-                                <input type="hidden" name="nonce" value="<?php esc_attr_e(wp_create_nonce( basename( __FILE__ ) ) )?>"/>
-                                <input type="hidden" name="id" value="<?php esc_attr_e($item['id']) ?>"
-                                <div class="metabox-holder" id="poststuff">
-                                    <div id="post-body">
-                                        <div id="post-body-content">
-                                            <?php do_meta_boxes('pickup-data-editor', 'normal' , $item)?>
-                                        </div>
+						<?php $this->mbe_eship_wp_notification() ?>
+						<?php if ( ! empty( $notice ) ): ?>
+                            <div id="notice" class="notice notice-error is-dismissible">
+                                <p><?php echo wp_kses_post( $notice ) ?></p></div>
+						<?php endif; ?>
+						<?php if ( ! empty( $message ) ): ?>
+                            <div id="message" class="notice notice-success is-dismissible">
+                                <p><?php echo wp_kses_post( $message ) ?></p></div>
+						<?php endif; ?>
+                        <form id="form" method="POST">
+                            <input type="hidden" name="nonce"
+                                   value="<?php esc_attr_e( wp_create_nonce( basename( __FILE__ ) ) ) ?>"/>
+                            <input type="hidden" name="id" value="<?php esc_attr_e( $item['id'] ) ?>"
+                            <div class="metabox-holder" id="poststuff">
+                                <div id="post-body">
+                                    <div id="post-body-content">
+										<?php do_meta_boxes( 'pickup-data-editor', 'normal', $item ) ?>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
+                        </form>
                     </div>
-                    <?php
+					<?php
 				} else {
-                    wp_redirect( esc_url_raw(admin_url('admin.php?'.$backPage ) ) );
-                }
-            }
+					wp_redirect( esc_url_raw( admin_url( 'admin.php?' . $backPage ) ) );
+				}
+			}
 
 
-			public function mbe_edit_pickup_data($post_ids) {
-                if($this->helper->getPickupRequestEnabled()) {
-	                switch ( $this->helper->getPickupRequestMode() ) {
-		                case Mbe_Shipping_Helper_Data::MBE_PICKUP_REQUEST_MANUAL :
-			                // Open default data editor and create a row for the batch ( pre-fill with default values from MOL ) and link it to the selected orders
-			                $backPage = '&backpage='.urlencode( WOOCOMMERCE_MBE_TABS_PAGE);
-			                wp_redirect( esc_url_raw(admin_url( 'admin.php?page=' . MBE_ESHIP_ID . '_pickup_data_tabs&orderids=' . urlencode( json_encode( $post_ids ) ).$backPage.'&nonce='.wp_create_nonce('mbe_edit_pickup') ) ) );
-			                break;
-		                case Mbe_Shipping_Helper_Data::MBE_PICKUP_REQUEST_AUTOMATIC :
-			                $this->createPickup( $post_ids );
-			                wp_redirect( esc_url_raw(admin_url('admin.php?page=' . WOOCOMMERCE_MBE_TABS_PAGE ) ) );
-			                break;
-	                }
-                }
-            }
+			public function mbe_edit_pickup_data( $post_ids ) {
+				if ( $this->helper->getPickupRequestEnabled() ) {
+					switch ( $this->helper->getPickupRequestMode() ) {
+						case Mbe_Shipping_Helper_Data::MBE_PICKUP_REQUEST_MANUAL :
+							// Open default data editor and create a row for the batch ( pre-fill with default values from MOL ) and link it to the selected orders
+							$backPage = '&backpage=' . urlencode( WOOCOMMERCE_MBE_TABS_PAGE );
+							wp_redirect( esc_url_raw( admin_url( 'admin.php?page=' . MBE_ESHIP_ID . '_pickup_data_tabs&orderids=' . urlencode( json_encode( $post_ids ) ) . $backPage . '&nonce=' . wp_create_nonce( 'mbe_edit_pickup' ) ) ) );
+							break;
+						case Mbe_Shipping_Helper_Data::MBE_PICKUP_REQUEST_AUTOMATIC :
+							$this->createPickup( $post_ids );
+							wp_redirect( esc_url_raw( admin_url( 'admin.php?page=' . WOOCOMMERCE_MBE_TABS_PAGE ) ) );
+							break;
+					}
+				}
+			}
 
 
 			public function mbe_delete_pickup_custom_data() {
-				$logger           = new \Mbe_Shipping_Helper_Logger();
+				$logger = new \Mbe_Shipping_Helper_Logger();
 				if ( isset( $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], 'mbe_delete_pickup_custom_data' ) ) {
 					global $wpdb;
 					$id       = wc_clean( $_REQUEST['id'] );
-					$backPage = 'page=' . (isset( $_REQUEST['backpage'] ) ? sanitize_text_field( $_REQUEST['backpage'] ) :  MBE_ESHIP_ID . '_' . WOOCOMMERCE_MBE_TABS_PICKUP_PAGE);
+					$backPage = 'page=' . ( isset( $_REQUEST['backpage'] ) ? sanitize_text_field( $_REQUEST['backpage'] ) : MBE_ESHIP_ID . '_' . WOOCOMMERCE_MBE_TABS_PICKUP_PAGE );
 
 					$pickupCustomData = new Mbe_Shipping_Model_Pickup_Custom_Data();
 					$row              = $pickupCustomData->getRow( $id );
 
 //					if ( 'ready' === strtolower( $row['status'] ) && isset( $row['pickup_batch_id'] ) ) {
-                    if ( 'ready' === strtolower( $row['status'] ) ) {
+					if ( 'ready' === strtolower( $row['status'] ) ) {
 						// Detach all the order linked
 						$selectOrderIds = $this->helper->select_pickup_orders_ids( $id );
-						$orders      = $wpdb->get_results($selectOrderIds, ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange
+						$orders         = $wpdb->get_results( $selectOrderIds, ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange
 						$orderIds       = array_map( 'absint', array_column( $orders, 'order_id' ) );
-						$notDetached = [];
+						$notDetached    = [];
 						foreach ( $orderIds as $orderId ) {
-							if(!$this->helper->detachOrderFromPickupBatch( $orderId )) {
-                                $notDetached[] = $orderId;
+							if ( ! $this->helper->detachOrderFromPickupBatch( $orderId ) ) {
+								$notDetached[] = $orderId;
 							}
 						}
-                        if (empty($notDetached)) {
-	                        // Delete the custom data row
-	                        $pickupCustomData->deleteRow( $id );
-                        } else {
-                            $message = sprintf(__('Cannot delete the pickup custom data row since order(s) %s cannot be detached as it seems to be a shipped pickup(s)', 'mail-boxes-etc'), implode(',', $notDetached));
-	                        $this->helper->logErrorAndSetWpAdminMessage($message, $logger);
-                        }
+						if ( empty( $notDetached ) ) {
+							// Delete the custom data row
+							$pickupCustomData->deleteRow( $id );
+						} else {
+							$message = sprintf( __( 'Cannot delete the pickup custom data row since order(s) %s cannot be detached as it seems to be a shipped pickup(s)', 'mail-boxes-etc' ), implode( ',', $notDetached ) );
+							$this->helper->logErrorAndSetWpAdminMessage( $message, $logger );
+						}
 
 					}
 
-					wp_redirect( esc_url_raw(get_admin_url( get_current_blog_id(), 'admin.php?' . $backPage ) ) );
+					wp_redirect( esc_url_raw( get_admin_url( get_current_blog_id(), 'admin.php?' . $backPage ) ) );
 				}
 			}
 
@@ -2420,23 +2559,23 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				$logger = new \Mbe_Shipping_Helper_Logger();
 
 				if ( isset( $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], 'mbe_detach_order_from_batch' ) ) {
-					$orderId  = sanitize_text_field( $_REQUEST['mbe_pickup_postid'] );
-					$backPage = 'page=' . (isset( $_REQUEST['backpage'] ) ? sanitize_text_field( $_REQUEST['backpage'] ) :  MBE_ESHIP_ID . '_' . WOOCOMMERCE_MBE_TABS_PICKUP_PAGE);
-                    $pickupCustomDataId = $this->helper->getOrderPickupCustomDataId($orderId);
+					$orderId            = sanitize_text_field( $_REQUEST['mbe_pickup_postid'] );
+					$backPage           = 'page=' . ( isset( $_REQUEST['backpage'] ) ? sanitize_text_field( $_REQUEST['backpage'] ) : MBE_ESHIP_ID . '_' . WOOCOMMERCE_MBE_TABS_PICKUP_PAGE );
+					$pickupCustomDataId = $this->helper->getOrderPickupCustomDataId( $orderId );
 
-					if ($this->helper->detachOrderFromPickupBatch( $orderId )) {
-						do_action(MBE_ESHIP_ID.'_after_detach', $pickupCustomDataId);
+					if ( $this->helper->detachOrderFromPickupBatch( $orderId ) ) {
+						do_action( MBE_ESHIP_ID . '_after_detach', $pickupCustomDataId );
 					} else {
-						$message = sprintf(__('Order %d cannot be detached as it is a shipped pickup', 'mail-boxes-etc'), $orderId);
-						$this->helper->logErrorAndSetWpAdminMessage($message, $logger);
+						$message = sprintf( __( 'Order %d cannot be detached as it is a shipped pickup', 'mail-boxes-etc' ), $orderId );
+						$this->helper->logErrorAndSetWpAdminMessage( $message, $logger );
 					}
 				}
-				wp_redirect( esc_url_raw(get_admin_url( get_current_blog_id(), 'admin.php?' . $backPage ) ) );
-            }
+				wp_redirect( esc_url_raw( get_admin_url( get_current_blog_id(), 'admin.php?' . $backPage ) ) );
+			}
 
 			/**
-             * Delete pickup batch if there are no items left
-             *
+			 * Delete pickup batch if there are no items left
+			 *
 			 * @return void
 			 */
 //			public function mbe_after_detach_check_pickup_batch_items($batchId) {
@@ -2452,10 +2591,10 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			 *
 			 * @return void
 			 */
-			public function mbe_after_detach_check_pickup_items($pickupCustomDataId) {
+			public function mbe_after_detach_check_pickup_items( $pickupCustomDataId ) {
 				$pickupCustomData = new Mbe_Shipping_Model_Pickup_Custom_Data();
 
-				if(empty($pickupCustomData->getPickupIdOrders($pickupCustomDataId))) {
+				if ( empty( $pickupCustomData->getPickupIdOrders( $pickupCustomDataId ) ) ) {
 					$pickupCustomData->deleteRow( $pickupCustomDataId );
 				}
 			}
@@ -2463,48 +2602,191 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 			public function mbe_send_pickup() {
 				$logger = new \Mbe_Shipping_Helper_Logger();
-                $logger->log('Send pickup Action - Start');
-				$backPage = 'page=' . (isset( $_REQUEST['backpage'] ) ? sanitize_text_field( $_REQUEST['backpage'] ) :  MBE_ESHIP_ID . '_' . WOOCOMMERCE_MBE_TABS_PICKUP_PAGE);
-				if ( isset( $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], 'mbe_send_pickup' ) && isset($_REQUEST['mbe_pickup_id'] ) && $this->helper->getPickupRequestEnabled())  {
-					$logger->log('Send pickup Action - Create pickup');
+				$logger->log( 'Send pickup Action - Start' );
+				$backPage = 'page=' . ( isset( $_REQUEST['backpage'] ) ? sanitize_text_field( $_REQUEST['backpage'] ) : MBE_ESHIP_ID . '_' . WOOCOMMERCE_MBE_TABS_PICKUP_PAGE );
+				if ( isset( $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], 'mbe_send_pickup' ) && isset( $_REQUEST['mbe_pickup_id'] ) && $this->helper->getPickupRequestEnabled() ) {
+					$logger->log( 'Send pickup Action - Create pickup' );
 					global $wpdb;
 					$pickupCustomDataId = sanitize_text_field( $_REQUEST['mbe_pickup_id'] );
-					$pickupCustomData = new Mbe_Shipping_Model_Pickup_Custom_Data();
-                    $hasPickupBatch = !empty($pickupCustomData->getRow($pickupCustomDataId)['pickup_batch_id']);
+					$pickupCustomData   = new Mbe_Shipping_Model_Pickup_Custom_Data();
+					$hasPickupBatch     = ! empty( $pickupCustomData->getRow( $pickupCustomDataId )['pickup_batch_id'] );
 
 //					$orders   = $wpdb->get_results( $this->helper->select_pickup_batch_orders_ids( $pickupBatchId ), ARRAY_A );
 					$orders   = $wpdb->get_results( $this->helper->select_pickup_orders_ids( $pickupCustomDataId ), ARRAY_A ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange
 					$orderIds = array_map( 'absint', array_column( $orders, 'order_id' ) );
 					$this->createPickup( $orderIds, $hasPickupBatch );
 				}
-                if(!$this->helper->getPickupRequestEnabled()) {
-	                $message = __( 'Pickup request cannot be enabled, please check the settings', 'mail-boxes-etc' );
-	                $this->helper->logErrorAndSetWpAdminMessage($message, $logger);
-                }
-				$logger->log('Send pickup Action - End');
-				wp_redirect( esc_url_raw(get_admin_url( get_current_blog_id(), 'admin.php?' . $backPage ) ) );
+				if ( ! $this->helper->getPickupRequestEnabled() ) {
+					$message = __( 'Pickup request cannot be enabled, please check the settings', 'mail-boxes-etc' );
+					$this->helper->logErrorAndSetWpAdminMessage( $message, $logger );
+				}
+				$logger->log( 'Send pickup Action - End' );
+				wp_redirect( esc_url_raw( get_admin_url( get_current_blog_id(), 'admin.php?' . $backPage ) ) );
 			}
 
 			public function mbe_create_return_shipment() {
-				$backPage = 'page=' . (isset( $_REQUEST['backpage'] ) ? sanitize_text_field( $_REQUEST['backpage'] ) :  MBE_ESHIP_ID . '_' . WOOCOMMERCE_MBE_TABS_PICKUP_PAGE);
+				$backPage = 'page=' . ( isset( $_REQUEST['backpage'] ) ? sanitize_text_field( $_REQUEST['backpage'] ) : MBE_ESHIP_ID . '_' . WOOCOMMERCE_MBE_TABS_PICKUP_PAGE );
 				if ( isset( $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], 'mbe_create_return_shipment' ) && isset( $_REQUEST['mbe_post_id'] ) ) {
-					$postId = array_map('absint', (array)sanitize_text_field($_REQUEST['mbe_post_id']));
-                    $this->createReturnShipment($postId);
+					$orderId = array_map( 'absint', (array) sanitize_text_field( $_REQUEST['mbe_post_id'] ) );
+					$this->createReturnShipment( $orderId );
 				}
-				wp_redirect( esc_url_raw(get_admin_url( get_current_blog_id(), 'admin.php?' . $backPage ) ) );
+				wp_redirect( esc_url_raw( get_admin_url( get_current_blog_id(), 'admin.php?' . $backPage ) ) );
 			}
 
-			public function mbe_after_delete_pickup_address_disable_pickup_if_no_default_address($ids, $csvType) {
+			public function mbe_woocommerce_get_advanced_return_address_data( $post_id ) {
+				if ( $this->helper->canAdvancedReturn() ) {
+					// Open the address data editor and create the return shipment
+					$backPage = '&backpage=' . urlencode( WOOCOMMERCE_MBE_TABS_PAGE );
+					wp_redirect( esc_url_raw( admin_url( 'admin.php?page=' . MBE_ESHIP_ID . '_advanced_return_address_data_tabs&orderid=' . urlencode( $post_id ) . $backPage . '&nonce=' . wp_create_nonce( 'mbe_edit_advanced_return_address_data' ) ) ) );
+				}
+			}
+
+			public function advanced_return_address_data_form_page_handler() {
+
+				$orderId  = isset( $_REQUEST['orderid'] ) ? wc_clean( $_REQUEST['orderid'] ) : null;
+				$backPage = 'page=' . ( isset( $_REQUEST['backpage'] ) ? sanitize_text_field( $_REQUEST['backpage'] ) : MBE_ESHIP_ID . '_' . WOOCOMMERCE_MBE_TABS_PICKUP_PAGE );
+				if ( ! empty( $orderId )
+				     && isset( $_REQUEST['nonce'] )
+				     && (
+					     wp_verify_nonce( $_REQUEST['nonce'], 'mbe_edit_advanced_return_address_data' )
+					     || wp_verify_nonce( $_REQUEST['nonce'], basename( __FILE__ ) ) // check nonce for post back (save)
+				     )
+				) {
+					if ( wp_verify_nonce( $_REQUEST['nonce'], basename( __FILE__ ) ) ) {
+
+						// Check Privince field
+						$senderProvince                  = sanitize_text_field( $_POST['sender_province'] );
+						$receiverProvince                = sanitize_text_field( $_POST['receiver_province'] );
+						$senderProvinceIsEmptyForItaly   = $this->helper->getCountry() === 'IT' && empty( $senderProvince );
+						$senderProvinceIsNotTwoChar      = $senderProvince && ! strlen( $senderProvince ) == 2;
+						$receiverProvinceIsEmptyForItaly = $this->helper->getCountry() === 'IT' && empty( $receiverProvince );
+						$receiverProvinceIsNotTwoChar    = $receiverProvince && ! strlen( $receiverProvince ) == 2;
+
+						try {
+
+							if ( $senderProvinceIsEmptyForItaly || $receiverProvinceIsEmptyForItaly || $senderProvinceIsNotTwoChar || $receiverProvinceIsNotTwoChar ) {
+								throw new Exception( __( "The field \"Province\" must not exceed 2 characters.", 'mail-boxes-etc' ) );
+							}
+
+							$returnData =
+								array(
+									'sender_trade_name'            => sanitize_text_field( $_POST['sender_trade_name'] ),
+									'sender_address_1'             => sanitize_text_field( $_POST['sender_address_1'] ),
+									'sender_address_2'             => sanitize_text_field( $_POST['sender_address_2'] ),
+									'sender_address_3'             => sanitize_text_field( $_POST['sender_address_3'] ),
+									'sender_postcode'              => sanitize_text_field( $_POST['sender_postcode'] ),
+									'sender_city'                  => sanitize_text_field( $_POST['sender_city'] ),
+									'sender_province'              => $senderProvince,
+									'sender_country'               => sanitize_text_field( $_POST['sender_country'] ),
+									'sender_reference'             => sanitize_text_field( $_POST['sender_reference'] ),
+									'sender_telephone_1'           => sanitize_text_field( $_POST['sender_telephone_1'] ),
+									'sender_telephone_2'           => sanitize_text_field( $_POST['sender_telephone_2'] ),
+									'sender_email_1'               => sanitize_email( $_POST['sender_email_1'] ),
+									'sender_email_2'               => sanitize_email( $_POST['sender_email_2'] ),
+									'sender_fax'                   => sanitize_text_field( $_POST['sender_fax'] ),
+									'receiver_trade_name'          => sanitize_text_field( $_POST['receiver_trade_name'] ),
+									'receiver_address_1'           => sanitize_text_field( $_POST['receiver_address_1'] ),
+									'receiver_address_2'           => sanitize_text_field( $_POST['receiver_address_2'] ),
+									'receiver_address_3'           => sanitize_text_field( $_POST['receiver_address_3'] ),
+									'receiver_postcode'            => sanitize_text_field( $_POST['receiver_postcode'] ),
+									'receiver_city'                => sanitize_text_field( $_POST['receiver_city'] ),
+									'receiver_province'            => $receiverProvince,
+									'receiver_country'             => sanitize_text_field( $_POST['receiver_country'] ),
+									'receiver_reference'           => sanitize_text_field( $_POST['receiver_reference'] ),
+									'receiver_telephone_1'         => sanitize_text_field( $_POST['receiver_telephone_1'] ),
+									'receiver_telephone_2'         => sanitize_text_field( $_POST['receiver_telephone_2'] ),
+									'receiver_email_1'             => sanitize_email( $_POST['receiver_email_1'] ),
+									'receiver_email_2'             => sanitize_email( $_POST['receiver_email_2'] ),
+									'receiver_fax'                 => sanitize_text_field( $_POST['receiver_fax'] ),
+									'pickup_date'                  => sanitize_text_field( $_POST['pickup_date'] ),
+									'pickup_time_preferred_from'   => sanitize_text_field( $_POST['pickup_time_preferred_from'] ),
+									'pickup_time_preferred_to'     => sanitize_text_field( $_POST['pickup_time_preferred_to'] ),
+									'pickup_time_alternative_from' => sanitize_text_field( $_POST['pickup_time_alternative_from'] ),
+									'pickup_time_alternative_to'   => sanitize_text_field( $_POST['pickup_time_alternative_to'] ),
+									'pickup_notes'                 => sanitize_text_field( $_POST['pickup_notes'] ),
+								);
+
+
+							$result = $this->createAdvancedReturnShipment( $orderId, $returnData );
+							if ( $result ) {
+								$this->helper->setWpAdminMessages( [ 'message' => __( 'Return shipment created' ) ] );
+							}
+
+						} catch ( Exception $e ) {
+							$this->helper->setWpAdminMessages( [
+								'message' => __( 'Return shipment', 'mail-boxes-etc' ) . ' - ' . __( $e->getMessage(), 'mail-boxes-etc' ),
+								'status'  => 'error'
+							] );
+						}
+
+						wp_redirect( esc_url_raw( get_admin_url( get_current_blog_id(), 'admin.php?' . $backPage ) ) );
+						exit;
+					}
+
+					\Metaboxes\AdvancedReturnAddressData::add( MBE_ESHIP_ID . '_advanced_return_address_data_form_meta_box', 'advanced-return-address-data-meta-box' );
+
+					?>
+                    <div class="wrap">
+						<?php $this->mbe_eship_wp_notification() ?>
+
+                        <div class="icon32 icon32-posts-post" id="icon-edit"><br></div>
+                        <h2><?php esc_html_e( 'Return address data', 'mail-boxes-etc' ) ?>
+                            <a class="add-new-h2"
+                               href="<?php echo esc_url( get_admin_url( get_current_blog_id(), 'admin.php?' . $backPage ) ); ?>">
+								<?php esc_html_e( 'Back to list', 'mail-boxes-etc' ) ?>
+                            </a>
+                        </h2>
+
+                        <form id="form" method="POST">
+                            <input type="hidden" name="nonce"
+                                   value="<?php esc_attr_e( wp_create_nonce( basename( __FILE__ ) ) ) ?>"/>
+                            <!--                            <input type="hidden" name="id" value="-->
+							<?php //esc_attr_e($item['id']) ?><!--"-->
+                            <div class="metabox-holder" id="advanced-return-address-data-meta-box">
+                                <div id="post-body">
+                                    <div id="post-body-content">
+										<?php do_meta_boxes( 'advanced-return-address-data-meta-box', 'normal', $orderId ) ?>
+
+                                        <table style="width: 100%; margin-top: 20px;">
+                                            <tbody>
+                                            <tr>
+                                                <td colspan="2">
+                                                    <div style="float:right;">
+                                                        <a class="button button-secondary"
+                                                           href="<?php echo esc_url( get_admin_url( get_current_blog_id(), 'admin.php?' . $backPage ) ); ?>">
+															<?php esc_html_e( 'Cancel', 'mail-boxes-etc' ) ?>
+                                                        </a>
+                                                        <input type="submit"
+                                                               value="<?php esc_attr_e( 'Save and send', 'mail-boxes-etc' ); ?>"
+                                                               class="button button-primary">
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+					<?php
+				} else {
+					wp_redirect( esc_url_raw( admin_url( 'admin.php?' . $backPage ) ) );
+				}
+			}
+
+			public function mbe_after_delete_pickup_address_disable_pickup_if_no_default_address( $ids, $csvType ) {
 				$logger = new \Mbe_Shipping_Helper_Logger();
 				$helper = new Mbe_Shipping_Helper_Data();
 				if ( 'pickup-addresses' === $csvType
-                     && ! $helper->hasDefaultPickupAddress()
+				     && ! $helper->hasDefaultPickupAddress()
 				     && $helper->getPickupRequestEnabled()
 				     && $helper->getPickupRequestMode() === Mbe_Shipping_Helper_Data::MBE_PICKUP_REQUEST_AUTOMATIC
 				) {
 					$helper->setOption( Mbe_Shipping_Helper_Data::XML_PATH_PICKUP_REQUEST_ENABLED, 0 );
 					$message = __( 'Pickup request cannot be enabled, please set a default pickup address', 'mail-boxes-etc' );
-					$this->helper->logErrorAndSetWpAdminMessage($message);
+					$this->helper->logErrorAndSetWpAdminMessage( $message );
 					$logger->log( 'Default pickup address missing, disabling pickup' );
 				}
 			}
@@ -2513,75 +2795,82 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				$helper = new Mbe_Shipping_Helper_Data();
 				$logger = new Mbe_Shipping_Helper_Logger();
 				// Check if Activation flag exists and if the default value setter didn't already run
-				if(!$helper->hasOption(Mbe_Shipping_Helper_Data::XML_PATH_TAX_DUTIES_ENABLED) && $helper->getPermissionEnabledTaxAndDuties()) {
+				if ( ! $helper->hasOption( Mbe_Shipping_Helper_Data::XML_PATH_TAX_DUTIES_ENABLED ) && $helper->getPermissionEnabledTaxAndDuties() ) {
 					update_option( MBE_SCHEMA_FLAG_OPTION, 'yes' );
-					$logger->log('Updating schema flag to run default value setter for Tax and Duties');
+					$logger->log( 'Updating schema flag to run default value setter for Tax and Duties' );
 				}
 			}
 
-			function mbe_eship_add_tax_and_duties_fee($data) { // TODO : Check if run it only when Tax and Duty TRUE
+			function mbe_eship_add_tax_and_duties_fee($data) {
 				$selectedMethod = WC()->session->get('chosen_shipping_methods');
 				WC()->session->set( 'mbe_tax_and_duties_show_info_text', '');
 
-				if($this->helper->isMBEShippingMethod($selectedMethod) ) {
-					$rateData = $this->getRateData($selectedMethod[0]);
+				if ( $this->helper->isMBEShippingMethod( $selectedMethod ) ) {
+					$rateData = $this->getRateData( $selectedMethod[0] );
 
-					$rateMetaData = $rateData->get_meta_data()??[];
-                    if(!empty($rateData) && !empty($rateMetaData)) {
-	                    $customDutyGuaranteed = $rateMetaData['tax_and_duties_data']['custom_duties_guaranteed'] ?? false;
+					$rateMetaData = [];
+					if(!empty($rateData)) {
+						$rateMetaData = $rateData->get_meta_data() ?? [];
 
-	                    if ( $customDutyGuaranteed && $this->helper->addTaxAndDutiesToTotal() ) {
-		                    WC()->session->set( 'mbe_tax_and_duties_show_info_text', 'DDP');
-	                    } else if ( $this->helper->isEnabledTaxAndDuties() ) {
-		                    WC()->session->set( 'mbe_tax_and_duties_show_info_text', 'DAP');
-	                    }
-	                    WC()->session->set( 'mbe_tax_and_duties_info_text_value', $rateMetaData['tax_and_duties_data']['net_tax_and_duty_total_price']??0);
-                    }
+						if ( ! empty( $rateMetaData ) ) {
+							$customDutyGuaranteed = $rateMetaData['tax_and_duties_data']['custom_duties_guaranteed'] ?? false;
 
-                }
-			}
+							if ( $customDutyGuaranteed && $this->helper->addTaxAndDutiesToTotal() ) {
+								WC()->session->set( 'mbe_tax_and_duties_show_info_text', 'DDP' );
+							} else {
+								WC()->session->set( 'mbe_tax_and_duties_show_info_text', 'DAP' );
+							}
+							WC()->session->set( 'mbe_tax_and_duties_info_text_value', $rateMetaData['tax_and_duties_data']['net_tax_and_duty_total_price'] ?? 0 );
+						}
+					}
 
-			function mbe_show_tax_and_duties_checkout_message () {
-                // If selected method is mbe and Tax&duty is not guaranteed or not DDP, show the message
-				$taxAndDutiesDAP = WC()->session->get( 'mbe_tax_and_duties_show_info_text' )??'DAP';
-                $taxAndDutiesValue = WC()->session->get( 'mbe_tax_and_duties_info_text_value' )??null;
-
-				switch ($taxAndDutiesDAP) {
-                    case 'DAP':
-                        echo wp_kses_post('<div style="font-size: 1rem; padding: 1rem; background: #eee;">
-                                    '. sprintf(__('As for all international shipments, customs requires a payment to clear goods through customs. It is a cost independent of our policies and tariffs. The <strong><span>%s</span></strong> figure shown may vary depending on the legislation of the country of destination.' , 'mail-boxes-etc'), wp_kses_post(wc_price($taxAndDutiesValue))) .'
-                              </div>');
-                        break;
-                    case 'DDP':
-                        echo wp_kses_post('<div style="font-size: 1rem; padding: 1rem; background: #eee;">
-                                '. sprintf(__('As with for all international shipments, customs requires a payment to clear goods through customs. It is a cost independent of our policies and tariffs, but the figure of <strong><span>%s</span></strong> charged ensures customs clearance, taken care of by us.' , 'mail-boxes-etc'), wp_kses_post(wc_price($taxAndDutiesValue))) .'
-                          </div>');
-                        break;
-                    default:
-                        break;
 				}
 			}
 
-            function mbe_eship_check_tax_and_duties() {
-                if($this->helper->mustDisableTaxAndDuties() && $this->helper->isEnabledTaxAndDuties()) {
-                    $this->helper->setEnabledTaxAndDuties(0);
-                    $this->helper->logErrorAndSetWCAdminMessage(__( 'Tax and Duties cannot be enabled, please check the pickup mode and courier and services settings', 'mail-boxes-etc' ), new Mbe_Shipping_Helper_Logger());
-                }
-            }
+			function mbe_show_tax_and_duties_checkout_message() {
+				// If selected method is mbe and Tax&duty is not guaranteed or not DDP, show the message
+				$taxAndDutiesDAP   = WC()->session->get( 'mbe_tax_and_duties_show_info_text' ) ?? 'DAP';
+				$taxAndDutiesValue = WC()->session->get( 'mbe_tax_and_duties_info_text_value' ) ?? null;
+
+				switch ( $taxAndDutiesDAP ) {
+					case 'DAP':
+						echo wp_kses_post( '<div style="font-size: 1rem; padding: 1rem; background: #eee;">
+                                    ' . sprintf( __( 'As for all international shipments, customs requires a payment to clear goods through customs. It is a cost independent of our policies and tariffs. The <strong><span>%s</span></strong> figure shown may vary depending on the legislation of the country of destination.', 'mail-boxes-etc' ), wp_kses_post( wc_price( $taxAndDutiesValue ) ) ) . '
+                              </div>' );
+						break;
+					case 'DDP':
+						echo wp_kses_post( '<div style="font-size: 1rem; padding: 1rem; background: #eee;">
+                                ' . sprintf( __( 'As with for all international shipments, customs requires a payment to clear goods through customs. It is a cost independent of our policies and tariffs, but the figure of <strong><span>%s</span></strong> charged ensures customs clearance, taken care of by us.', 'mail-boxes-etc' ), wp_kses_post( wc_price( $taxAndDutiesValue ) ) ) . '
+                          </div>' );
+						break;
+					default:
+						break;
+				}
+			}
+
+			function mbe_eship_check_tax_and_duties() {
+				if ( $this->helper->mustDisableTaxAndDuties() && $this->helper->isEnabledTaxAndDuties() ) {
+					$this->helper->setEnabledTaxAndDuties( 0 );
+					$this->helper->logErrorAndSetWCAdminMessage( __( 'Tax and Duties cannot be enabled, please check the pickup mode and courier and services settings', 'mail-boxes-etc' ), new Mbe_Shipping_Helper_Logger() );
+				}
+			}
 
 			public function wf_mbe_wooCommerce_shipping_hide_custom_order_meta_keys( $formatted_meta, $thisa ) {
-				foreach($formatted_meta as $key => $meta){
-					if(in_array($meta->key, array(
-                            Mbe_Shipping_Helper_Data::META_FIELD_DELIVERY_POINT_CUSTOM_DATA,
-                            Mbe_Shipping_Helper_Data::META_FIELD_DELIVERY_POINT_SHIPMENT,
-						    Mbe_Shipping_Helper_Data::META_FIELD_PICKUP_CUSTOM_DATA_ID,
-						    Mbe_Shipping_Helper_Data::META_FIELD_IS_PICKUP_SHIPPING,
-						    Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_MBE_STATUS,
-                            Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_DEPARTMENTS_ADDRESS
-                    ))) {
-						unset($formatted_meta[$key]);
+				foreach ( $formatted_meta as $key => $meta ) {
+					if ( in_array( $meta->key, array(
+						Mbe_Shipping_Helper_Data::META_FIELD_DELIVERY_POINT_CUSTOM_DATA,
+						Mbe_Shipping_Helper_Data::META_FIELD_DELIVERY_POINT_SHIPMENT,
+						Mbe_Shipping_Helper_Data::META_FIELD_PICKUP_CUSTOM_DATA_ID,
+						Mbe_Shipping_Helper_Data::META_FIELD_IS_PICKUP_SHIPPING,
+						Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_MBE_STATUS,
+						Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_RETURN_TRACKING_MBE_STATUS,
+						Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_RETURN_TRACKING_NUMBER,
+						Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_DEPARTMENTS_ADDRESS
+					) ) ) {
+						unset( $formatted_meta[ $key ] );
 					}
 				}
+
 				return $formatted_meta;
 			}
 
@@ -2608,15 +2897,15 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				return $taxPercentage;
 			}
 
-			protected function getRateData($chosen_method_id) {
-				$found_rate  = null;
-				$packages    = WC()->cart->get_shipping_packages();
+			protected function getRateData( $chosen_method_id ) {
+				$found_rate = null;
+				$packages   = WC()->cart->get_shipping_packages();
 
-				foreach ($packages as $package_key => $package) {
-					$shipping_for_package = WC()->session->get('shipping_for_package_' . $package_key);
+				foreach ( $packages as $package_key => $package ) {
+					$shipping_for_package = WC()->session->get( 'shipping_for_package_' . $package_key );
 
-					if (! empty($shipping_for_package['rates'][$chosen_method_id])) {
-						$found_rate = $shipping_for_package['rates'][$chosen_method_id];
+					if ( ! empty( $shipping_for_package['rates'][ $chosen_method_id ] ) ) {
+						$found_rate = $shipping_for_package['rates'][ $chosen_method_id ];
 						break;
 					}
 				}
@@ -2624,97 +2913,104 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				return $found_rate;
 			}
 
-			public function mbe_edit_department_address_data($post_ids) {
-				if($this->helper->canSelectDepartmentForOrders()) {
-							// Open default data editor and create a row for the batch ( pre-fill with default values from MOL ) and link it to the selected orders
-							$backPage = '&backpage='.urlencode( WOOCOMMERCE_MBE_TABS_PAGE);
-							wp_redirect( esc_url_raw(admin_url( 'admin.php?page=' . MBE_ESHIP_ID . '_department_address_data_tabs&orderids=' . urlencode( json_encode( $post_ids ) ).$backPage.'&nonce='.wp_create_nonce('mbe_select_department') ) ) );
-					}
+			public function mbe_edit_department_address_data( $post_ids ) {
+				if ( $this->helper->canSelectDepartmentForOrders() ) {
+					// Open default data editor and create a row for the batch ( pre-fill with default values from MOL ) and link it to the selected orders
+					$backPage = '&backpage=' . urlencode( WOOCOMMERCE_MBE_TABS_PAGE );
+					wp_redirect( esc_url_raw( admin_url( 'admin.php?page=' . MBE_ESHIP_ID . '_department_address_data_tabs&orderids=' . urlencode( json_encode( $post_ids ) ) . $backPage . '&nonce=' . wp_create_nonce( 'mbe_select_department' ) ) ) );
+				}
 			}
 
 			public function department_address_data_form_page_handler() {
-//				$departmentAddressMeta = new \Metaboxes\DepartmentAddressData();
-				$orderIds    = isset($_REQUEST['orderids'])?json_decode(wc_clean($_REQUEST['orderids'])) : null;
-				$backPage = 'page=' . (isset( $_REQUEST['backpage'] ) ? sanitize_text_field( $_REQUEST['backpage'] ) :  MBE_ESHIP_ID . '_' . WOOCOMMERCE_MBE_TABS_PICKUP_PAGE);
+				$orderIds = isset( $_REQUEST['orderids'] ) ? json_decode( wc_clean( $_REQUEST['orderids'] ) ) : null;
+				$backPage = 'page=' . ( isset( $_REQUEST['backpage'] ) ? sanitize_text_field( $_REQUEST['backpage'] ) : MBE_ESHIP_ID . '_' . WOOCOMMERCE_MBE_TABS_PICKUP_PAGE );
 				if ( ! empty( $orderIds )
-				     && isset($_REQUEST['nonce'])
+				     && isset( $_REQUEST['nonce'] )
 				     && (
-					     wp_verify_nonce($_REQUEST['nonce'], 'mbe_select_department')
-					     || wp_verify_nonce($_REQUEST['nonce'], basename( __FILE__ )) // check nonce for post back (save)
+					     wp_verify_nonce( $_REQUEST['nonce'], 'mbe_select_department' )
+					     || wp_verify_nonce( $_REQUEST['nonce'], basename( __FILE__ ) ) // check nonce for post back (save)
 				     )
 				) {
 					if ( wp_verify_nonce( $_REQUEST['nonce'], basename( __FILE__ ) ) ) {
-                        $departmentAddressId = sanitize_key($_REQUEST['department_address_id']);
-                        $failed = [];
+						$departmentAddressId = sanitize_key( $_REQUEST['department_address_id'] );
+						$failed              = [];
 						foreach ( $orderIds as $order_id ) {
-                            // get the old values to check if it needs to be updated
-							$oldValue = $this->helper->getOrderDepartmentAddressId($order_id);
-                            if ($oldValue !== $departmentAddressId) {
-	                            // Update order's meta data
-	                            if (!$this->helper->setOrderDepartmentAddressId( $order_id, $departmentAddressId)) {
-                                    $failed[] = $order_id;
-	                            }
-                            }
-                        }
-                        if(count($failed) > 0) {
-                            $notice = __('There was an error while updating the orders: ', 'mail-boxes-etc') . implode(',', $failed);
-                        } else {
-                            $this->helper->setWpAdminMessages(['message' => __('Department data associated', 'mail-boxes-etc'), 'status' => 'success']);
-	                        wp_redirect( esc_url_raw(admin_url('admin.php?'.$backPage ) ) );
-	                        exit;
-                        }
-                    }
+							// get the old values to check if it needs to be updated
+							$oldValue = $this->helper->getOrderDepartmentAddressId( $order_id );
+							if ( $oldValue !== $departmentAddressId ) {
+								// Update order's meta data
+								if ( ! $this->helper->setOrderDepartmentAddressId( $order_id, $departmentAddressId ) ) {
+									$failed[] = $order_id;
+								}
+							}
+						}
+						if ( count( $failed ) > 0 ) {
+							$notice = __( 'There was an error while updating the orders: ', 'mail-boxes-etc' ) . implode( ',', $failed );
+						} else {
+							$this->helper->setWpAdminMessages( [
+								'message' => __( 'Department data associated', 'mail-boxes-etc' ),
+								'status'  => 'success'
+							] );
+							wp_redirect( esc_url_raw( admin_url( 'admin.php?' . $backPage ) ) );
+							exit;
+						}
+					}
 
-                    \Metaboxes\DepartmentAddressData::add(MBE_ESHIP_ID . '_department_address_data_form_meta_box', 'department-address-data-selection');
+					\Metaboxes\DepartmentAddressData::add( MBE_ESHIP_ID . '_department_address_data_form_meta_box', 'department-address-data-selection' );
 
 					?>
 
                     <div class="wrap">
                         <div class="icon32 icon32-posts-post" id="icon-edit"><br></div>
-                        <h2><?php esc_html_e('Department address selection', 'mail-boxes-etc') ?>
+                        <h2><?php esc_html_e( 'Department address selection', 'mail-boxes-etc' ) ?>
                             <a class="add-new-h2"
-                               href="<?php echo esc_url(get_admin_url( get_current_blog_id(), 'admin.php?'.$backPage )); ?>">
+                               href="<?php echo esc_url( get_admin_url( get_current_blog_id(), 'admin.php?' . $backPage ) ); ?>">
 								<?php esc_html_e( 'Back to list', 'mail-boxes-etc' ) ?>
                             </a>
                         </h2>
 
 						<?php $this->mbe_eship_wp_notification() ?>
 						<?php if ( ! empty( $notice ) ): ?>
-                            <div id="notice" class="notice notice-error is-dismissible"><p><?php echo wp_kses_post($notice) ?></p></div>
+                            <div id="notice" class="notice notice-error is-dismissible">
+                                <p><?php echo wp_kses_post( $notice ) ?></p></div>
 						<?php endif; ?>
 						<?php if ( ! empty( $message ) ): ?>
-                            <div id="message" class="notice notice-success is-dismissible"><p><?php echo wp_kses_post($message) ?></p></div>
+                            <div id="message" class="notice notice-success is-dismissible">
+                                <p><?php echo wp_kses_post( $message ) ?></p></div>
 						<?php endif; ?>
                         <form id="form" method="POST">
-                            <input type="hidden" name="nonce" value="<?php esc_attr_e(wp_create_nonce( basename( __FILE__ ) ) )?>"/>
-<!--                            <input type="hidden" name="id" value="--><?php //esc_attr_e($item['id']) ?><!--"-->
-                            <div class="metabox-holder" id="poststuff">
+                            <input type="hidden" name="nonce"
+                                   value="<?php esc_attr_e( wp_create_nonce( basename( __FILE__ ) ) ) ?>"/>
+                            <!--                            <input type="hidden" name="id" value="-->
+							<?php //esc_attr_e($item['id']) ?><!--"-->
+                            <div class="metabox-holder" id="department-address-data-selection">
                                 <div id="post-body">
                                     <div id="post-body-content">
-										<?php do_meta_boxes('department-address-data-selection', 'normal' , $orderIds)?>
+										<?php do_meta_boxes( 'department-address-data-selection', 'normal', $orderIds ) ?>
 
-                                        <input type="submit" value="<?php esc_html_e( 'Save', 'mail-boxes-etc' ) ?>" id="submit_save"
+                                        <input type="submit" value="<?php esc_html_e( 'Save', 'mail-boxes-etc' ) ?>"
+                                               id="submit_save"
                                                class="button-primary" name="submit_save">
                                     </div>
                                 </div>
                             </div>
                         </form>
                     </div>
-                    <?php
+					<?php
 				} else {
-					wp_redirect( esc_url_raw(admin_url('admin.php?'.$backPage ) ) );
+					wp_redirect( esc_url_raw( admin_url( 'admin.php?' . $backPage ) ) );
 				}
-            }
+			}
 
 			public function mbe_select_department_address_pickup() {
-				$backPage = '&backpage=' . (isset( $_REQUEST['backpage'] ) ? sanitize_text_field( $_REQUEST['backpage'] ) :  MBE_ESHIP_ID . '_' . WOOCOMMERCE_MBE_TABS_PICKUP_PAGE);
-                $post_ids = array((int)sanitize_key($_REQUEST['mbe_pickup_postid']));
+				$backPage = '&backpage=' . ( isset( $_REQUEST['backpage'] ) ? sanitize_text_field( $_REQUEST['backpage'] ) : MBE_ESHIP_ID . '_' . WOOCOMMERCE_MBE_TABS_PICKUP_PAGE );
+				$post_ids = array( (int) sanitize_key( $_REQUEST['mbe_pickup_postid'] ) );
 
-				if ( isset( $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], 'mbe_select_department_address_pickup' ) && $this->helper->canSelectDepartmentForOrders()) {
-					wp_redirect(esc_url_raw(admin_url( 'admin.php?page=' . MBE_ESHIP_ID . '_department_address_data_tabs&orderids=' . urlencode( json_encode( $post_ids ) ).$backPage.'&nonce='.wp_create_nonce('mbe_select_department') ) ) );
+				if ( isset( $_REQUEST['nonce'] ) && wp_verify_nonce( $_REQUEST['nonce'], 'mbe_select_department_address_pickup' ) && $this->helper->canSelectDepartmentForOrders() ) {
+					wp_redirect( esc_url_raw( admin_url( 'admin.php?page=' . MBE_ESHIP_ID . '_department_address_data_tabs&orderids=' . urlencode( json_encode( $post_ids ) ) . $backPage . '&nonce=' . wp_create_nonce( 'mbe_select_department' ) ) ) );
 					exit;
 				}
-				wp_redirect( esc_url_raw(get_admin_url( get_current_blog_id(), 'admin.php?' . $backPage ) ) );
+				wp_redirect( esc_url_raw( get_admin_url( get_current_blog_id(), 'admin.php?' . $backPage ) ) );
 			}
 
 		}

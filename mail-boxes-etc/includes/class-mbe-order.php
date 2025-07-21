@@ -73,10 +73,12 @@ class Mbe_E_Link_Order_List_Table extends WP_List_Table {
 		if ( empty( $trackings ) ) {
 			return '';
 		} else {
-			$html = '';
+			$returnTracking = $this->helper->getReturnTrackings( $this->itemId( $item ) ) ?? null;
+			$html           = '';
+
 			if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
 				$order = wc_get_order( $this->itemId( $item ) );
-				$url   = $order->get_meta( Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_URL );
+				$url = $order===false?'':$order->get_meta(Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_URL);
 			} else {
 				$url = get_post_meta( $this->itemId( $item ), Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_URL, true );
 			}
@@ -85,6 +87,7 @@ class Mbe_E_Link_Order_List_Table extends WP_List_Table {
 			if ( count( $trackings ) > 1 ) {
 				$html .= "<a target='_blank' href=" . $url . $trackingString . ">" . __( 'Track all', 'mail-boxes-etc' ) . "</a><br/>";
 			}
+
 
 			$i = 0;
 			foreach ( $trackings as $t ) {
@@ -95,7 +98,13 @@ class Mbe_E_Link_Order_List_Table extends WP_List_Table {
 				$i ++;
 			}
 
-			return $html;
+			return '<table style="height: 100%">
+					    <tbody>
+					        <tr style="height: 50%"><td>' . $html . '</td></tr>'
+			       . ( $returnTracking ? ( '<tr style="height: 50%"><td><span style="font-style: normal; font-weight: bold; color: #666;">' . __( 'Return shipment', 'mail-boxes-etc' ) . ':</span> <span style="font-style: italic;">' . $returnTracking . '</span></td></tr>' ) : '' )
+			       . '</tbody>
+					</table>';
+//			return $html;
 		}
 	}
 
@@ -110,18 +119,18 @@ class Mbe_E_Link_Order_List_Table extends WP_List_Table {
 		if ( empty( $trackings ) ) {
 			return '';
 		} else {
+			$returnCourierTracking = $this->helper->getReturnCourierTrackings( $this->itemId( $item ) ) ?? null;
 			$html = '';
 			if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
 				$order = wc_get_order( $this->itemId( $item ) );
-				$url   = $order->get_meta( Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_URL );
+				$url = $order===false?'':$order->get_meta(Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_URL);
 			} else {
 				$url = get_post_meta( $this->itemId( $item ), Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_URL, true );
 			}
 
-			//TODO : per courier tracking è string non array
-			$trackingString = $this->helper->getTrackingsString( $this->itemId( $item ) );
+			$trackingString = $this->helper->getCourierTrackingsString( $this->itemId( $item ) );
 			if ( count( $trackings ) > 1 ) {
-				$html .= "<a target='_blank' href=" . $url . $trackingString . ">" . __( 'Track all', 'mail-boxes-etc' ) . "</a><br/>";
+				$html .= "<a style=' word-wrap:anywhere;' target='_blank' href=" . $url . $trackingString . ">" . __( 'Track all', 'mail-boxes-etc' ) . "</a><br/>";
 			}
 
 			$i = 0;
@@ -129,31 +138,62 @@ class Mbe_E_Link_Order_List_Table extends WP_List_Table {
 				if ( $i > 0 ) {
 					$html .= "<br/>";
 				}
-				$html .= "<a target='_blank' href=" . $url . $t . ">" . $t . "</a>";
+				$html .= "<a style=' word-wrap:anywhere;' target='_blank' href=" . $url . $t . ">" . $t . "</a>";
 				$i ++;
 			}
 
-			return $html;
+			return '<table style="height: 100%">
+					    <tbody>
+					        <tr style="height: 50%"><td>' . $html . '</td></tr>'
+			       . ( $returnCourierTracking ? ( '<tr style="height: 50%"><td><span style="font-style: normal; font-weight: bold; color: #666;">' . __( 'Return shipment', 'mail-boxes-etc' ) . ':</span> <span style="font-style: italic; word-wrap:anywhere;">' . $returnCourierTracking . '</span></td></tr>' ) : '' )
+			       . '</tbody>
+					</table>';
+
+//			return $html;
 		}
 	}
 
 	function column_courier_name( $item ) {
-		return $this->helper->getCourierName( $this->itemId( $item ) );
+		return '<table style="height: 100%">
+					    <tbody>
+					        <tr style="height: 50%"><td>' . $this->helper->getCourierName( $this->itemId( $item ) ) . '</td></tr>'
+		       . ( $this->helper->getReturnCourierName( $this->itemId( $item ) ) ? ( '<tr style="height: 50%"><td><span style="font-style: normal; font-weight: bold; color: #666;">' . __( 'Return shipment', 'mail-boxes-etc' ) . ':</span> <span style="font-style: italic; word-wrap:anywhere;">' . $this->helper->getReturnCourierName( $this->itemId( $item ) ) . '</span></td></tr>' ) : '' )
+		       . '</tbody>
+					</table>';
 	}
 
 	function column_tracking_status( $item ) {
-		$trackingFullData  = $this->helper->getTrackingFullData( $this->itemId( $item ) );
-		$trackingMBEstatus = sanitize_text_field( $trackingFullData['mbeStatusDescription'] ?? '' );
+		$trackingFullData               = $this->helper->getTrackingFullData( $this->itemId( $item ) );
+		$trackingAdvancedReturnFullData = $this->helper->getAdvancedReturnTrackingFullData( $this->itemId( $item ) );
 
-		if ( empty( $trackingMBEstatus ) ) {
+		$trackingMBEstatus               = sanitize_text_field( $trackingFullData['mbeStatusDescription'] ?? '' );
+		$trackingMBEAdvancedReturnStatus = sanitize_text_field( $trackingAdvancedReturnFullData['mbeStatusDescription'] ?? '' );
+
+		if ( empty( $trackingMBEstatus ) && empty( $trackingMBEAdvancedReturnStatus ) ) {
 			return '';
 		} else {
-			$color                            = $this->helper->getTrackingStatusColor( $trackingMBEstatus );
-			$trackingcourierStatusDescription = sanitize_text_field( __( $trackingFullData['courierStatusDescription'] ?? '', 'mail-boxes-etc' ) );
+			$color                                          = $this->helper->getTrackingStatusColor( $trackingMBEstatus );
+			$colorAdvancedReturn                            = $this->helper->getTrackingStatusColor( $trackingMBEAdvancedReturnStatus );
+			$trackingcourierStatusDescription               = sanitize_text_field( __( $trackingFullData['courierStatusDescription'] ?? '', 'mail-boxes-etc' ) );
+			$trackingcourierAdvancedReturnStatusDescription = sanitize_text_field( __( $trackingAdvancedReturnFullData['courierStatusDescription'] ?? '', 'mail-boxes-etc' ) );
 
-			return "<span style='font-size: small; font-weight: bold; float: left; color:$color; padding:4px ;text-align: center;border-radius: 5px; margin: 3px;' title='" . esc_attr( $trackingcourierStatusDescription ) . "'>" .
-			       esc_html( __( $trackingMBEstatus, 'mail-boxes-etc' ) )
-			       . "</span>";
+			$htmlTrackingStatus = "<span style='font-size: small; font-weight: bold; float: left; color:$color; padding:4px ;text-align: center;border-radius: 5px; margin: 3px;' title='" . esc_attr( $trackingcourierStatusDescription ) . "'>" .
+			                      esc_html( __( $trackingMBEstatus, 'mail-boxes-etc' ) )
+			                      . "</span>";
+
+			$htmlAdvancedReturnTrackingStatus = "<span style='font-size: small; font-weight: bold; float: left; color:$colorAdvancedReturn; padding:4px ;text-align: center;border-radius: 5px; margin: 3px;' title='" . esc_attr( $trackingcourierAdvancedReturnStatusDescription ) . "'>" .
+			                                    esc_html( __( $trackingMBEAdvancedReturnStatus, 'mail-boxes-etc' ) )
+			                                    . "</span>";
+
+
+			return '<table style="height: 100%">
+					    <tbody>
+					        <tr style="min-height: 50%"><td>&nbsp;' . $htmlTrackingStatus . '</td></tr>'
+
+			       . ( $trackingMBEAdvancedReturnStatus ? '<tr style="min-height: 50%"><td><span style="font-style: normal; font-weight: bold; color: #666;">' . __( 'Return shipment', 'mail-boxes-etc' ) . ':</span> <span style="font-style: italic;">' . $htmlAdvancedReturnTrackingStatus . '</span></td></tr>' : '' )
+			       . '</tbody>
+					</table>';
+
 		}
 	}
 
@@ -188,14 +228,6 @@ class Mbe_E_Link_Order_List_Table extends WP_List_Table {
 	function column_files( $item ) {
 		if ( $this->helper->isDeliveryPointOrder( $this->itemId( $item ) ) && $this->helper->hasTracking( $this->itemId( $item ) ) ) {
 			$actionUrl = sprintf( "%sadmin-post.php?action=mbe_download_delivery_point_waybill&mbe_delivery_point_postid=%s&nonce=%s", get_admin_url(), $this->itemId( $item ), wp_create_nonce( 'mbe_download_delivery_point_waybill' ) );
-//			return '<a href="'. get_admin_url() . 'admin-post.php?action=mbe_download_delivery_point_waybill&mbe_delivery_point_postid=' . $this->itemId($item) . '&nonce=' . wp_create_nonce( 'mbe_download_delivery_point_waybill' ) . '">
-//						<button style="margin: 0px 5px 0px 5px; color:#778899FF; cursor:pointer" type="button" title="' . __( 'Download waybill', 'mail-boxes-etc' ) . '">
-//								<svg style="height: 20px;width: 20px; padding-top: 4px"  aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-//    								<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 9h6m-6 3h6m-6 3h6M7 9h0m0 3h0m0 3h0M4 5h16c.6 0 1 .4 1 1v12c0 .6-.4 1-1 1H4a1 1 0 0 1-1-1V6c0-.6.4-1 1-1Z"/>
-//  								</svg>
-//	                    </button>
-//                    </a>';
-
 			return ' <button style="margin: 0px 5px 0px 5px; color:#778899FF; cursor:pointer" type="button" title="' . __( 'Download waybill', 'mail-boxes-etc' ) . '"
  					  onclick="mbeButtonAction(this, \'' . $actionUrl . '\',\'_self\', \'false\')">
 								<svg style="height: 20px;width: 20px; padding-top: 4px"  aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -203,25 +235,22 @@ class Mbe_E_Link_Order_List_Table extends WP_List_Table {
   								</svg>
 					 </input>';
 		} else {
-			$files = $this->helper->getFileNames( $this->itemId( $item ) );
+			$files = $this->helper->getFileNames( $this->itemId( $item ));
+			$filesReturn = $this->helper->getFileNames( $this->itemId( $item ), Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_RETURN_TRACKING_FILENAME );
 
 			$trackings = $this->helper->getTrackings( $this->itemId( $item ) );
-			if ( empty( $files ) ) {
-				return '';
-			} else {
-				$html = '';
-				for ( $i = 0; $i < count( $files ); $i ++ ) {
-					$filename = __( 'Label', 'mail-boxes-etc' ) . " " . ( $i + 1 );
-					$path     = $this->helper->mbeUploadUrl() . DIRECTORY_SEPARATOR . $files[ $i ];
-					$html     .= "<a target='_blank' href=" . $path . " style='margin-bottom:5px;display: inline-block;'>" . $filename . "</a></br>";
-				}
-				if ( isset( $trackings[0] ) && ! $this->helper->isTrackingOpen( $trackings[0] ) ) {
-					$path = $this->helper->mbeUploadUrl() . DIRECTORY_SEPARATOR . 'MBE_' . $trackings[0] . "_closed.pdf";
-					$html .= "<a target='_blank' href=" . $path . " style='margin-bottom:5px;display: inline-block;'>" . __( 'Closure file', 'mail-boxes-etc' ) . "</a></br>";
-				}
+			$trackingReturn = $this->helper->getReturnTrackings( $this->itemId( $item ) );
 
-				return $html;
-			}
+			$filesHtml = $this->getFilesHtmlBlock( $files, $trackings );
+			$filesReturnHtml = $this->getFilesHtmlBlock( $filesReturn, [$trackingReturn] );
+
+			return '<table style="height: 100%">
+					    <tbody>
+					        <tr style="min-height: 50%"><td>&nbsp;' . $filesHtml . '</td></tr>'
+
+			       . ( $filesReturnHtml ? '<tr style="min-height: 50%"><td><span style="font-style: normal; font-weight: bold; color: #666;">' . __( 'Return shipment', 'mail-boxes-etc' ) . ':</span> <span style="font-style: italic;">' . $filesReturnHtml . '</span></td></tr>' : '' )
+			       . '</tbody>
+					</table>';
 		}
 	}
 
@@ -293,12 +322,12 @@ class Mbe_E_Link_Order_List_Table extends WP_List_Table {
 		$actions = array();
 		if ( ! ( $this->helper->isCreationAutomatically() ||
 		         ( $this->helper->getPickupRequestEnabled() && Mbe_Shipping_Helper_Data::MBE_PICKUP_REQUEST_AUTOMATIC === $this->helper->getPickupRequestMode() )
-			   )
+		)
 		) {
-			$actions['creation']   = __( 'Shipment creation (no pickup)', 'mail-boxes-etc' );
+			$actions['creation'] = __( 'Shipment creation (no pickup)', 'mail-boxes-etc' );
 		}
 
-		if($this->helper->canSelectDepartmentForOrders()) {
+		if ( $this->helper->canSelectDepartmentForOrders() ) {
 			$actions['department'] = __( 'Associate department data', 'mail-boxes-etc' );
 		}
 
@@ -308,7 +337,11 @@ class Mbe_E_Link_Order_List_Table extends WP_List_Table {
 			}
 		}
 		if ( ! $this->helper->isOnlineMBE() ) {
-			$actions['return'] = __( 'Create return shipment', 'mail-boxes-etc' );
+			if ( $this->helper->canAdvancedReturn() ) {
+				$actions['advanced_return'] = __( 'Create return shipment - pickup', 'mail-boxes-etc' );
+			} else {
+				$actions['return'] = __( 'Create return shipment', 'mail-boxes-etc' );
+			}
 		}
 		$actions['downloadLabels']         = __( 'Download shipping Labels', 'mail-boxes-etc' );
 		$actions['downloadPickupManifest'] = __( 'Download pickup manifest', 'mail-boxes-etc' );
@@ -402,7 +435,7 @@ class Mbe_E_Link_Order_List_Table extends WP_List_Table {
 
 								if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
 									$order                = wc_get_order( $post_id );
-									$masterTrackingNumber = $order->get_meta( Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NUMBER );
+									$masterTrackingNumber = $order===false?'':$order->get_meta(Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NUMBER);
 								} else {
 									$masterTrackingNumber = get_post_meta( $post_id, Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NUMBER, true );
 								}
@@ -418,7 +451,7 @@ class Mbe_E_Link_Order_List_Table extends WP_List_Table {
 									$this->helper->logErrorAndSetWpAdminMessage( $errMsg, $this->logger );
 								}
 							} else {
-								$labels = $this->helper->getFileNames( $post_id );
+								$labels = $this->helper->getFileNames( $post_id);
 								if ( is_array( $labels ) ) {
 									foreach ( $labels as $l ) {
 										$labelType   = preg_replace( '/.*\./', '', $l );
@@ -459,6 +492,29 @@ class Mbe_E_Link_Order_List_Table extends WP_List_Table {
 					wp_redirect( admin_url( 'admin.php?page=' . WOOCOMMERCE_MBE_TABS_PAGE ) );
 					exit;
 					break;
+				case 'advanced_return':
+					try {
+						// if one order only
+						if ( count( $post_ids ) > 1 || ! $this->helper->hasTracking( $post_ids[0] ) ) {
+							throw new \MbeExceptions\ValidationException( __('Please select only one shipped order', 'mail-boxes-etc') );
+						}
+
+//						//if not already returned
+//						if($this->helper->isReturned($post_ids[0])) {
+//							throw new \MbeExceptions\ValidationException( 'Please select only an order not already returned' );
+//						}
+
+						// Open address selection form
+						do_action( MBE_ESHIP_ID . '_before_create_advanced_return', $post_ids[0] );
+						exit;
+					} catch ( \MbeExceptions\ValidationException $e ) {
+						$this->logger->log( 'MBE Creation advanced return - ' . $e->getMessage() );
+						$this->helper->setWpAdminMessages( [
+							'message' => urlencode( $e->getMessage() ),
+							'status'  => urlencode( 'error' )
+						] );
+					}
+					break;
 				case 'downloadPickupManifest' :
 					try {
 						$masterTrackingIds = [];
@@ -473,7 +529,7 @@ class Mbe_E_Link_Order_List_Table extends WP_List_Table {
 
 							if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
 								$order                = wc_get_order( $post_id );
-								$masterTrackingNumber = $order->get_meta( Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NUMBER, false );
+								$masterTrackingNumber = $order===false?'':$order->get_meta(Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NUMBER, false);
 							} else {
 								$masterTrackingNumber = get_post_meta( $post_id, Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_NUMBER );
 							}
@@ -575,24 +631,24 @@ class Mbe_E_Link_Order_List_Table extends WP_List_Table {
 
 		// Set the warning for department if needed
 		if ( $this->helper->getCustomerAddressAsSender() && $this->helper->getMandatoryDepartment() ) {
-			$departmentWarning = null;
+			$departmentWarning    = null;
 			$hasDepartmentDefault = $this->helper->hasDepartmentDefault();
 			if ( $this->helper->isCreationAutomatically() ) {
 				// Automatic creation
 				// No department default address, check for MOL department default
 				$departmentWarning = $hasDepartmentDefault
-					? "Department is mandatory for shipments. However, we detected that a default department is already configured in your MOL user settings. If you don't specify an eShip default department here, the system will automatically use your MOL default department. You can override it by selecting a diﬀerent eShip default department"
+					? "Department is mandatory for shipments. However, we detected that a default department is already configured in your MOL user settings. If you don't specify an eShip default department here, the system will automatically use your MOL default department. You can override it by selecting a different eShip default department"
 					: "Department is mandatory for shipments. To create shipments successfully, please specify, in the plugin Shipping section, an eShip Default Department. If you proceed without setting an eShip Default Department, shipment creation will fail";
 			} else {
 				// Manual creation
 				$departmentWarning = $hasDepartmentDefault
-					? "Department is mandatory for shipments. However, we detected that a default department is already configured in your MOL user settings. If you don't specify a department, the system will automatically use your MOL default department. You can override this by selecting a diﬀerent department, when creating the shipment"
+					? "Department is mandatory for shipments. However, we detected that a default department is already configured in your MOL user settings. If you don't specify a department, the system will automatically use your MOL default department. You can override this by selecting a different department, when creating the shipment"
 					: "Department is mandatory for shipments. To create shipments successfully, please specify a department manually for each shipment. If you proceed without setting a department, shipment creation will fail";
 			}
 
 			// Add warning message if any
 			if ( $departmentWarning ) {
-				$this->helper->setWpAdminMessages( [ 'message' => __($departmentWarning), 'status' => 'warning' ] );
+				$this->helper->setWpAdminMessages( [ 'message' => __( $departmentWarning, 'mail-boxes-etc' ), 'status' => 'warning' ] );
 			}
 		}
 
@@ -867,6 +923,7 @@ class Mbe_E_Link_Order_List_Table extends WP_List_Table {
 	/**
 	 * @param array $post_ids
 	 * Check if any of the selected orders has already been shipped and throw a ValidationException
+	 *
 	 * @return void
 	 * @throws \MbeExceptions\ValidationException
 	 */
@@ -875,6 +932,31 @@ class Mbe_E_Link_Order_List_Table extends WP_List_Table {
 			if ( $this->helper->hasTracking( $post_id ) ) {
 				throw new \MbeExceptions\ValidationException( __( 'Please select only not shipped orders', 'mail-boxes-etc' ) );
 			}
+		}
+	}
+
+	/**
+	 * @param array $files
+	 * @param array $trackings
+	 *
+	 * @return string
+	 */
+	private function getFilesHtmlBlock( array $files, array $trackings ): string {
+		if ( empty( $files ) ) {
+			return '';
+		} else {
+			$html = '';
+			for ( $i = 0; $i < count( $files ); $i ++ ) {
+				$filename = __( 'Label', 'mail-boxes-etc' ) . " " . ( $i + 1 );
+				$path     = $this->helper->mbeUploadUrl() . DIRECTORY_SEPARATOR . $files[ $i ];
+				$html     .= "<a target='_blank' href=" . $path . " style='margin-bottom:5px;display: inline-block;'>" . $filename . "</a></br>";
+			}
+			if ( isset( $trackings[0] ) && ! $this->helper->isTrackingOpen( $trackings[0] ) ) {
+				$path = $this->helper->mbeUploadUrl() . DIRECTORY_SEPARATOR . 'MBE_' . $trackings[0] . "_closed.pdf";
+				$html .= "<a target='_blank' href=" . $path . " style='margin-bottom:5px;display: inline-block;'>" . __( 'Closure file', 'mail-boxes-etc' ) . "</a></br>";
+			}
+
+			return $html;
 		}
 	}
 

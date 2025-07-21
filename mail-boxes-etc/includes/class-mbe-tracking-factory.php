@@ -101,12 +101,7 @@ class mbe_tracking_factory
 			    );
 
 
-			    $products       = array();
-			    $p              = new stdClass;
-			    $p->SKUCode     = $product->get_sku();
-			    $p->Description = $shippingHelper->getProductTitleFromItem( $item );
-			    $p->Quantity    = 1;
-				$p->Currency    = $order->get_currency();
+			    $products = $shippingHelper->createProductsArrayForShipping($order, true, $item);
 
 			    if ( isset( $item["subtotal"] ) ) {
 				    $subTotal    = $item["subtotal"];
@@ -116,10 +111,7 @@ class mbe_tracking_factory
 				    $subTotalTax = $item["line_subtotal_tax"];
 			    }
 
-			    $p->Price = ( $subTotal ) / $itemQty;
-			    $products[] = $p;
-
-			    $goodsValue = $p->Price;
+			    $goodsValue = $products[0]->Price;
 
 			    if ( $shippingHelper->getShipmentsInsuranceMode() == Mbe_Shipping_Helper_Data::MBE_INSURANCE_WITH_TAXES ) {
 				    $insuranceValue = ( $subTotal + $subTotalTax ) / $itemQty;
@@ -138,12 +130,13 @@ class mbe_tracking_factory
 	    } elseif ( $shipmentConfigurationMode == Mbe_Shipping_Model_Carrier::SHIPMENT_CONFIGURATION_MODE_ONE_SHIPMENT_PER_SHOPPING_CART_WEIGHT_MULTI_PARCEL ) {
 //            $maxPackageWeight = $shippingHelper->getMaxPackageWeight();
 //            $boxesWeights = array();
-		    $products       = array();
 		    $goodsValue     = 0.0;
 		    $insuranceValue = 0.0;
 		    $codValue       = $orderTotal;
 
 			$logger->logVar( $order->get_items(), "order items" );
+
+			$products = $shippingHelper->createProductsArrayForShipping($order);
 
 		    foreach ( $order->get_items() as $item ) {
 			    $itemQty = $item['qty'];
@@ -151,17 +144,7 @@ class mbe_tracking_factory
 			    $product     = $shippingHelper->getProductFromItem( $item );
 			    $packageInfo = $shippingHelper->getPackageInfo( $product->get_sku() );
 
-
-			    $p              = new stdClass;
-			    $p->SKUCode     = $product->get_sku();
-			    $p->Description = $shippingHelper->getProductTitleFromItem( $item );
-			    $p->Quantity    = $itemQty;
-			    $p->Currency    = $order->get_currency();
-
-			    $weightPrice = self::getProductWeightPrice($product);
-
-			    $p->Price   = $weightPrice['price'];
-			    $products[] = $p;
+			    $weightPrice = $shippingHelper->getProductWeightPrice($product);
 
 			    for ( $i = 1; $i <= $itemQty; $i ++ ) {
 
@@ -174,7 +157,7 @@ class mbe_tracking_factory
 				    $goodsValue = $goodsValue + $weightPrice['price'];
 			    }
 
-			    $insuranceValue += self::getInsuranceValue($item);
+			    $insuranceValue += $shippingHelper->getInsuranceValue($item);
 		    }
 
 
@@ -207,11 +190,12 @@ class mbe_tracking_factory
 	    }
         elseif ($shipmentConfigurationMode == Mbe_Shipping_Model_Carrier::SHIPMENT_CONFIGURATION_MODE_ONE_SHIPMENT_PER_SHOPPING_CART_ITEMS_MULTI_PARCEL) {
             $boxesWeights = array();
-            $products = array();
             $numBoxes = 0;
             $goodsValue = 0.0;
 	        $insuranceValue = 0;
             $codValue = $orderTotal;
+
+            $products = $shippingHelper->createProductsArrayForShipping($order);
 
             foreach ($order->get_items() as $item) {
                 $itemQty = $item['qty'];
@@ -219,17 +203,7 @@ class mbe_tracking_factory
                 $id_product = $item['product_id'];
                 $product = $shippingHelper->getProductFromItem($item);
 
-
-                $p = new stdClass;
-                $p->SKUCode = $product->get_sku();
-                $p->Description = $shippingHelper->getProductTitleFromItem($item);
-                $p->Quantity = $itemQty;
-	            $p->Currency = $order->get_currency();
-
-	            $weightPrice = self::getProductWeightPrice($product);
-
-	            $p->Price   = $weightPrice['price'];
-	            $products[] = $p;
+                $weightPrice = $shippingHelper->getProductWeightPrice($product);
 
                 $logger->logVar($weightPrice['price'], "product price");
 
@@ -243,7 +217,7 @@ class mbe_tracking_factory
 	                $goodsValue = $goodsValue + $weightPrice['price'];
                 }
 
-               $insuranceValue += self::getInsuranceValue($item);
+               $insuranceValue += $shippingHelper->getInsuranceValue($item);
             }
 
             $logger->logVar($numBoxes, "boxes amount");
@@ -326,7 +300,7 @@ class mbe_tracking_factory
 		            $pickupAddress = $ws->getPickupAddressById($pickupData['pickup_address_id']);
 					if (empty($pickupAddress)) {
 						$message = 'Pickup address cannot be retrieved';
-						throw new Exception(__($message));
+						throw new Exception(__($message, 'mail-boxes-etc'));
 					}
 		            $senderInfo = [
 			            'company-name'      => $pickupAddress['TradeName'],
@@ -409,61 +383,14 @@ class mbe_tracking_factory
 
     public static function saveMultipleShipmentInfo($post_id, $key, $value)
     {
-	    if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
-		    $order = wc_get_order($post_id);
-		    $old_meta = $order->get_meta($key);
-		    if (!empty($old_meta)) {
-			    $old_meta = $old_meta . Mbe_Shipping_Helper_Data::MBE_SHIPPING_TRACKING_SEPARATOR . $value;
-				$order->update_meta_data($key,$old_meta);
-		    } else {
-				$order->add_meta_data($key, $value, true);
-		    }
-		    $order->save();
-	    } else {
-		    $old_meta = get_post_meta($post_id, $key, true);
-		    // Update post meta
-		    if (!empty($old_meta)) {
-			    $old_meta = $old_meta . Mbe_Shipping_Helper_Data::MBE_SHIPPING_TRACKING_SEPARATOR . $value;
-			    update_post_meta($post_id, $key, $old_meta);
-		    }
-		    else {
-			    add_post_meta($post_id, $key, $value, true);
-		    }
-	    }
-
-
+	    $helper = new Mbe_Shipping_Helper_Data();
+	    $helper->saveMultipleShipmentInfo($post_id, $key, $value);
     }
-
 
     public static function saveShipmentDocument($type, $content, $filename)
     {
         $helper = new Mbe_Shipping_Helper_Data();
-        $logger = new Mbe_Shipping_Helper_Logger();
-
-        $ext = "txt";
-        if ($type == "HTML") {
-            $ext = "html";
-        }
-        elseif ($type == "PDF") {
-            $ext = "pdf";
-        }
-        elseif ($type == "GIF") {
-            $ext = "gif";
-        }
-        $filePath = $helper->getShipmentFilePath($filename, $ext);
-        $saveResult = file_put_contents($filePath, $content);
-
-        $message = "Saving shipping document :" . $filePath;
-
-        if ($saveResult) {
-            $message .= " OK";
-        }
-        else {
-            $message .= " FAILURE";
-        }
-
-        $logger->log($message);
-		return $saveResult;
+		return $helper->saveShipmentDocument($type, $content, $filename);
     }
 
 	public static function getTrackingUrlBySystem()
@@ -495,35 +422,6 @@ class mbe_tracking_factory
 		}
 	}
 
-	protected static function getInsuranceValue($item)
-	{
-		$shippingHelper = new Mbe_Shipping_Helper_Data();
-
-		$subTotalKey     = isset($item["subtotal"]) ? "subtotal" : "line_subtotal";
-		$subTotalTaxKey  = isset($item["subtotal"]) ? "subtotal_tax" : "line_subtotal_tax";
-
-		$subTotal    = $item[$subTotalKey];
-		$subTotalTax = $item[$subTotalTaxKey];
-
-		if ($shippingHelper->getShipmentsInsuranceMode() === Mbe_Shipping_Helper_Data::MBE_INSURANCE_WITH_TAXES) {
-			return $subTotal + $subTotalTax;
-		}
-
-		return $subTotal;
-	}
-
-	protected static function getProductWeightPrice( $product )
-	{
-		if ( version_compare( WC()->version, '3', '>=' ) ) {
-			$productResult['weight'] = (float)$product->get_weight();
-			$productResult['price']  = (float)$product->get_price();
-		} else {
-			$productResult['weight'] = (float)$product->weight;
-			$productResult['price']  = (float)$product->price;
-		}
-
-		return $productResult;
-	}
 
 }
 

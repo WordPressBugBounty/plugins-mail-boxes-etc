@@ -437,6 +437,32 @@ class Mbe_Shipping_Model_Ws
 		return $returnTracking;
 	}
 
+	/**
+	 * @throws SoapFault
+	 * @throws \MbeExceptions\ValidationException
+	 * @throws \MbeExceptions\ApiRequestException
+	 */
+	public function advancedReturnShipping($toReturnId, $returnData)
+	{
+		$tracking = $this->helper->getTrackings($toReturnId);
+		if (empty($tracking)) {
+			throw new \MbeExceptions\ValidationException(__('Please select only one shipped order' , 'mail-boxes-etc'));
+		}
+
+		return $this->ws->advancedReturnShipping($toReturnId, $this->wsUrl, $this->wsUsername, $this->wsPassword, $this->system, $this->getShipperType(), $returnData);
+	}
+
+	public function getShipmentItems( $toReturnId ) {
+		$result = [];
+		$tracking = $this->helper->getTrackings($toReturnId)[0];
+		if (!empty($tracking)) {
+			$result = $this->ws->getShipmentItems($this->wsUrl, $this->wsUsername, $this->wsPassword, $this->system, $tracking);
+		}
+
+		return $result;
+
+	}
+
 	public function getPickupDefaultData() {
 		return $this->ws->getPickupDefaultData($this->wsUrl, $this->wsUsername, $this->wsPassword, $this->system);
 	}

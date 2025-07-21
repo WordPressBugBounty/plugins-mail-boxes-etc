@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2017-11-13 13:46+0000\n"
-"PO-Revision-Date: 2025-04-29 10:36+0200\n"
+"PO-Revision-Date: 2025-07-01 12:11+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.6\n"
 
 #: mail-boxes-etc.php:163
 msgid "Settings"
@@ -1783,3 +1783,33 @@ msgstr "Les frais de livraison incluent un montant de XXXX€ destiné à couvri
 
 msgid "The shipping cost includes an amount of XXXX€ which estimates customs duties and taxes applied to your shipment. Please be advised that additional charges may occur depending on your country's customs regulations"
 msgstr "Les frais de livraison incluent un montant estimatif de XXXX€, correspondant aux droits de douane et taxes susceptibles d’être appliqués à votre commande. Veuillez noter que des frais supplémentaires peuvent s’ajouter en fonction de la réglementation douanière de votre pays"
+
+msgid "Create return shipment - pickup"
+msgstr "Créer un envoi retour - collecte"
+
+msgid "Please select only one shipped order"
+msgstr "Veuillez sélectionner une seule commande expédiée"
+
+msgid "Please select only an order not already returned"
+msgstr "Veuillez sélectionner uniquement une commande non encore retournée"
+
+msgid "Return shipment"
+msgstr "Expédition de retour"
+
+msgid "Return shipment created"
+msgstr "Expédition de retour créée"
+
+msgid "Order not selected or not found"
+msgstr "Commande non sélectionnée ou introuvable"
+
+msgid "Recipient Address"
+msgstr "Adresse du destinataire"
+
+msgid "Sender Address"
+msgstr "Adresse de l’expéditeur"
+
+msgid "Pickup Details"
+msgstr "Détails de l’enlèvement"
+
+msgid "The field \"Province\" must not exceed 2 characters."
+msgstr "Le champ \"Province\" ne doit pas dépasser 2 caractères."

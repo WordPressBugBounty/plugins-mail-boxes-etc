@@ -267,7 +267,7 @@ class Mbe_E_Link_Pickup_Batches_List_Table extends WP_List_Table
             $html = '';
 	        if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
 		        $order = wc_get_order($item['orderid']);
-		        $url = $order->get_meta(Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_URL);
+		        $url = $order === false? '' : $order->get_meta(Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_URL);
 	        } else {
 		        $url = get_post_meta($item['orderid'], Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_URL, true);
 	        }
