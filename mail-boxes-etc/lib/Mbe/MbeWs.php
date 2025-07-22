@@ -615,7 +615,7 @@ class MbeWs {
 		$insurance = false, $insuranceValue = 0.0,
 		$senderInfo = [],
 		$pickupData = [],
-		$insuranceCode = null,
+		$insuranceCode = null
 	) {
 		$messageTitle = 'CREATE PICKUP SHIPPING';
 
@@ -725,7 +725,7 @@ class MbeWs {
 		$senderInfo = [],
 		$pickupData = [],
 		$insuranceCode = null,
-		$advancedReturnTracking = '',
+		$advancedReturnTracking = ''
 	) {
 		$messageTitle = 'CREATE ADVANCE RETURN PICKUP SHIPPING';
 

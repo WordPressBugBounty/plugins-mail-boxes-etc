@@ -27,7 +27,9 @@ class Mbe_Shipping_Csv_Editor extends WP_List_Table
 	/** Function to be overridden by the child class
 	 *
 	 */
-	public function get_remoteRows($orderBy = null, $order = 'asc'): array {}
+	public function get_remoteRows($orderBy = null, $order = 'asc'): array {
+		return [];
+	}
 
 	/**
 	 * Prepares the list of items for displaying.
