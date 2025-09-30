@@ -289,11 +289,13 @@ class Mbe_Shipping_Helper_Data
 
 	public function getMbeUsername()
 	{
+		// Data hashed with hash sha256
 		return $this->getOption(self::XML_PATH_MBE_USERNAME);
 	}
 
 	public function getMbePassword()
 	{
+		// Data hashed with password_hash
 		return $this->getOption(self::XML_PATH_MBE_PASSWORD);
 	}
 

@@ -32,7 +32,8 @@ class MbeSoapClient extends SoapClient {
 				'login' => $username,
 				'password' => $password,
 				'location' =>  preg_replace('/(\/e-link\.wsdl)$/i', '', $wsdl),
-				'cache_wsdl' => $wsdlcache?WSDL_CACHE_MEMORY:WSDL_CACHE_NONE,
+//              Removed as requested in the "Performance optimization through smart caching" document, so cache is always used
+//				'cache_wsdl' => $wsdlcache?WSDL_CACHE_MEMORY: WSDL_CACHE_NONE,
 			);
 
 			parent::__construct( $wsdl, $soapClientOptions );

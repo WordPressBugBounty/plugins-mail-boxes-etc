@@ -2,12 +2,12 @@
 /*
 	Plugin Name: MBE eShip
 	Description: Mail Boxes Etc. Online MBE Plugin integration for main Ecommerce platforms.
-	Version: 2.6.1
+	Version: 2.7.0
 	Author: MBE Worldwide S.p.A.
 	Author URI: https://www.mbeglobal.com/
 	Text Domain: mail-boxes-etc
     WC requires at least: 6.2
-    WC tested up to: 9.2
+    WC tested up to: 10.1
 	Domain Path: /languages
 */
 
@@ -950,8 +950,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 					$trackingNumber = trim( sanitize_text_field( $requestParameters[0]['mbeTrackingNumber'] ?? '' ) );
 					$mbeStatus      = $requestParameters[0]['mbeStatus'];
 
-					$trackingNumber = preg_replace( '/-\d(1,2)$/', '', $trackingNumber );
-					$logger->log( 'REST API Endpoint - Tracking Number: ' . $trackingNumber . ' - Status code: ' . $mbeStatus );
+                    $trackingNumber = preg_replace( '/-\d{1,2}\s*$/', '', $trackingNumber );
+                    $logger->log( 'REST API Endpoint - Tracking Number: ' . $trackingNumber . ' - Status code: ' . $mbeStatus );
 
 					$orders = [];
 					if ( ! empty( $trackingNumber ) ) {
@@ -1968,12 +1968,12 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 					if ( ! empty( $mbePwd ) && ! empty( $mbeUser ) ) {
 						// Set the option in case it wasn't saved before
-						$this->helper->setOption( Mbe_Shipping_Helper_Data::XML_PATH_MBE_USERNAME, $mbeUser );
-						$this->helper->setOption( Mbe_Shipping_Helper_Data::XML_PATH_MBE_PASSWORD, $mbePwd );
+						$this->helper->setOption( Mbe_Shipping_Helper_Data::XML_PATH_MBE_USERNAME, hash('sha256', $mbeUser) );
+						$this->helper->setOption( Mbe_Shipping_Helper_Data::XML_PATH_MBE_PASSWORD, password_hash($mbePwd, PASSWORD_DEFAULT) );
 						$this->helper->setOption( Mbe_Shipping_Helper_Data::XML_PATH_COUNTRY, $mbeCountry );
 						$this->helper->setWsUrl( $mbeCountry );
 
-						if ( $this->mbe_generate_api_key() ) {
+						if ( $this->mbe_generate_api_key($mbeUser, $mbePwd) ) {
 							// set advanced
 							$this->helper->setLoginMode( false );
 							update_option( 'mbe_shipping_admin_messages', [
@@ -2016,13 +2016,13 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				wp_redirect( wp_get_referer() );
 			}
 
-			public function mbe_generate_api_key() {
+			public function mbe_generate_api_key($mbeUser, $mbePwd) {
 				$logger = new Mbe_Shipping_Helper_Logger();
 				$logger->log( 'MBE Generate API KEY - Start' );
 				$status = 'success';
 				try {
 					$ws       = new MbeWs( true );
-					$response = $ws->generateApiKey( $this->helper->getMbeUsername(), $this->helper->getMbePassword() );
+					$response = $ws->generateApiKey( $mbeUser, $mbePwd );
 					if ( ! empty( $response ) ) {
 						$this->helper->setWsUsername( $response->apiKey );
 						$this->helper->setWsPassword( $response->apiSecret );
@@ -2828,24 +2828,26 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			}
 
 			function mbe_show_tax_and_duties_checkout_message() {
-				// If selected method is mbe and Tax&duty is not guaranteed or not DDP, show the message
-				$taxAndDutiesDAP   = WC()->session->get( 'mbe_tax_and_duties_show_info_text' ) ?? 'DAP';
-				$taxAndDutiesValue = WC()->session->get( 'mbe_tax_and_duties_info_text_value' ) ?? null;
+                if ($this->helper->isEnabledTaxAndDuties()) {
+                    // If the selected method is mbe and Tax&duty is not guaranteed or not DDP, show the message
+                    $taxAndDutiesDAP   = WC()->session->get( 'mbe_tax_and_duties_show_info_text' ) ?? 'DAP';
+                    $taxAndDutiesValue = WC()->session->get( 'mbe_tax_and_duties_info_text_value' ) ?? null;
 
-				switch ( $taxAndDutiesDAP ) {
-					case 'DAP':
-						echo wp_kses_post( '<div style="font-size: 1rem; padding: 1rem; background: #eee;">
+                    switch ( $taxAndDutiesDAP ) {
+                        case 'DAP':
+                            echo wp_kses_post( '<div style="font-size: 1rem; padding: 1rem; background: #eee;">
                                     ' . sprintf( __( 'As for all international shipments, customs requires a payment to clear goods through customs. It is a cost independent of our policies and tariffs. The <strong><span>%s</span></strong> figure shown may vary depending on the legislation of the country of destination.', 'mail-boxes-etc' ), wp_kses_post( wc_price( $taxAndDutiesValue ) ) ) . '
                               </div>' );
-						break;
-					case 'DDP':
-						echo wp_kses_post( '<div style="font-size: 1rem; padding: 1rem; background: #eee;">
+                            break;
+                        case 'DDP':
+                            echo wp_kses_post( '<div style="font-size: 1rem; padding: 1rem; background: #eee;">
                                 ' . sprintf( __( 'As with for all international shipments, customs requires a payment to clear goods through customs. It is a cost independent of our policies and tariffs, but the figure of <strong><span>%s</span></strong> charged ensures customs clearance, taken care of by us.', 'mail-boxes-etc' ), wp_kses_post( wc_price( $taxAndDutiesValue ) ) ) . '
                           </div>' );
-						break;
-					default:
-						break;
-				}
+                            break;
+                        default:
+                            break;
+                    }
+                }
 			}
 
 			function mbe_eship_check_tax_and_duties() {
