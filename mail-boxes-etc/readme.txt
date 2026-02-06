@@ -4,7 +4,7 @@ Tags: woocommerce,mbe,eShip,mailbox
 Requires at least: 6.2
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 2.7.0
+Stable tag: 2.7.2
 WC requires at least: 6.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -78,6 +78,9 @@ Yes. Please refer to http://php.net/manual/en/book.soap.php
 11. Shipping rates plugin choices in cart totals
 
 == Changelog ==
+= 2.7.1 =
+* Fix duplicate VAT value for delivery points
+
 = 2.7.0 =
 * Enhanced security
 
@@ -105,7 +108,7 @@ Yes. Please refer to http://php.net/manual/en/book.soap.php
 
 = 2.2.0 =
 * Delivery points service
-* Tax and Duties service
+* MBE Easy Duty service
 * Compatibility with WooCommerce HPOS
 * Minor fixes and improvements
 

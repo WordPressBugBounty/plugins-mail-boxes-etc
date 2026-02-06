@@ -1467,19 +1467,19 @@ msgstr "Wybrano punkt odbioru "
 msgid "Sandbox mode is active "
 msgstr "Aktywny jest tryb Sandbox "
 
-msgid "Tax & Duties service"
-msgstr "Obsługa podatków i ceł T&D"
+msgid "MBE Easy Duty service"
+msgstr "Obsługa podatków i ceł MBE Easy Duty"
 
-msgid "If you want to enable Tax and Duties service you need to set the \"automatic\" pickup management mode"
+msgid "If you want to enable MBE Easy Duty service you need to set the \"automatic\" pickup management mode"
 msgstr "Jeśli chcesz włączyć obsługę podatków i ceł, musisz ustawić \"automatyczny\" tryb zarządzania odbiorem"
 
-msgid "By enabling this option you can compute T&D price in case of Worldwide shipments and display the total amount on checkout phase"
-msgstr "Włączenie tej opcji pozwala obliczyć cenę T&D w przypadku przesyłek na całym świecie i wyświetlić łączną kwotę na etapie realizacji zakupu."
+msgid "By enabling this option you can compute MBE Easy Duty price in case of Worldwide shipments and display the total amount on checkout phase"
+msgstr "Włączenie tej opcji pozwala obliczyć cenę MBE Easy Duty w przypadku przesyłek na całym świecie i wyświetlić łączną kwotę na etapie realizacji zakupu."
 
-msgid "By choosing the Manual mode, it will be possible to route a pickup request manually, associating a specific pickup address and pickup data with one or more shipments. The Manual mode is not configurable when T&D service is active. By choosing the Automatic mode, pickup requests will be routed to a default address and with default pickup data"
-msgstr "Wybierając tryb ręczny, możliwe będzie ręczne skierowanie żądania odbioru, kojarząc określony adres odbioru i dane odbioru z jedną lub kilkoma przesyłkami. Trybu ręcznego nie można skonfigurować, gdy usługa T&D jest aktywna. Po wybraniu trybu automatycznego żądania odbioru będą kierowane na domyślny adres i z domyślnymi danymi odbioru"
+msgid "By choosing the Manual mode, it will be possible to route a pickup request manually, associating a specific pickup address and pickup data with one or more shipments. The Manual mode is not configurable when MBE Easy Duty service is active. By choosing the Automatic mode, pickup requests will be routed to a default address and with default pickup data"
+msgstr "Wybierając tryb ręczny, możliwe będzie ręczne skierowanie żądania odbioru, kojarząc określony adres odbioru i dane odbioru z jedną lub kilkoma przesyłkami. Trybu ręcznego nie można skonfigurować, gdy usługa MBE Easy Duty jest aktywna. Po wybraniu trybu automatycznego żądania odbioru będą kierowane na domyślny adres i z domyślnymi danymi odbioru"
 
-msgid "\"Tax & Duties service\" cannot be enabled with \"Mapping of Couriers and Shipping Services\" configuration mode"
+msgid "\"MBE Easy Duty service\" cannot be enabled with \"Mapping of Couriers and Shipping Services\" configuration mode"
 msgstr "\" Obsługa podatków i ceł\" nie może być włączona w trybie konfiguracji \"Mapowanie kurierów i usług wysyłkowych\"."
 
 msgid "As with for all international shipments, customs requires a payment to clear goods through customs. It is a cost independent of our policies and tariffs, but the figure of <strong><span>%s</span></strong> charged ensures customs clearance, taken care of by us."
@@ -1602,10 +1602,10 @@ msgid "Department address not set or not valid, shipment not created”"
 msgstr "Adres działu nie został ustawiony lub jest nieprawidłowy, przesyłka nie została utworzona"
 
 msgid "The shipping cost includes an amount of XXXX€ to cover customs duties and taxes applied to your shipment. Please be advised that additional charges may occur depending on your country's customs regulations"
-msgstr "T&D DDP"
+msgstr "MBE Easy Duty DDP"
 
 msgid "The shipping cost includes an amount of XXXX€ which estimates customs duties and taxes applied to your shipment. Please be advised that additional charges may occur depending on your country's customs regulations"
-msgstr "T&D DAP"
+msgstr "MBE Easy Duty DAP"
 
 msgid "Create return shipment - pickup"
 msgstr "Utwórz przesyłkę zwrotną - odbiór"

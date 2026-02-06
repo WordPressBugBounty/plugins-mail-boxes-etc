@@ -2,7 +2,7 @@
 /*
 	Plugin Name: MBE eShip
 	Description: Mail Boxes Etc. Online MBE Plugin integration for main Ecommerce platforms.
-	Version: 2.7.0
+	Version: 2.7.2
 	Author: MBE Worldwide S.p.A.
 	Author URI: https://www.mbeglobal.com/
 	Text Domain: mail-boxes-etc
@@ -536,7 +536,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 					'mbe_eship_check_pickup_default_options'
 				) );
 
-				// Check if Tax and Duties request activation flag is set and in case force the default value setter to run
+				// Check if MBE Easy Duty request activation flag is set and in case force the default value setter to run
 				add_action( 'mbe_eship_custom_settings_loaded', array(
 					$this,
 					'mbe_eship_check_tax_and_duties_default_options'
@@ -737,10 +737,10 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 					) );
 
 					// Update package payload for dynamic shipping cost base on selected delivery point
-					add_filter( 'woocommerce_cart_shipping_packages', array(
+					add_filter( 'woocommerce_package_rates', array(
 						$this,
 						'wf_mbe_delivery_point_update_package_for_cost_recalculation'
-					) );
+					), 10, 2 );
 
 					// Remove the delivery point session variable
 					add_action( 'woocommerce_checkout_order_created', array(
@@ -780,7 +780,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 						'mbe_eship_check_pickup_request_mode'
 					) );
 
-					// Check if the tax and duties must be disabled
+					// Check if the MBE Easy Duty must be disabled
 					add_action( 'woocommerce_settings_page_init', array( $this, 'mbe_eship_check_tax_and_duties' ) );
 
 					// Set or update pickup data on shipment creation
@@ -798,7 +798,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 						'mbe_select_department_address_pickup'
 					) );
 
-					// Show Tax and Duties in Checkout shortcodes
+					// Show MBE Easy Duty in Checkout shortcodes
 					add_action( 'woocommerce_review_order_before_submit', array(
 						$this,
 						'mbe_show_tax_and_duties_checkout_message'
@@ -1610,7 +1610,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 //						$gelServices .= "'" . $gel_service ."'" . ',';
 //					}
 
-					// Generate the prices parameter for GEL map initialization
+					// Generate the price parameter for GEL map initialization - manage taxes based on woocommerce settings
 					$prenegotiatedFound  = false;
 					$labelingFound       = false;
 					$deliveryPointPrices = [ 'currencyCode' => get_woocommerce_currency() ];
@@ -1642,6 +1642,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 									'labeling'      => ''
 								] ) as $key => $price
 							) {
+                                // Set the delivery point price adding taxes
 								$deliveryPointPrices[ $key ] += $this->helper->round( $price * $taxPercentage / 100 );
 							}
 						}
@@ -1722,32 +1723,32 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				}
 			}
 
-			function wf_mbe_delivery_point_update_package_for_cost_recalculation( $packages ) {
-
+			function wf_mbe_delivery_point_update_package_for_cost_recalculation( $rates, $package ) {
 				$deliveryPoint = WC()->session->get( 'mbe_delivery_point' ) ?? null;
 				if ( ! empty( $deliveryPoint ) ) {
-					if ( wc_tax_enabled() && WC()->cart->display_prices_including_tax() && ! empty( WC()->cart->get_shipping_taxes() ) && ( WC()->session->get( 'mbe_delivery_point_update' ) ?? false ) ) {
+                    $rateTaxes = $rates[WC()->session->get( 'chosen_shipping_methods' )[0]]->get_taxes();
+					if ( wc_tax_enabled() && WC()->cart->display_prices_including_tax() && ! empty( $rateTaxes ) && ( WC()->session->get( 'mbe_delivery_point_update' ) ?? false ) ) {
 						$logger = new Mbe_Shipping_Helper_Logger();
 						$logger->logVar( $deliveryPoint, 'Delivery Point recalculation - removing taxes from map cost' );
-						$deliveryPoint->cost = $this->helper->round( $this->helper->calculateNetPriceFromGross( $deliveryPoint->cost, $this->getShippingTaxPercentageFromCart() ) );
+						$deliveryPoint->cost = $this->helper->round( $this->helper->calculateNetPriceFromGross( $deliveryPoint->cost, $this->getShippingTaxPercentageFromCart($rateTaxes) ) );
 						$logger->logVar( $deliveryPoint, 'Delivery Point recalculation - taxes removed from map cost' );
 						WC()->session->set( 'mbe_delivery_point', $deliveryPoint );
 						WC()->session->set( 'mbe_delivery_point_update', null );
 						WC()->session->set( 'mbe_delivery_point_markup', $this->helper->getHandlingFee() );
 					}
 
-					// Always check if markup/handling fee has been changed (valid only in the same session) and update the delivery point cost and the session option
+					// Always check if the markup / handling fee has been changed (valid only in the same session) and update the delivery point cost and the session option
 					if ( $this->helper->getHandlingFee() !== WC()->session->get( 'mbe_delivery_point_markup' ) ) {
 						$deliveryPoint->cost = $deliveryPoint->cost - WC()->session->get( 'mbe_delivery_point_markup' ) + $this->helper->getHandlingFee();
 						WC()->session->set( 'mbe_delivery_point', $deliveryPoint );
 						WC()->session->set( 'mbe_delivery_point_markup', $this->helper->getHandlingFee() );
 					}
-					foreach ( $packages as $packageKey => $packageValue ) {
-						$packages[ $packageKey ]['delivery_point'] = $deliveryPoint;
-					}
+
+                    $package['delivery_point'] = $deliveryPoint;
+
 				}
 
-				return $packages;
+				return $rates;
 			}
 
 			function wf_mbe_delivery_point_set_meta_field_review( $data ) {
@@ -2797,7 +2798,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				// Check if Activation flag exists and if the default value setter didn't already run
 				if ( ! $helper->hasOption( Mbe_Shipping_Helper_Data::XML_PATH_TAX_DUTIES_ENABLED ) && $helper->getPermissionEnabledTaxAndDuties() ) {
 					update_option( MBE_SCHEMA_FLAG_OPTION, 'yes' );
-					$logger->log( 'Updating schema flag to run default value setter for Tax and Duties' );
+					$logger->log( 'Updating schema flag to run default value setter for MBE Easy Duty' );
 				}
 			}
 
@@ -2853,7 +2854,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			function mbe_eship_check_tax_and_duties() {
 				if ( $this->helper->mustDisableTaxAndDuties() && $this->helper->isEnabledTaxAndDuties() ) {
 					$this->helper->setEnabledTaxAndDuties( 0 );
-					$this->helper->logErrorAndSetWCAdminMessage( __( 'Tax and Duties cannot be enabled, please check the pickup mode and courier and services settings', 'mail-boxes-etc' ), new Mbe_Shipping_Helper_Logger() );
+					$this->helper->logErrorAndSetWCAdminMessage( __( 'MBE Easy Duty cannot be enabled, please check the pickup mode and courier and services settings', 'mail-boxes-etc' ), new Mbe_Shipping_Helper_Logger() );
 				}
 			}
 
@@ -2890,9 +2891,10 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			/**
 			 * @return array
 			 */
-			protected function getShippingTaxPercentageFromCart(): float {
+			protected function getShippingTaxPercentageFromCart($taxes = null): float {
 				$taxPercentage = 0;
-				foreach ( WC()->cart->get_shipping_taxes() as $key => $shipping_tax ) {
+                $rateTaxes = !empty(WC()->cart->get_shipping_taxes()) ? WC()->cart->get_shipping_taxes() : $taxes;
+				foreach ($rateTaxes as $key => $shipping_tax ) {
 					$taxPercentage += WC_Tax::get_rate_percent_value( $key );
 				}
 

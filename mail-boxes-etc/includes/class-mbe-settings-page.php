@@ -123,7 +123,7 @@ class Mbe_Settings extends WC_Settings_Page {
         }
 
         return array_merge($sections,[
-	        'mbe_taxduties'   => __( 'Tax and Duty', 'mail-boxes-etc'),
+	        'mbe_taxduties'   => __( 'MBE Easy Duty', 'mail-boxes-etc'),
             'mbe_markup'    => __( 'Markup', 'mail-boxes-etc' ),
             'mbe_debug'     => __( 'Debug', 'mail-boxes-etc' ),
         ]);
@@ -167,7 +167,7 @@ class Mbe_Settings extends WC_Settings_Page {
 
 	    if ($this->helper->isEnabledTaxAndDuties()) {
 		    $pickupRequestOptionsDisabled  = [ 'disabled' => 'disabled' ];
-		    $pickupRequestOptionsDescription = __('By choosing the Manual mode, it will be possible to route a pickup request manually, associating a specific pickup address and pickup data with one or more shipments. The Manual mode is not configurable when T&D service is active. By choosing the Automatic mode, pickup requests will be routed to a default address and with default pickup data', 'mail-boxes-etc');
+		    $pickupRequestOptionsDescription = __('By choosing the Manual mode, it will be possible to route a pickup request manually, associating a specific pickup address and pickup data with one or more shipments. The Manual mode is not configurable when MBE Easy Duty service is active. By choosing the Automatic mode, pickup requests will be routed to a default address and with default pickup data', 'mail-boxes-etc');
 	    } else {
 		    $pickupRequestOptionsDisabled = [];
 		    $pickupRequestOptionsDescription = __('By choosing the Manual mode, it will be possible to route a pickup request manually, associating a specific pickup address and pickup data with one or more shipments. By choosing the Automatic mode, pickup requests will be routed to a default address and with default pickup data', 'mail-boxes-etc' )
@@ -443,7 +443,7 @@ class Mbe_Settings extends WC_Settings_Page {
 				'title' => '',
 				'type'  => 'title',
 				'desc'  => __( 'For the plugin to work correctly, at least one option must be selected, and the services available are those set by the MBE Center on the MOL user page on HUB. Subsequently, it is possible to define a custom name for each MBE service selected in the field seen above. This set of fields is automatically generated dynamically, based on the values selected in the "Enabled MBE Services" list', 'mail-boxes-etc' )
-                . (true?"\n\n".__('"Tax & Duties service" cannot be enabled with "Mapping of Couriers and Shipping Services" configuration mode', 'mail-boxes-etc'):'') ,
+                . (true?"\n\n".__('"MBE Easy Duty service" cannot be enabled with "Mapping of Couriers and Shipping Services" configuration mode', 'mail-boxes-etc'):'') ,
 				'id'    => $sectionId
 			],
 
@@ -932,16 +932,16 @@ class Mbe_Settings extends WC_Settings_Page {
 
         if ($this->helper->mustDisableTaxAndDuties()) {
 	        $TaxAndDutiesOptionsDisabled  = [ 'disabled' => 'disabled' ];
-            $TaxAndDutiesDescription = __('If you want to enable Tax and Duties service you need to set the "automatic" pickup management mode', 'mail-boxes-etc');
+            $TaxAndDutiesDescription = __('If you want to enable MBE Easy Duty service you need to set the "automatic" pickup management mode', 'mail-boxes-etc');
         } else {
             $TaxAndDutiesOptionsDisabled = [];
-            $TaxAndDutiesDescription = __( 'By enabling this option you can compute T&D price in case of Worldwide shipments and display the total amount on checkout phase', 'mail-boxes-etc' );
+            $TaxAndDutiesDescription = __( 'By enabling this option you can compute MBE Easy Duty price in case of Worldwide shipments and display the total amount on checkout phase', 'mail-boxes-etc' );
         }
 
         $sectionId = 'mbe_taxduties_1';
 		$settings  = [
 			[
-				'title' => __( 'Tax and Duty', 'mail-boxes-etc' ),
+				'title' => __( 'MBE Easy Duty', 'mail-boxes-etc' ),
 				'type'  => 'title',
 				'desc'  => __( '', 'mail-boxes-etc' ),
 				'id'    => $sectionId,
@@ -951,7 +951,7 @@ class Mbe_Settings extends WC_Settings_Page {
         if(!$this->helper->getPermissionEnabledTaxAndDuties()) {
 	        $settings  = [
 		        [
-			        'title' => __( 'Tax and Duty', 'mail-boxes-etc' ),
+			        'title' => __( 'MBE Easy Duty', 'mail-boxes-etc' ),
 			        'type'  => 'title',
 			        'desc'  => __( 'At the moment this feature is not active, you will receive detailed information as soon as it is released.', 'mail-boxes-etc' ),
 			        'id'    => $sectionId,
@@ -960,7 +960,7 @@ class Mbe_Settings extends WC_Settings_Page {
         } else {
 	        $settings  = [
 		        [
-			        'title' => __( 'Tax and Duty', 'mail-boxes-etc' ),
+			        'title' => __( 'MBE Easy Duty', 'mail-boxes-etc' ),
 			        'type'  => 'title',
 			        'desc'  => __( '', 'mail-boxes-etc' ),
 			        'id'    => $sectionId,

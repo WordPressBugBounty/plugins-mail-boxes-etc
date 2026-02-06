@@ -1561,19 +1561,19 @@ msgstr "Punto di ritiro selezionato"
 msgid "Sandbox mode is active "
 msgstr "Modalità Sandbox attiva"
 
-msgid "Tax & Duties service"
+msgid "MBE Easy Duty service"
 msgstr "Servizio Tax & Duites"
 
-msgid "If you want to enable Tax and Duties service you need to set the \"automatic\" pickup management mode"
+msgid "If you want to enable MBE Easy Duty service you need to set the \"automatic\" pickup management mode"
 msgstr "Se si desidera attivare il servizio di imposte e tasse, è necessario impostare la modalità di gestione di pickup \"automatico\"."
 
-msgid "By enabling this option you can compute T&D price in case of Worldwide shipments and display the total amount on checkout phase"
-msgstr "Abilitando questa opzione è possibile calcolare il prezzo T&D in caso di spedizioni in tutto il mondo e visualizzare l'importo totale nella fase di checkout."
+msgid "By enabling this option you can compute MBE Easy Duty price in case of Worldwide shipments and display the total amount on checkout phase"
+msgstr "Abilitando questa opzione è possibile calcolare il prezzo MBE Easy Duty in caso di spedizioni in tutto il mondo e visualizzare l'importo totale nella fase di checkout."
 
-msgid "By choosing the Manual mode, it will be possible to route a pickup request manually, associating a specific pickup address and pickup data with one or more shipments. The Manual mode is not configurable when T&D service is active. By choosing the Automatic mode, pickup requests will be routed to a default address and with default pickup data"
-msgstr "Scegliendo la modalità Manuale, sarà possibile inoltrare una richiesta di prelievo manualmente, associando un indirizzo di prelievo e dati di prelievo specifici a una o più spedizioni. La modalità Manuale non è configurabile quando il servizio T&D è attivo. Scegliendo la modalità Automatica, le richieste di prelievo verranno inoltrate a un indirizzo predefinito e con dati di prelievo predefiniti."
+msgid "By choosing the Manual mode, it will be possible to route a pickup request manually, associating a specific pickup address and pickup data with one or more shipments. The Manual mode is not configurable when MBE Easy Duty service is active. By choosing the Automatic mode, pickup requests will be routed to a default address and with default pickup data"
+msgstr "Scegliendo la modalità Manuale, sarà possibile inoltrare una richiesta di prelievo manualmente, associando un indirizzo di prelievo e dati di prelievo specifici a una o più spedizioni. La modalità Manuale non è configurabile quando il servizio MBE Easy Duty è attivo. Scegliendo la modalità Automatica, le richieste di prelievo verranno inoltrate a un indirizzo predefinito e con dati di prelievo predefiniti."
 
-msgid "\"Tax & Duties service\" cannot be enabled with \"Mapping of Couriers and Shipping Services\" configuration mode"
+msgid "\"MBE Easy Duty service\" cannot be enabled with \"Mapping of Couriers and Shipping Services\" configuration mode"
 msgstr "Il \"Servizio imposte e tasse\" non può essere abilitato con la modalità di configurazione \"Mappatura dei corrieri e dei servizi di spedizione\"."
 
 msgid "As with for all international shipments, customs requires a payment to clear goods through customs. It is a cost independent of our policies and tariffs, but the figure of <strong><span>%s</span></strong> charged ensures customs clearance, taken care of by us."

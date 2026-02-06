@@ -162,7 +162,7 @@ class Mbe_Shipping_Helper_Data
 	const META_FIELD_DELIVERY_POINT_SERVICES = 'delivery_point_services';
 //	const META_FIELD_DELIVERY_POINT_MOL_SERVICES = 'delivery_point_mol_services';
 
-	// Tax and Duties
+	// MBE Easy Duty
 	const XML_PATH_TAX_DUTIES_ENABLED = 'mbe_taxduties_enabled';
 	const XML_PATH_TAX_DUTIES_MODE = 'mbe_taxduties_mode';
 	const MBE_TAX_AND_DUTIES_DDP = 1;
@@ -546,9 +546,9 @@ class Mbe_Shipping_Helper_Data
 	}
 
 	public function mustDisableTaxAndDuties() {
-		// If the Customer cannot use tax and duties, it must be disabled
-		// If the merchant can use the tax and duties functionality but the manual pickup is enabled, tax & duties must be disabled
-		// If it's "service mapping" is used, tax & duties must be disabled
+		// If the Customer cannot use MBE Easy Duty, it must be disabled
+		// If the merchant can use the MBE Easy Duty functionality but the manual pickup is enabled, MBE Easy Duty must be disabled
+		// If it's "service mapping" is used, MBE Easy Duty must be disabled
 		return ( !$this->getPermissionEnabledTaxAndDuties() ||
 				(
 					$this->getPermissionEnabledTaxAndDuties()

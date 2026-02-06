@@ -1638,20 +1638,20 @@ msgstr "Point d'enlèvement sélectionné "
 msgid "Sandbox mode is active "
 msgstr "Le mode Sandbox est actif"
 
-msgid "Tax & Duties service"
+msgid "MBE Easy Duty service"
 msgstr "Service des impôts et taxes"
 
-msgid "If you want to enable Tax and Duties service you need to set the \"automatic\" pickup management mode"
+msgid "If you want to enable MBE Easy Duty service you need to set the \"automatic\" pickup management mode"
 msgstr "Si vous souhaitez activer le service des taxes et droits de douane, vous devez définir le mode de gestion de l'enlèvement \"automatique\"."
 
-msgid "By enabling this option you can compute T&D price in case of Worldwide shipments and display the total amount on checkout phase"
-msgstr "En activant cette option, vous pouvez calculer le prix T&D pour les envois dans le monde entier et afficher le montant total lors de la phase de paiement."
+msgid "By enabling this option you can compute MBE Easy Duty price in case of Worldwide shipments and display the total amount on checkout phase"
+msgstr "En activant cette option, vous pouvez calculer le prix MBE Easy Duty pour les envois dans le monde entier et afficher le montant total lors de la phase de paiement."
 
-msgid "By choosing the Manual mode, it will be possible to route a pickup request manually, associating a specific pickup address and pickup data with one or more shipments. The Manual mode is not configurable when T&D service is active. By choosing the Automatic mode, pickup requests will be routed to a default address and with default pickup data"
-msgstr "En choisissant le mode manuel, il sera possible d'acheminer une demande d'enlèvement manuellement, en associant une adresse d'enlèvement spécifique et des données d'enlèvement à une ou plusieurs expéditions. Le mode manuel n'est pas configurable lorsque le service T&D est actif. En choisissant le mode Automatique, les demandes d'enlèvement seront acheminées vers une adresse par défaut et avec des données d'enlèvement par défaut."
+msgid "By choosing the Manual mode, it will be possible to route a pickup request manually, associating a specific pickup address and pickup data with one or more shipments. The Manual mode is not configurable when MBE Easy Duty service is active. By choosing the Automatic mode, pickup requests will be routed to a default address and with default pickup data"
+msgstr "En choisissant le mode manuel, il sera possible d'acheminer une demande d'enlèvement manuellement, en associant une adresse d'enlèvement spécifique et des données d'enlèvement à une ou plusieurs expéditions. Le mode manuel n'est pas configurable lorsque le service MBE Easy Duty est actif. En choisissant le mode Automatique, les demandes d'enlèvement seront acheminées vers une adresse par défaut et avec des données d'enlèvement par défaut."
 
-msgid "\"Tax & Duties service\" cannot be enabled with \"Mapping of Couriers and Shipping Services\" configuration mode"
-msgstr "Le service \"Tax & Duties\" ne peut pas être activé avec le mode de configuration \"Mapping of Couriers and Shipping Services\"."
+msgid "\"MBE Easy Duty service\" cannot be enabled with \"Mapping of Couriers and Shipping Services\" configuration mode"
+msgstr "Le service \"MBE Easy Duty\" ne peut pas être activé avec le mode de configuration \"Mapping of Couriers and Shipping Services\"."
 
 msgid "As with for all international shipments, customs requires a payment to clear goods through customs. It is a cost independent of our policies and tariffs, but the figure of <strong><span>%s</span></strong> charged ensures customs clearance, taken care of by us."
 msgstr "Comme pour tous les envois internationaux, les douanes exigent un paiement pour le dédouanement des marchandises. Il s'agit d'un coût indépendant de nos politiques et tarifs, mais le chiffre de <strong><span>%s</span></strong> facturé assure le dédouanement, pris en charge par nous."

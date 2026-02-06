@@ -1618,20 +1618,20 @@ msgstr "Punto de recogida seleccionado."
 msgid "Sandbox mode is active "
 msgstr "El modo Sandbox está activo."
 
-msgid "Tax & Duties service"
-msgstr "Servicio Tax & Duties "
+msgid "MBE Easy Duty service"
+msgstr "Servicio MBE Easy Duty "
 
-msgid "If you want to enable Tax and Duties service you need to set the \"automatic\" pickup management mode"
-msgstr "Si desea activar el servicio de Tax & Duties , debe establecer el modo \"automático\" de gestión de la recogida."
+msgid "If you want to enable MBE Easy Duty service you need to set the \"automatic\" pickup management mode"
+msgstr "Si desea activar el servicio de MBE Easy Duty , debe establecer el modo \"automático\" de gestión de la recogida."
 
-msgid "By enabling this option you can compute T&D price in case of Worldwide shipments and display the total amount on checkout phase"
-msgstr "Activando esta opción puede calcular el precio de T&D en caso de envíos a todo el mundo y mostrar el importe total en la fase de pago."
+msgid "By enabling this option you can compute MBE Easy Duty price in case of Worldwide shipments and display the total amount on checkout phase"
+msgstr "Activando esta opción puede calcular el precio de MBE Easy Duty en caso de envíos a todo el mundo y mostrar el importe total en la fase de pago."
 
-msgid "By choosing the Manual mode, it will be possible to route a pickup request manually, associating a specific pickup address and pickup data with one or more shipments. The Manual mode is not configurable when T&D service is active. By choosing the Automatic mode, pickup requests will be routed to a default address and with default pickup data"
-msgstr "Seleccionando el modo Manual, será posible encaminar una solicitud de recogida manualmente, asociando una dirección de recogida y unos datos de recogida concretos a uno o varios envíos. El modo Manual no es configurable cuando el servicio T&D está activo. Seleccionando el modo Automático, las solicitudes de recogida se encaminarán a una dirección por defecto y con unos datos de recogida por defecto  "
+msgid "By choosing the Manual mode, it will be possible to route a pickup request manually, associating a specific pickup address and pickup data with one or more shipments. The Manual mode is not configurable when MBE Easy Duty service is active. By choosing the Automatic mode, pickup requests will be routed to a default address and with default pickup data"
+msgstr "Seleccionando el modo Manual, será posible encaminar una solicitud de recogida manualmente, asociando una dirección de recogida y unos datos de recogida concretos a uno o varios envíos. El modo Manual no es configurable cuando el servicio MBE Easy Duty está activo. Seleccionando el modo Automático, las solicitudes de recogida se encaminarán a una dirección por defecto y con unos datos de recogida por defecto  "
 
-msgid "\"Tax & Duties service\" cannot be enabled with \"Mapping of Couriers and Shipping Services\" configuration mode"
-msgstr "El \"Servicio de Tax & Duties \" no puede activarse con el modo de configuración \"Asignación de servicios de mensajería y envío\"."
+msgid "\"MBE Easy Duty service\" cannot be enabled with \"Mapping of Couriers and Shipping Services\" configuration mode"
+msgstr "El \"Servicio de MBE Easy Duty \" no puede activarse con el modo de configuración \"Asignación de servicios de mensajería y envío\"."
 
 msgid "As with for all international shipments, customs requires a payment to clear goods through customs. It is a cost independent of our policies and tariffs, but the figure of <strong><span>%s</span></strong> charged ensures customs clearance, taken care of by us."
 msgstr "Como para todos los envíos internacionales, la aduana exige un pago para despachar las mercancías en aduana. Se trata de un coste independiente de nuestras políticas y tarifas, pero la cifra de <strong><span>%s</span></strong> cobrada garantiza el despacho de aduanas, del que nos encargamos nosotros."

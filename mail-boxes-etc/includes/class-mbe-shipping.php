@@ -63,7 +63,7 @@ class mbe_shipping_method extends WC_Shipping_Method {
 						}
 					}
 
-					// Add Tax and Duties data, if any
+					// Add MBE Easy Duty data, if any
 					if($this->shippingHelper->isEnabledTaxAndDuties() && !empty( $r['tax_and_duties_data'] ) ) {
 						$rate['meta_data']  = array_merge($rate['meta_data'], [
 							'tax_and_duties_data'      => $r['tax_and_duties_data'],

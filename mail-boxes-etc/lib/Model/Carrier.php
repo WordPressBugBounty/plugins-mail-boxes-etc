@@ -351,7 +351,7 @@ class Mbe_Shipping_Model_Carrier {
 						}
 					}
 
-					// Add Tax and Duties data
+					// Add MBE Easy Duty data
 					if($this->shippingHelper->isEnabledTaxAndDuties() && isset($shipment->CustomDutiesGuaranteed)) {
 						$current->tax_and_duties_data = [
 							'custom_duties_guaranteed' => $shipment->CustomDutiesGuaranteed,
