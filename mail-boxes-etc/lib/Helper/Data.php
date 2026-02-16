@@ -162,6 +162,9 @@ class Mbe_Shipping_Helper_Data
 	const META_FIELD_DELIVERY_POINT_SERVICES = 'delivery_point_services';
 //	const META_FIELD_DELIVERY_POINT_MOL_SERVICES = 'delivery_point_mol_services';
 
+	// Shipment rate mbe service id
+	const META_FIELD_METHOD_MBE_SERVICE_ID = 'method_mbe_service_id';
+
 	// MBE Easy Duty
 	const XML_PATH_TAX_DUTIES_ENABLED = 'mbe_taxduties_enabled';
 	const XML_PATH_TAX_DUTIES_MODE = 'mbe_taxduties_mode';
@@ -748,6 +751,10 @@ class Mbe_Shipping_Helper_Data
 		return $isDeleted;
 	}
 
+	public function setOrderMethodMbeServiceId( $orderId, $value ) {
+		return $this->updateOrderItemShippingMeta($orderId, $value, self::META_FIELD_METHOD_MBE_SERVICE_ID );
+	}
+
 	public function setOrderDeliveryPointCustomData( $orderId, $value ) {
 		return $this->updateOrderItemShippingMeta($orderId, $value, self::META_FIELD_DELIVERY_POINT_CUSTOM_DATA);
 	}
@@ -755,6 +762,11 @@ class Mbe_Shipping_Helper_Data
 	public function setOrderDeliveryPointShipment( $orderId, $value ) {
 		return $this->updateOrderItemShippingMeta($orderId, $value, self::META_FIELD_DELIVERY_POINT_SHIPMENT);
 	}
+
+	public function getOrderMethodMbeServiceId( $orderId ) {
+		return $this->getOrderItemShippingMeta($orderId, self::META_FIELD_METHOD_MBE_SERVICE_ID );
+	}
+
 
 	public function getOrderDeliveryPointCustomData( $orderId ) {
 		return $this->getOrderItemShippingMeta($orderId, self::META_FIELD_DELIVERY_POINT_CUSTOM_DATA);
@@ -839,13 +851,14 @@ class Mbe_Shipping_Helper_Data
 
 	public function isPickupShipped( $post_id ) {
 		if(empty($post_id)) {return false;}
+		return !empty($this->getOrderItemShippingMeta($post_id, Mbe_Shipping_Helper_Data::META_FIELD_IS_PICKUP_SHIPPING));
 		// $post_id = is_null($post_id) ? (int)$_GET['post'] : (int)$post_id;
 
-		$order = wc_get_order($post_id);
-		foreach ( $order->get_items( 'shipping' ) as $orderItemId => $orderItemData ) {
-			$value = wc_get_order_item_meta( $orderItemId, Mbe_Shipping_Helper_Data::META_FIELD_IS_PICKUP_SHIPPING, true );
-		}
-		return !empty($value);
+//		$order = wc_get_order($post_id);
+//		foreach ( $order->get_items( 'shipping' ) as $orderItemId => $orderItemData ) {
+//			$value = wc_get_order_item_meta( $orderItemId, Mbe_Shipping_Helper_Data::META_FIELD_IS_PICKUP_SHIPPING, true );
+//		}
+//		return !empty($value);
 	}
 
 	public function setIsPickupShipped( $orderId, $value = false ) {
@@ -1339,47 +1352,58 @@ class Mbe_Shipping_Helper_Data
 	 */
     public function getShippingMethod($order)
     {
-        if (version_compare(WC()->version, '2.1', '>=')) {
-            $order_item_id = null;
-            foreach ($order->get_items('shipping') as $key => $item) {
-                $order_item_id = $key;
-            }
-	        try {
-		        if ( $order_item_id ) {
-			        $shippingMethod = wc_get_order_item_meta( $order_item_id, 'method_id', true );
-			        if ( $this->isEnabledCustomMapping() ) {
-				        $customMapping = $this->getOption( 'mbe_custom_mapping_' . $shippingMethod );
-				        if ( ! empty( $customMapping ) ) {
-					        $shippingMethod = $shippingMethod . ':' . $customMapping;
-				        }
-			        }
-			        return $shippingMethod;
-		        } else {
-			        return false;
-		        }
-	        } catch (Exception $e) {
-				return false;
-	        }
-        }
+	    if (version_compare(WC()->version, '2.1', '>=') ) {
+			// Get the new shipping item meta-data
+		    $shippingMethod = $this->getOrderMethodMbeServiceId($order->get_id());
+		    // Retro-compatibility with existing orders
+		    if(empty($shippingMethod)) {
+			    $order_item_id = null;
+				/** @var WC_Order $order */
+			    foreach ( $order->get_items( 'shipping' ) as $key => $item ) {
+				    $order_item_id = $key;
+			    }
+			    try {
+				    if ( $order_item_id ) {
+					    $shippingMethod = wc_get_order_item_meta( $order_item_id, 'method_id', true );
+					    if ( $this->isEnabledCustomMapping() ) {
+						    $customMapping = $this->getOption( 'mbe_custom_mapping_' . $shippingMethod );
+						    if ( ! empty( $customMapping ) ) {
+							    $shippingMethod = $shippingMethod . ':' . $customMapping;
+						    }
+					    }
+
+					    return $shippingMethod;
+				    } else {
+					    return false;
+				    }
+			    } catch ( Exception $e ) {
+				    return false;
+			    }
+		    }
+		    return $shippingMethod;
+	    }
     }
 
-    public function getServiceName($order)
-    {
-        if (version_compare(WC()->version, '2.1', '>=')) {
-            foreach ($order->get_items('shipping') as $key => $item) {
-                return $item['name'];
-            }
-        }
-        else {
-	        $orderId = $this->getOrderId($order);
-	        if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
-		        $order = wc_get_order($orderId);
-		        return $order===false?'':$order->get_meta('_shipping_method_title');
-	        } else {
-		        return get_post_meta($orderId, '_shipping_method_title', true);
-	        }
-        }
+    public function getServiceName($order) {
+	    return trim( explode( '^', $this->getOrderShippingMethodLabel( $order ) )[0] );
     }
+
+	public function getOrderShippingMethodLabel($order) {
+		if (version_compare(WC()->version, '2.1', '>=')) {
+			foreach ($order->get_items('shipping') as $key => $item) {
+				return $item['name'];
+			}
+		}
+		else {
+			$orderId = $this->getOrderId($order);
+			if ( \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
+				$order = wc_get_order($orderId);
+				return $order===false?'':$order->get_meta('_shipping_method_title');
+			} else {
+				return get_post_meta($orderId, '_shipping_method_title', true);
+			}
+		}
+	}
 
 	public function getOrderId($order)
 	{

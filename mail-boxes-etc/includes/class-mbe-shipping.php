@@ -43,18 +43,20 @@ class mbe_shipping_method extends WC_Shipping_Method {
 				} );
 
 				foreach ( $rates as $r ) {
-					// FIXES woocommerce 3.4 compatibility
-					$this->id = MBE_ESHIP_ID . ':' . $r['method'];
+
+					$rateMetaData = [];
+
 					$rate     = array(
 						'id'    => $this->id . ':' . $r['method'],
 						'label' => $r['label'],
 						'cost'  => $r['price'],
-						//                'calc_tax' => 'per_item'
 					);
-					$rate['meta_data'] = [];
+
+					$rateMetaData['method_mbe_service_id'] = $this->id . ':' . $r['method'];
+
 					// Add delivery point services data, if any
 					if(!empty( $r['delivery_point_services'] ) ) {
-						$rate['meta_data']  = array_merge($rate['meta_data'], [
+						$rateMetaData  = array_merge($rateMetaData, [
 							'delivery_point_services'     => $r['delivery_point_services'],
 						]);
 						// Update the method price if we are recalculating fares due to a delivery point selection
@@ -65,10 +67,13 @@ class mbe_shipping_method extends WC_Shipping_Method {
 
 					// Add MBE Easy Duty data, if any
 					if($this->shippingHelper->isEnabledTaxAndDuties() && !empty( $r['tax_and_duties_data'] ) ) {
-						$rate['meta_data']  = array_merge($rate['meta_data'], [
+						$rateMetaData  = array_merge($rateMetaData, [
 							'tax_and_duties_data'      => $r['tax_and_duties_data'],
 						]);
 					}
+
+					if(!empty($rateMetaData)) $rate['meta_data'] = $rateMetaData;
+
 					// Register the rate
 					$this->add_rate( $rate );
 				}

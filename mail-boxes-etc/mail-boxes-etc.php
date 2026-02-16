@@ -2,7 +2,7 @@
 /*
 	Plugin Name: MBE eShip
 	Description: Mail Boxes Etc. Online MBE Plugin integration for main Ecommerce platforms.
-	Version: 2.7.2
+	Version: 2.7.3
 	Author: MBE Worldwide S.p.A.
 	Author URI: https://www.mbeglobal.com/
 	Text Domain: mail-boxes-etc
@@ -724,11 +724,17 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 						'wf_mbe_delivery_point_set_shipping_address'
 					) );
 
-					// Set Delivery Point shipment metafield value for the "old" shortcode checkout
+					// Set Delivery Point shipment meta-field value for the "old" shortcode checkout
 					add_action( 'woocommerce_checkout_update_order_meta', array(
 						$this,
 						'wf_mbe_delivery_point_set_meta_field'
 					), 10, 2 );
+
+                    // Set Order shipping method code as a meta-field for the "old" shortcode checkout
+                    add_action( 'woocommerce_checkout_create_order_shipping_item', array(
+                            $this,
+                            'wf_mbe_shipping_method_code_set_meta_field'
+                    ), 10, 4 );
 
 
 					add_action( 'woocommerce_checkout_update_order_review', array(
@@ -1722,6 +1728,18 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 					$order->save();
 				}
 			}
+
+            function wf_mbe_shipping_method_code_set_meta_field( $item, $package_key, $package, $order) {
+                $helper = new Mbe_Shipping_Helper_Data();
+                $logger = new Mbe_Shipping_Helper_Logger();
+                $item_meta = $item->get_meta('method_mbe_service_id'); /// get shipping method meta-data value
+                if($item_meta) {
+                    return $helper->setOrderMethodMbeServiceId($order->get_id(), $item_meta, 'method_mbe_service_id');
+                } else {
+                    $logger->log(__( 'Missing Mbe Service ID in rates meta data', 'mail-boxes-etc'));
+                    return false;
+                }
+            }
 
 			function wf_mbe_delivery_point_update_package_for_cost_recalculation( $rates, $package ) {
 				$deliveryPoint = WC()->session->get( 'mbe_delivery_point' ) ?? null;
@@ -2865,6 +2883,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 						Mbe_Shipping_Helper_Data::META_FIELD_DELIVERY_POINT_SHIPMENT,
 						Mbe_Shipping_Helper_Data::META_FIELD_PICKUP_CUSTOM_DATA_ID,
 						Mbe_Shipping_Helper_Data::META_FIELD_IS_PICKUP_SHIPPING,
+                        Mbe_Shipping_Helper_Data::META_FIELD_METHOD_MBE_SERVICE_ID,
 						Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_MBE_STATUS,
 						Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_RETURN_TRACKING_MBE_STATUS,
 						Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_RETURN_TRACKING_NUMBER,
