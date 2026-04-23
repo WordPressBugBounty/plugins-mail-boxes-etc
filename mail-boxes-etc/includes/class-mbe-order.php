@@ -327,6 +327,11 @@ class Mbe_E_Link_Order_List_Table extends WP_List_Table {
 			$actions['creation'] = __( 'Shipment creation (no pickup)', 'mail-boxes-etc' );
 		}
 
+		if ($this->helper->canEditDynamicPackageData()
+		) {
+			$actions['edit_packages'] = __( 'Edit packages', 'mail-boxes-etc' );
+		}
+
 		if ( $this->helper->canSelectDepartmentForOrders() ) {
 			$actions['department'] = __( 'Associate department data', 'mail-boxes-etc' );
 		}
@@ -363,6 +368,20 @@ class Mbe_E_Link_Order_List_Table extends WP_List_Table {
 					$this->processShipmentCreation( $post_ids );
 					wp_redirect( admin_url( 'admin.php?page=' . WOOCOMMERCE_MBE_TABS_PAGE ) );
 					exit;
+					break;
+				case 'edit_packages':
+					try {
+						$this->checkIfAlreadyShipped( $post_ids );
+						// Open the default data editor and add details to the order
+						do_action( MBE_ESHIP_ID . '_edit_dynamic_packages_data', $post_ids );
+					} catch ( \MbeExceptions\ValidationException $e ) {
+						$this->logger->log( 'MBE Edit dynamic packages - ' . $e->getMessage() );
+						$this->helper->setWpAdminMessages( [
+							'message' => urlencode( $e->getMessage() ),
+							'status'  => urlencode( 'error' )
+						] );
+						break;
+					}
 					break;
 				case 'department':
 					try {

@@ -175,6 +175,9 @@ class Mbe_Shipping_Helper_Data
 	const XML_PATH_DEPARTMENTS_DEFAULT_ADDRESS = "default_department_address";
 	const SHIPMENT_SOURCE_DEPARTMENTS_ADDRESS = "woocommerce_mbe_department_address";
 
+	// Dynamic Packages
+	const META_FIELD_DYNAMIC_PACKAGE_DATA = "woocommerce_mbe_dynamic_package_data";
+
 	protected $csv_package_model;
 	protected $csv_package_product_model;
 	protected $_options;
@@ -1670,6 +1673,25 @@ class Mbe_Shipping_Helper_Data
 		} else {
 			return $this->getOrderItemShippingMeta($orderId, self::SHIPMENT_SOURCE_DEPARTMENTS_ADDRESS);
 		}
+	}
+
+	public function getOrderDynamicPackageData( $orderId ) {
+		return $this->getOrderItemShippingMeta($orderId, self::META_FIELD_DYNAMIC_PACKAGE_DATA);
+	}
+
+	public function setOrderDynamicPackageData($orderId, $dynamicPackageData) {
+		$this->updateOrderItemShippingMeta($orderId,$dynamicPackageData,self::META_FIELD_DYNAMIC_PACKAGE_DATA);
+		return true;
+	}
+
+	public function hasDynamicPackageData( $orderId ) {
+		return json_decode($this->getOrderDynamicPackageData($orderId)) !== null;
+	}
+
+	public function canEditDynamicPackageData(): bool {
+		return !( $this->isCreationAutomatically()) &&
+		$this->isCsvStandardPackageEnabled() &&
+		$this->getShipmentConfigurationMode() == Mbe_Shipping_Model_Carrier::SHIPMENT_CONFIGURATION_MODE_ONE_SHIPMENT_PER_SHOPPING_CART_WEIGHT_MULTI_PARCEL;
 	}
 
     public function getShippingMethodCustomLabel($methodCode)

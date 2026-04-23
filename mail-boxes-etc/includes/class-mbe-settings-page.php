@@ -82,7 +82,7 @@ class Mbe_Settings extends WC_Settings_Page {
 		     && $current_section === 'mbe_courier' ) {
 			$this->csv_shipping_to_table->run();
 		}
-		if ( $this->helper->isCsvStandardPackageEnabled() && $current_section === 'mbe_packages' ) {
+		if ( $this->helper->isCsvStandardPackageEnabled() && $current_section === 'mbe_dynamic_packages' ) {
 			$this->csv_package_to_table->run();
 			$this->csv_package_product_to_table->run();
 		}
@@ -111,11 +111,12 @@ class Mbe_Settings extends WC_Settings_Page {
 	protected function get_own_sections() {
 		$sections =
 			[
-				''              => __( 'Welcome', 'mail-boxes-etc' ),
-				'mbe_general'   => __( 'General', 'mail-boxes-etc' ),
-				'mbe_courier'   => __( 'Couriers and services', 'mail-boxes-etc' ),
-				'mbe_packages'  => __( 'Packages', 'mail-boxes-etc' ),
-				'mbe_shipments' => __( 'Shipping', 'mail-boxes-etc' ),
+                ''                     => __( 'Welcome', 'mail-boxes-etc' ),
+                'mbe_general'          => __( 'General', 'mail-boxes-etc' ),
+                'mbe_courier'          => __( 'Couriers and services', 'mail-boxes-etc' ),
+                'mbe_packages'         => __( 'Packages', 'mail-boxes-etc' ),
+                'mbe_dynamic_packages' => __( 'Dynamic Packages', 'mail-boxes-etc' ),
+                'mbe_shipments'        => __( 'Shipping', 'mail-boxes-etc' ),
             ];
 
         if($this->helper->isEnabledThirdPartyPickups()) {
@@ -581,7 +582,7 @@ class Mbe_Settings extends WC_Settings_Page {
 				$configDescr = __( "Introductory description of MBE shipments: \n - MBE Standard: is a service that offers you the possibility to ship in Italy and throughout Europe and is the ideal solution for individuals and companies who want to guarantee their customers reliability and punctuality.\n - MBE Express: is a service that guarantees the delivery of your shipments, in Italy, on average in two working days (within 48 hours of collection)\n - MBE Delivery Point: it is a service that allows you to send objects, packages, documents and much more, in a convenient and fast way from an MBE Center of your choice, to one of the many authorized and authorized collection points, both in Italy than abroad.", 'mail-boxes-etc' );
 				// Custom label for selected services
 				$configFields = $this->getCustomLabelSetting( $this->helper->getAllowedShipmentServicesArray() );
-                // Threshold for insurance // TODO : dynamic fields for services
+                // Threshold for insurance
 				$configFields [] = [
 					'id'    => $this->id . '_' . 'mbe_shipments_csv_insurance_min',
 					'title' => __( 'Minimum threshold for the services '. $this->helper->getSelectedInsuranceLabel() , 'mail-boxes-etc' ),
@@ -672,140 +673,160 @@ class Mbe_Settings extends WC_Settings_Page {
 			];
 		}
 		$settings        = array_merge( $settings, $standardSizes );
-		$settings[]      = [
-			'id'      => $this->id . '_' . 'use_packages_csv',
-			'title'   => __( 'Csv for standard packages', 'mail-boxes-etc' ),
-			'type'    => 'select',
-			'options' => [ 0 => __( 'No', 'mail-boxes-etc' ), 1 => __( 'Yes', 'mail-boxes-etc' ) ],
-			'label'   => __( 'Csv for standard packages', 'mail-boxes-etc' ),
-			'desc'    => __( 'Load the standard packages via csv file', 'mail-boxes-etc' ),
-            'desc_tip' => true,
-			'default' => 0,
-		];
+
 		$settings[] = [ 'type' => 'sectionend', 'id' => $sectionId ];
-		$advancedSection = [];
-		$csvSection      = [];
 
 		if ( $this->helper->getShipmentConfigurationMode() == 2 ) {
-
-			$sectionId  = 'mbe_packages_csv';
-			if ( $this->helper->isCsvStandardPackageEnabled() ) {
-				$csvButtons = [
-					[
-						'id'    => $this->id . '_' . 'packages_csv',
-						'title' => __( 'Packages via csv - File upload', 'mail-boxes-etc' ),
-						'type'  => 'file',
-					],
-					[
-						'id'    => $this->id . '_' . 'packages_csv_file',
-						'title' => '',
-						'type'  => 'hidden'
-					],
-					[
-						'id'                => $this->id . '_' . 'packages_csv_download',
-						'title'             => '',
-						'type'              => 'mbebutton',
-						'caption'           => __( 'Download current file' , 'mail-boxes-etc' ),
-						'class'             => ( !is_file( $this->helper->getCurrentCsvPackagesDir()  ) ? 'disabled ' : '' ) . 'button-secondary',
-						'confirm'           => false,
-						'onclick'           => get_admin_url() . "admin-post.php?action=mbe_download_standard_package_file&mbe_filetype=package&nonce="  . wp_create_nonce( 'mbe_download_standard_package_file' ),
-						'blank'             => true,
-						'custom_attributes' => [ ( !is_file( $this->helper->getCurrentCsvPackagesDir()  ) ? 'disabled' : '' ) => '' ]
-					],
-					[
-						'id'      => $this->id . '_' . 'packages_template_download',
-						'title'   => '',
-						'type'    => 'mbebutton',
-						'caption' => __( 'Download template file', 'mail-boxes-etc' ),
-						'class'   => 'button-secondary',
-						'confirm' => false,
-						'onclick' => get_admin_url() . "admin-post.php?action=mbe_download_standard_package_file&mbe_filetype=package-template&nonce="  . wp_create_nonce( 'mbe_download_standard_package_file' ),
-						'blank'   => true,
-					],
-					[
-						'id'    => $this->id . '_' . 'packages_product_csv',
-						'title' => __( 'Packages for products via csv - File upload', 'mail-boxes-etc' ),
-						'type'  => 'file',
-					],
-					[
-						'id'    => $this->id . '_' . 'packages_product_csv_file',
-						'title' => '',
-						'type'  => 'hidden',
-					],
-					[
-						'id'                => $this->id . '_' . 'packages_product_csv_download',
-						'title'             => '',
-						'type'              => 'mbebutton',
-						'caption'           => __( 'Download current file', 'mail-boxes-etc' ),
-						'class'             => ( !is_file($this->helper->getCurrentCsvPackagesProductDir() ) ? 'disabled ' : '' ) . 'button-secondary',
-						'confirm'           => false,
-						'onclick'           => get_admin_url() . "admin-post.php?action=mbe_download_standard_package_file&mbe_filetype=package-product&nonce="  . wp_create_nonce( 'mbe_download_standard_package_file' ),
-						'blank'             => true,
-						'custom_attributes' => [ ( !is_file( $this->helper->getCurrentCsvPackagesProductDir() ) ? 'disabled' : '' ) => '' ]
-					],
-					[
-						'id'      => $this->id . '_' . 'packages_product_template_download',
-						'title'   => '',
-						'type'    => 'mbebutton',
-						'caption' => __( 'Download template file', 'mail-boxes-etc' ),
-						'class'   => 'button-secondary',
-						'confirm' => false,
-						'onclick' => get_admin_url() . "admin-post.php?action=mbe_download_standard_package_file&mbe_filetype=package-product-template&nonce="  . wp_create_nonce( 'mbe_download_standard_package_file' ),
-						'blank'   => true,
-					],
-				];
-
-				$csvSection = [
-					[
-						'title' => __( 'CSV for standard packages', 'mail-boxes-etc' ),
-						'type'  => 'title',
-						'desc'  => __( '', 'mail-boxes-etc' ),
-						'id'    => $sectionId,
-					],
-				];
-				$csvSection = array_merge( $csvSection, $csvButtons, [
-					[
-						'type' => 'sectionend',
-						'id'   => $sectionId
-					]
-				] );
-
-				$sectionId       = 'mbe_packages_advanced';
-				$advancedSection = [
-					[
-						'title' => __( 'Advanced configuration', 'mail-boxes-etc' ),
-						'type'  => 'title',
-						'desc'  => __( 'In this section it will be possible to update the loaded list for your standard packages and for your products', 'mail-boxes-etc' ),
-						'id'    => $sectionId
-					],
-					[
-						'id'      => $this->id . '_' . 'packages_csv_edit',
-						'title'   => '',
-						'type'    => 'mbebutton',
-						'caption' => __( 'Edit Packages list', 'mail-boxes-etc' ),
-						'class'   => 'button-secondary',
-						'confirm' => false,
-						'onclick' => get_admin_url() . 'admin.php?page=woocommerce_mbe_csv_tabs&csv=packages&nonce='.wp_create_nonce('woocommerce_mbe_csv_tabs'),
-						'blank'   => false,
-					],
-					[
-						'id'      => $this->id . '_' . 'packages_product_csv_edit',
-						'title'   => '',
-						'type'    => 'mbebutton',
-						'caption' => __( 'Edit Packages for Products list', 'mail-boxes-etc' ),
-						'class'   => 'button-secondary',
-						'confirm' => false,
-						'onclick' => get_admin_url() . 'admin.php?page=woocommerce_mbe_csv_tabs&csv=packages-products&nonce='.wp_create_nonce('woocommerce_mbe_csv_tabs'),
-						'blank'   => false,
-					],
-					[ 'type' => 'sectionend', 'id' => $sectionId ]
-				];
-			}
+            //
 		}
 
-		return array_merge( $settings, $csvSection, $advancedSection );
+		return array_merge( $settings );
 
 	}
+
+    protected function get_settings_for_mbe_dynamic_packages_section() {
+        $sectionId = 'mbe_dynamic_packages_main';
+        $settings  = [
+            [
+                'title' => __( 'Dynamic Packages', 'mail-boxes-etc' ),
+                'type'  => 'title',
+                'desc'  => '',
+                'id'    => $sectionId
+            ],
+        ];
+        $settings[]      = [
+                'id'      => $this->id . '_' . Mbe_Shipping_Helper_Data::XML_PATH_CSV_STANDARD_PACKAGE_USE_CSV,
+                'title'   => __( 'Csv for standard packages', 'mail-boxes-etc' ),
+                'type'    => 'select',
+                'options' => [ 0 => __( 'No', 'mail-boxes-etc' ), 1 => __( 'Yes', 'mail-boxes-etc' ) ],
+                'label'   => __( 'Csv for standard packages', 'mail-boxes-etc' ),
+                'desc'    => __( 'Load the standard packages via csv file', 'mail-boxes-etc' ),
+                'desc_tip' => true,
+                'default' => 0,
+        ];
+        $settings[] = [ 'type' => 'sectionend', 'id' => $sectionId ];
+        $advancedSection = [];
+        $csvSection      = [];
+
+        if ( $this->helper->getShipmentConfigurationMode() == Mbe_Shipping_Model_Carrier::SHIPMENT_CONFIGURATION_MODE_ONE_SHIPMENT_PER_SHOPPING_CART_WEIGHT_MULTI_PARCEL ) {
+
+            $sectionId  = 'mbe_packages_csv';
+            if ( $this->helper->isCsvStandardPackageEnabled() ) {
+                $csvButtons = [
+                        [
+                                'id'    => $this->id . '_' . 'packages_csv',
+                                'title' => __( 'Packages via csv - File upload', 'mail-boxes-etc' ),
+                                'type'  => 'file',
+                        ],
+                        [
+                                'id'    => $this->id . '_' . 'packages_csv_file',
+                                'title' => '',
+                                'type'  => 'hidden'
+                        ],
+                        [
+                                'id'                => $this->id . '_' . 'packages_csv_download',
+                                'title'             => '',
+                                'type'              => 'mbebutton',
+                                'caption'           => __( 'Download current file' , 'mail-boxes-etc' ),
+                                'class'             => ( !is_file( $this->helper->getCurrentCsvPackagesDir()  ) ? 'disabled ' : '' ) . 'button-secondary',
+                                'confirm'           => false,
+                                'onclick'           => get_admin_url() . "admin-post.php?action=mbe_download_standard_package_file&mbe_filetype=package&nonce="  . wp_create_nonce( 'mbe_download_standard_package_file' ),
+                                'blank'             => true,
+                                'custom_attributes' => [ ( !is_file( $this->helper->getCurrentCsvPackagesDir()  ) ? 'disabled' : '' ) => '' ]
+                        ],
+                        [
+                                'id'      => $this->id . '_' . 'packages_template_download',
+                                'title'   => '',
+                                'type'    => 'mbebutton',
+                                'caption' => __( 'Download template file', 'mail-boxes-etc' ),
+                                'class'   => 'button-secondary',
+                                'confirm' => false,
+                                'onclick' => get_admin_url() . "admin-post.php?action=mbe_download_standard_package_file&mbe_filetype=package-template&nonce="  . wp_create_nonce( 'mbe_download_standard_package_file' ),
+                                'blank'   => true,
+                        ],
+                        [
+                                'id'    => $this->id . '_' . 'packages_product_csv',
+                                'title' => __( 'Packages for products via csv - File upload', 'mail-boxes-etc' ),
+                                'type'  => 'file',
+                        ],
+                        [
+                                'id'    => $this->id . '_' . 'packages_product_csv_file',
+                                'title' => '',
+                                'type'  => 'hidden',
+                        ],
+                        [
+                                'id'                => $this->id . '_' . 'packages_product_csv_download',
+                                'title'             => '',
+                                'type'              => 'mbebutton',
+                                'caption'           => __( 'Download current file', 'mail-boxes-etc' ),
+                                'class'             => ( !is_file($this->helper->getCurrentCsvPackagesProductDir() ) ? 'disabled ' : '' ) . 'button-secondary',
+                                'confirm'           => false,
+                                'onclick'           => get_admin_url() . "admin-post.php?action=mbe_download_standard_package_file&mbe_filetype=package-product&nonce="  . wp_create_nonce( 'mbe_download_standard_package_file' ),
+                                'blank'             => true,
+                                'custom_attributes' => [ ( !is_file( $this->helper->getCurrentCsvPackagesProductDir() ) ? 'disabled' : '' ) => '' ]
+                        ],
+                        [
+                                'id'      => $this->id . '_' . 'packages_product_template_download',
+                                'title'   => '',
+                                'type'    => 'mbebutton',
+                                'caption' => __( 'Download template file', 'mail-boxes-etc' ),
+                                'class'   => 'button-secondary',
+                                'confirm' => false,
+                                'onclick' => get_admin_url() . "admin-post.php?action=mbe_download_standard_package_file&mbe_filetype=package-product-template&nonce="  . wp_create_nonce( 'mbe_download_standard_package_file' ),
+                                'blank'   => true,
+                        ],
+                ];
+
+                $csvSection = [
+                        [
+                                'title' => __( 'CSV for standard packages', 'mail-boxes-etc' ),
+                                'type'  => 'title',
+                                'desc'  => __( '', 'mail-boxes-etc' ),
+                                'id'    => $sectionId,
+                        ],
+                ];
+                $csvSection = array_merge( $csvSection, $csvButtons, [
+                        [
+                                'type' => 'sectionend',
+                                'id'   => $sectionId
+                        ]
+                ] );
+
+                $sectionId       = 'mbe_packages_advanced';
+                $advancedSection = [
+                        [
+                                'title' => __( 'Packages', 'mail-boxes-etc' ),
+                                'type'  => 'title',
+                                'desc'  => __( 'In this section it will be possible to update the loaded list for your standard packages and for your products', 'mail-boxes-etc' ),
+                                'id'    => $sectionId
+                        ],
+                        [
+                                'id'      => $this->id . '_' . 'packages_csv_edit',
+                                'title'   => '',
+                                'type'    => 'mbebutton',
+                                'caption' => __( 'Edit Packages list', 'mail-boxes-etc' ),
+                                'class'   => 'button-secondary',
+                                'confirm' => false,
+                                'onclick' => get_admin_url() . 'admin.php?page=woocommerce_mbe_csv_tabs&csv=packages&nonce='.wp_create_nonce('woocommerce_mbe_csv_tabs'),
+                                'blank'   => false,
+                        ],
+                        [
+                                'id'      => $this->id . '_' . 'packages_product_csv_edit',
+                                'title'   => '',
+                                'type'    => 'mbebutton',
+                                'caption' => __( 'Edit Packages for Products list', 'mail-boxes-etc' ),
+                                'class'   => 'button-secondary',
+                                'confirm' => false,
+                                'onclick' => get_admin_url() . 'admin.php?page=woocommerce_mbe_csv_tabs&csv=packages-products&nonce='.wp_create_nonce('woocommerce_mbe_csv_tabs'),
+                                'blank'   => false,
+                        ],
+                        [ 'type' => 'sectionend', 'id' => $sectionId ]
+                ];
+            }
+        }
+
+        return array_merge( $settings, $csvSection, $advancedSection );
+    }
 
 	protected function get_settings_for_mbe_shipments_section() {
 		$sectionId = 'mbe_shipments_1';
@@ -1232,42 +1253,6 @@ class Mbe_Settings extends WC_Settings_Page {
 
             </td>
         </tr>
-
-<!--        Moved to mbe-helper-scripts.js-->
-<!--        <script>-->
-<!--            if (typeof mbeButtonAction !== "function") {-->
-<!--                function mbeButtonAction(button, url, target, confirmation, confirmationText, parameters, lock) {-->
-<!--                    let ok = false;-->
-<!--                    if (confirmation === 'true') {-->
-<!--                        if (confirm(confirmationText) === true) {-->
-<!--                            ok = true;-->
-<!--                        }-->
-<!--                    } else {-->
-<!--                        ok = true;-->
-<!--                    }-->
-<!--                    if (ok === true) {-->
-<!--                        if (lock === 'true') {-->
-<!--                            button.disabled = true;-->
-<!--                        }-->
-<!--                        let a = document.createElement('a');-->
-<!--                        a.target = target;-->
-<!--                        let parameters = '--><?php //echo $data['parameters'] ?><!--'-->
-<!--                        let queryString = '';-->
-<!--                        if (parameters.length) {-->
-<!--                            parameters = JSON.parse(parameters)-->
-<!--                            Object.entries(parameters).forEach((entry) => {-->
-<!--                                const [key, value] = entry;-->
-<!--                                parameters[key] = document.getElementById(key).value;-->
-<!--                            });-->
-<!--                            queryString = '&' + (new URLSearchParams(parameters).toString())-->
-<!--                        }-->
-<!--                        a.href = url + queryString;-->
-<!--                        a.click();-->
-<!--                    }-->
-<!--                }-->
-<!--            }-->
-<!---->
-<!--        </script>-->
 
 		<?php
 	}

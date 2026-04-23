@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Mail boxes\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-13 13:47+0000\n"
-"PO-Revision-Date: 2025-07-01 12:12+0200\n"
+"PO-Revision-Date: 2026-04-22 19:51+0200\n"
 "Last-Translator: Samuele Carpene <samuele.carpene@intesys.it>\n"
 "Language-Team: German\n"
 "Language: de_DE\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Poedit 3.6\n"
+"X-Generator: Poedit 3.9\n"
 "X-Poedit-KeywordsList: __\n"
 "X-Poedit-Basepath: /home/web/php59/woombe/wordpress46/wp-content/plugins/mbe-woocommerce-shipping-method\n"
 "X-Poedit-SearchPath-0: .\n"
@@ -1876,3 +1876,33 @@ msgstr "Abholdetails"
 
 msgid "The field \"Province\" must not exceed 2 characters."
 msgstr "Das Feld „Provinz“ darf maximal 2 Zeichen lang sein."
+
+msgid "Dynamic Packages"
+msgstr "Dynamische Pakete"
+
+msgid "Weight"
+msgstr "Gewicht"
+
+msgid "Width"
+msgstr "Width"
+
+msgid "Height"
+msgstr "Höhe"
+
+msgid "Dynamic packages edit"
+msgstr "Bearbeitung von Dynamische Pakete"
+
+msgid "Template name"
+msgstr "Template Name"
+
+msgid "Parcels"
+msgstr "Pakete"
+
+msgid "Edit packages"
+msgstr "Pakete bearbeiten"
+
+msgid "Select package"
+msgstr "Paket wählen"
+
+msgid "Add package"
+msgstr "Aggiungi pacchetto"

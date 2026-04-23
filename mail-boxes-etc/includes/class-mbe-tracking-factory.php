@@ -69,7 +69,7 @@ class mbe_tracking_factory
 	    $boxesDimensionWeight             = [];
 	    $boxesSingleParcelDimensionWeight = [];
 
-	    if ( $shipmentConfigurationMode == Mbe_Shipping_Model_Carrier::SHIPMENT_CONFIGURATION_MODE_ONE_SHIPMENT_PER_ITEM ) {
+		if ( $shipmentConfigurationMode == Mbe_Shipping_Model_Carrier::SHIPMENT_CONFIGURATION_MODE_ONE_SHIPMENT_PER_ITEM ) {
 
 		    $productsAmount = 0;
 		    foreach ( $order->get_items() as $item ) {
@@ -128,66 +128,104 @@ class mbe_tracking_factory
 			    }
 		    }
 	    } elseif ( $shipmentConfigurationMode == Mbe_Shipping_Model_Carrier::SHIPMENT_CONFIGURATION_MODE_ONE_SHIPMENT_PER_SHOPPING_CART_WEIGHT_MULTI_PARCEL ) {
+			if ( $shippingHelper->canEditDynamicPackageData()
+			     && $shippingHelper->hasDynamicPackageData( $order_id ) ) {
+				// Custom Dynamic Packages for manual order
+				$logger->log( "Manual Shipping - Using custom dynamic packages for order " . $order_id );
+
+				$goodsValue     = 0.0;
+				$insuranceValue = 0.0;
+				$codValue       = $orderTotal;
+				$products       = $shippingHelper->createProductsArrayForShipping( $order );
+
+				foreach ( $order->get_items() as $item ) {
+					$itemQty     = $item['qty'];
+					$product     = $shippingHelper->getProductFromItem( $item );
+					$weightPrice = $shippingHelper->getProductWeightPrice( $product );
+
+					foreach ( json_decode( $shippingHelper->getOrderDynamicPackageData( $order_id ), ARRAY_A ) as $packageKey => $packageData ) {
+						$packageName                 = 'manual-dynamic-package-' . $packageKey;
+						$boxesMerged[ $packageName ] = [
+							'dimensions' => [
+								'length' => $packageData['length'],
+								'width'  => $packageData['width'],
+								'height' => $packageData['height'],
+							],
+							'weight'     => array_fill( 0, $packageData['parcels'], $packageData['weight'] ),
+							"maxweight"  => ""
+						];
+					}
+
+					$goodsValue     = $goodsValue + $weightPrice['price'] * $itemQty;
+					$insuranceValue += $shippingHelper->getInsuranceValue( $item );
+				}
+
+				$numBoxes = $shippingHelper->countBoxesArray( $boxesMerged );
+
+			}
+			else {
 //            $maxPackageWeight = $shippingHelper->getMaxPackageWeight();
 //            $boxesWeights = array();
-		    $goodsValue     = 0.0;
-		    $insuranceValue = 0.0;
-		    $codValue       = $orderTotal;
+			    $goodsValue     = 0.0;
+			    $insuranceValue = 0.0;
+			    $codValue       = $orderTotal;
 
-			$logger->logVar( $order->get_items(), "order items" );
+			    $logger->logVar( $order->get_items(), "order items" );
 
-			$products = $shippingHelper->createProductsArrayForShipping($order);
+			    $products = $shippingHelper->createProductsArrayForShipping( $order );
 
-		    foreach ( $order->get_items() as $item ) {
-			    $itemQty = $item['qty'];
+			    foreach ( $order->get_items() as $item ) {
+				    $itemQty = $item['qty'];
 //                $id_product = $item['product_id'];
-			    $product     = $shippingHelper->getProductFromItem( $item );
-			    $packageInfo = $shippingHelper->getPackageInfo( $product->get_sku() );
+				    $product     = $shippingHelper->getProductFromItem( $item );
+				    $packageInfo = $shippingHelper->getPackageInfo( $product->get_sku() );
 
-			    $weightPrice = $shippingHelper->getProductWeightPrice($product);
+				    $weightPrice = $shippingHelper->getProductWeightPrice( $product );
 
-			    for ( $i = 1; $i <= $itemQty; $i ++ ) {
+				    for ( $i = 1; $i <= $itemQty; $i ++ ) {
 
-				    $boxesDimensionWeight = $shippingHelper->getBoxesArray(
-					    $boxesDimensionWeight,
-					    $boxesSingleParcelDimensionWeight,
-					    $weightPrice['weight'],
-					    $packageInfo
-				    );
-				    $goodsValue = $goodsValue + $weightPrice['price'];
+					    $boxesDimensionWeight = $shippingHelper->getBoxesArray(
+						    $boxesDimensionWeight,
+						    $boxesSingleParcelDimensionWeight,
+						    $weightPrice['weight'],
+						    $packageInfo
+					    );
+					    $goodsValue           = $goodsValue + $weightPrice['price'];
+				    }
+
+				    $insuranceValue += $shippingHelper->getInsuranceValue( $item );
 			    }
 
-			    $insuranceValue += $shippingHelper->getInsuranceValue($item);
-		    }
 
+			    $boxesMerged = $shippingHelper->mergeBoxesArray(
+				    $boxesDimensionWeight,
+				    $boxesSingleParcelDimensionWeight
+			    );
+			    $numBoxes    = $shippingHelper->countBoxesArray( $boxesMerged );
 
-		    $boxesMerged = $shippingHelper->mergeBoxesArray(
-			    $boxesDimensionWeight,
-			    $boxesSingleParcelDimensionWeight
-		    );
-		    $numBoxes = $shippingHelper->countBoxesArray( $boxesMerged );
+			    $logger->logVar( $numBoxes, "boxes amount" );
+			    $logger->logVar( $boxesMerged, "boxes weights" );
+			    $logger->logVar( $goodsValue, "goods value" );
 
-		    $logger->logVar( $numBoxes, "boxes amount" );
-		    $logger->logVar( $boxesMerged, "boxes weights" );
-		    $logger->logVar( $goodsValue, "goods value" );
+			}
 
-		    $result = self::createSingleShipment(
-			    $order,
-			    $service,
-			    $subzone,
-			    $boxesMerged,
-			    $products,
-			    $numBoxes,
-			    $insurance,
-			    $insuranceValue,
-			    [],
-			    $goodsValue,
-			    $isCod,
-			    $codValue,
-			    $pickupInfo,
-			    $insuranceCode
-		    );
-	    }
+			$result = self::createSingleShipment(
+				$order,
+				$service,
+				$subzone,
+				$boxesMerged,
+				$products,
+				$numBoxes,
+				$insurance,
+				$insuranceValue,
+				[],
+				$goodsValue,
+				$isCod,
+				$codValue,
+				$pickupInfo,
+				$insuranceCode
+			);
+		}
         elseif ($shipmentConfigurationMode == Mbe_Shipping_Model_Carrier::SHIPMENT_CONFIGURATION_MODE_ONE_SHIPMENT_PER_SHOPPING_CART_ITEMS_MULTI_PARCEL) {
             $boxesWeights = array();
             $numBoxes = 0;

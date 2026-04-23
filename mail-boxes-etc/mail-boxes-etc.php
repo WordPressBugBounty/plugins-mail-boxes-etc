@@ -2,17 +2,18 @@
 /*
 	Plugin Name: MBE eShip
 	Description: Mail Boxes Etc. Online MBE Plugin integration for main Ecommerce platforms.
-	Version: 2.7.3
+	Version: 2.8.0
 	Author: MBE Worldwide S.p.A.
 	Author URI: https://www.mbeglobal.com/
 	Text Domain: mail-boxes-etc
     WC requires at least: 6.2
-    WC tested up to: 10.1
+    WC tested up to: 10.5
 	Domain Path: /languages
 */
 
 use MbeExceptions\ApiRequestException;
 use MbeExceptions\DbException;
+use Metaboxes\DynamicPackagesData;
 
 if ( ! defined( 'MBE_ESHIP_ID' ) ) {
 	define( "MBE_ESHIP_ID", "mbe_eship" );
@@ -145,6 +146,7 @@ require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/Model/PickupCustomData.php' );
 
 require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/Metaboxes/DepartmentAddressData.php' );
 require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/Metaboxes/AdvancedReturnAddressData.php' );
+require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/Metaboxes/DynamicPackagesData.php' );
 require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/Mbe/MbeWs.php' );
 require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/Mbe/MbeSoapClient.php' );
 require_once( MBE_ESHIP_PLUGIN_DIR . 'lib/Model/Ws.php' );
@@ -804,6 +806,12 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 						'mbe_select_department_address_pickup'
 					) );
 
+                    // Action to set or update package data for the order/shipment
+                    add_action( MBE_ESHIP_ID . '_edit_dynamic_packages_data', array(
+                            $this,
+                            'mbe_edit_dynamic_packages_data'
+                    ) );
+
 					// Show MBE Easy Duty in Checkout shortcodes
 					add_action( 'woocommerce_review_order_before_submit', array(
 						$this,
@@ -1351,6 +1359,14 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 						'advanced_return_address_data_form_page_handler'
 					) );
 				}
+
+                //Dynamic packages Data Page
+                if ( ! $this->helper->isCreationAutomatically() ) {
+                    add_submenu_page( null, __( 'MBE Dynamic Packages Data', 'mail-boxes-etc' ), __( 'MBE Dynamic Packages Data', 'mail-boxes-etc' ), 'manage_woocommerce', MBE_ESHIP_ID . '_dynamic_packages_data_tabs', array(
+                        $this,
+                        'mbe_dynamic_packages_data_form_page_handler'
+                    ) );
+                }
 			}
 
 			/**
@@ -2673,7 +2689,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				) {
 					if ( wp_verify_nonce( $_REQUEST['nonce'], basename( __FILE__ ) ) ) {
 
-						// Check Privince field
+						// Check Province field
 						$senderProvince                  = sanitize_text_field( $_POST['sender_province'] );
 						$receiverProvince                = sanitize_text_field( $_POST['receiver_province'] );
 						$senderProvinceIsEmptyForItaly   = $this->helper->getCountry() === 'IT' && empty( $senderProvince );
@@ -2887,7 +2903,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 						Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_TRACKING_MBE_STATUS,
 						Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_RETURN_TRACKING_MBE_STATUS,
 						Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_RETURN_TRACKING_NUMBER,
-						Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_DEPARTMENTS_ADDRESS
+						Mbe_Shipping_Helper_Data::SHIPMENT_SOURCE_DEPARTMENTS_ADDRESS,
+                        Mbe_Shipping_Helper_Data::META_FIELD_DYNAMIC_PACKAGE_DATA
 					) ) ) {
 						unset( $formatted_meta[ $key ] );
 					}
@@ -3035,6 +3052,96 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				}
 				wp_redirect( esc_url_raw( get_admin_url( get_current_blog_id(), 'admin.php?' . $backPage ) ) );
 			}
+
+
+            public function mbe_edit_dynamic_packages_data($orderIds) {
+                if ( $this->helper->canEditDynamicPackageData() ) {
+                    $backPage = '&backpage=' . urlencode( WOOCOMMERCE_MBE_TABS_PAGE );
+                    // Open the dynamic package data editor
+                    wp_redirect( esc_url_raw( admin_url( 'admin.php?page=' . MBE_ESHIP_ID . '_dynamic_packages_data_tabs&orderids=' . urlencode( json_encode($orderIds) ) . $backPage . '&nonce=' . wp_create_nonce( 'mbe_edit_dynamic_packages_data' ) ) ) );
+                } else {
+                    $this->helper->setWpAdminMessages( [
+                            'message' => __( 'Edit Packages', 'mail-boxes-etc' ) . ' - ' . __( 'not enabled', 'mail-boxes-etc' ),
+                            'status'  => 'error'
+                    ] );
+                    wp_redirect( esc_url_raw( admin_url( 'admin.php?page=' . urlencode( WOOCOMMERCE_MBE_TABS_PAGE ) ) ) );
+                    exit;
+                }
+            }
+
+            public function mbe_dynamic_packages_data_form_page_handler() {
+                $backPage = 'page=' . ( isset( $_REQUEST['backpage'] ) ? sanitize_text_field( $_REQUEST['backpage'] ) : MBE_ESHIP_ID . '_' . WOOCOMMERCE_MBE_TABS_PICKUP_PAGE );
+                $orderIds = isset( $_REQUEST['orderids'] ) ? json_decode( wc_clean( $_REQUEST['orderids'] ) ) : null;
+
+                if ( ! empty( $orderIds )
+                     && isset( $_REQUEST['nonce'] )
+                     && (
+                         wp_verify_nonce( $_REQUEST['nonce'], 'mbe_edit_dynamic_packages_data' )
+                         || wp_verify_nonce( $_REQUEST['nonce'], basename( __FILE__ ) ) // check nonce for post back (save)
+                     )
+                ) {
+
+                    if ( wp_verify_nonce( $_REQUEST['nonce'], basename( __FILE__ ) ) ) {
+                        $orderPackagesData = $_REQUEST['mbe_packages'] ?: null;
+
+                        $failed              = [];
+                        foreach ( $orderIds as $order_id ) {
+                            $this->helper->setOrderDynamicPackageData( $order_id, json_encode($orderPackagesData) );
+                        }
+
+                        if ( count( $failed ) > 0 ) {
+                            $notice = __( 'There was an error while updating the orders: ', 'mail-boxes-etc' ) . implode( ',', $failed );
+                        } else {
+                            $this->helper->setWpAdminMessages( [
+                                    'message' => __( 'Packages data associated to order ', 'mail-boxes-etc' ) . implode( ',', $orderIds ),
+                                    'status'  => 'success'
+                            ] );
+                            wp_redirect( esc_url_raw( admin_url( 'admin.php?' . $backPage ) ) );
+                            exit;
+                        }
+                    }
+
+                    DynamicPackagesData::add( MBE_ESHIP_ID . '_dynamic_packages_data_form_meta_box', 'dynamic-packages-data-edit' );
+
+                    ?>
+
+                    <div class="wrap">
+                        <div class="icon32 icon32-posts-post" id="icon-edit"><br></div>
+                        <h2><?php esc_html_e( 'Dynamic packages edit', 'mail-boxes-etc' ) ?>
+                            <a class="add-new-h2"
+                               href="<?php echo esc_url( get_admin_url( get_current_blog_id(), 'admin.php?' . $backPage ) ); ?>">
+                                <?php esc_html_e( 'Back to list', 'mail-boxes-etc' ) ?>
+                            </a>
+                        </h2>
+
+                        <?php $this->mbe_eship_wp_notification() ?>
+                        <?php if ( ! empty( $notice ) ): ?>
+                            <div id="notice" class="notice notice-error is-dismissible">
+                                <p><?php echo wp_kses_post( $notice ) ?></p></div>
+                        <?php endif; ?>
+                        <?php if ( ! empty( $message ) ): ?>
+                            <div id="message" class="notice notice-success is-dismissible">
+                                <p><?php echo wp_kses_post( $message ) ?></p></div>
+                        <?php endif; ?>
+                    </div>
+                    <form id="form" method="POST">
+                        <input type="hidden" name="nonce"
+                               value="<?php esc_attr_e( wp_create_nonce( basename( __FILE__ ) ) ) ?>"/>
+                        <!--                            <input type="hidden" name="id" value="-->
+                        <?php //esc_attr_e($item['id']) ?><!--"-->
+                        <div class="metabox-holder" id="dynamic-packages-data-edit">
+                            <div id="post-body">
+                                <div id="post-body-content">
+                                    <?php do_meta_boxes( 'dynamic-packages-data-edit', 'normal', $orderIds ) ?>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <?php
+
+                }
+
+            }
 
 		}
 	}

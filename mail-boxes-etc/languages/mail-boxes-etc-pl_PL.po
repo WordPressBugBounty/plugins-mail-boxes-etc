@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Mail boxes\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-13 13:46+0000\n"
-"PO-Revision-Date: 2025-07-01 12:11+0200\n"
+"PO-Revision-Date: 2026-04-22 19:51+0200\n"
 "Last-Translator: Rafał Borycki <rborycki@mbe.pl>\n"
 "Language-Team: Polish\n"
 "Language: pl_PL\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Poedit 3.6\n"
+"X-Generator: Poedit 3.9\n"
 "X-Poedit-KeywordsList: __\n"
 "X-Poedit-Basepath: /home/web/php59/woombe/wordpress46/wp-content/plugins/mbe-woocommerce-shipping-method\n"
 "X-Poedit-SearchPath-0: .\n"
@@ -1636,3 +1636,24 @@ msgstr "Szczegóły odbioru"
 
 msgid "The field \"Province\" must not exceed 2 characters."
 msgstr "Pole nie może przekraczać 2 znaków."
+
+msgid "Dynamic packages"
+msgstr "Opakowania dynamiczne"
+
+msgid "Dynamic packages edits"
+msgstr "Edytuj opakowania dynamiczne"
+
+msgid "Template name"
+msgstr "Nazwa szablonu"
+
+msgid "Parcels"
+msgstr "Paczki"
+
+msgid "Edit packages"
+msgstr "Edytuj opakowania"
+
+msgid "Select package"
+msgstr "Wybierz opakowanie"
+
+msgid "Weight"
+msgstr "Waga"

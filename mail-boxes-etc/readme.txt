@@ -2,9 +2,9 @@
 Contributors: MBE
 Tags: woocommerce,mbe,eShip,mailbox
 Requires at least: 6.2
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 2.7.3
+Stable tag: 2.8.0
 WC requires at least: 6.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -78,6 +78,9 @@ Yes. Please refer to http://php.net/manual/en/book.soap.php
 11. Shipping rates plugin choices in cart totals
 
 == Changelog ==
+= 2.8.0 =
+* Dynamic packages
+
 = 2.7.3 =
 * Compatibility fix with option "Hide shipping rates when free shipping is available"
 

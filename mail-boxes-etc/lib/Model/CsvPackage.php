@@ -85,6 +85,20 @@ class Mbe_Shipping_Model_Csv_Package implements Mbe_Shipping_Entity_Model_Interf
 			, ARRAY_A );
 	}
 
+	public function getStandardPackagesFullData() {
+		global $wpdb;
+		$main_table = $this->getTableName();
+		$join_table = $this->packagesProductModel->getTableName();
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange
+		return $wpdb->get_results(
+			"SELECT $main_table.*  FROM $main_table" .
+			" LEFT JOIN $join_table ON " .
+			" $main_table.package_code = $join_table.package_code " .
+			" WHERE $join_table.custom_package <> true OR $join_table.custom_package is null"
+			, ARRAY_A );
+	}
+
 	public function getCsvPackages() {
 		global $wpdb;
 		$main_table = $this->getTableName();

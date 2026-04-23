@@ -41,7 +41,7 @@ class Mbe_Shipping_Csv_Editor_Package extends Mbe_Shipping_Csv_Editor
 
 		$this->tableName =  Mbe_Shipping_Helper_Data::MBE_CSV_PACKAGES_TABLE_NAME;
 
-        $this->backLink = 'mbe_packages';
+        $this->backLink = 'mbe_dynamic_packages';
 
 		parent::__construct( $args );
 	}
