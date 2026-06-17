@@ -1538,6 +1538,7 @@ class MbeWs {
 		if ( $this->helper->isEnabledTaxAndDuties() ) {
 			$shipmentNode->LanguageCode        = $this->helper->getCountry();
 			$shipmentNode->TaxAndDutyPluginAct = true;
+			$shipmentNode->ProformaIncoterms   = $this->helper->getTaxAndDutiesModeName();
 		}
 
 		$args->RequestContainer->Shipment = $shipmentNode;
